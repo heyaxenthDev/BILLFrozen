@@ -20,7 +20,7 @@ include "alert.php";
         </li><!-- End Dashboard Nav -->
 
         <li class="nav-item">
-            <a class="nav-link " href="orders.php">
+            <a class="nav-link collapsed" href="orders.php">
                 <i class="bi bi-cart"></i>
                 <span>Orders</span>
             </a>
@@ -34,7 +34,7 @@ include "alert.php";
         </li><!-- End Product List Page Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="inventory.php">
+            <a class="nav-link " href="inventory.php">
                 <i class="bi bi-box-seam"></i>
                 <span>Inventory</span>
             </a>
@@ -54,11 +54,11 @@ include "alert.php";
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>Orders</h1>
+        <h1>Inventory</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-                <li class="breadcrumb-item active">Orders</li>
+                <li class="breadcrumb-item active">Inventory</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
