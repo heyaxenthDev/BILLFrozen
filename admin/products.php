@@ -64,7 +64,105 @@ include "alert.php";
     </div><!-- End Page Title -->
 
     <section class="section">
-
+        <div class="row mt-4 mb-4">
+            <div class="col-6 d-grid gap-2 d-md-block">
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Search Product...">
+            </div>
+            <div class="col-6 d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-success" type="button">
+                    <i class="bi bi-cart-plus-fill"></i> Add Product</button>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-lg-2">
+                <!-- Product Card -->
+                <div class="card">
+                    <img src="images/products/SM3012-4.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h6 class="card-title">Product Card</h6>
+                        <p class="card-text">Price</p>
+                        <div class="d-grid gap-2 mx-auto">
+                            <button class="btn btn-primary" type="button">Edit</button>
+                            <button class="btn btn-danger" type="button">Delete</button>
+                        </div>
+                    </div>
+                </div><!-- End Product Card -->
+            </div>
+            <div class="col-lg-2">
+                <!-- Product Card -->
+                <div class="card">
+                    <img src="images/products/funtastyk-young-pork-tocino-flatpack-225g_1.jpg" class="card-img-top"
+                        alt="...">
+                    <div class="card-body">
+                        <h6 class="card-title">Product Card</h6>
+                        <p class="card-text">Price</p>
+                        <div class="d-grid gap-2 mx-auto">
+                            <button class="btn btn-primary" type="button">Edit</button>
+                            <button class="btn btn-danger" type="button">Delete</button>
+                        </div>
+                    </div>
+                </div><!-- End Product Card -->
+            </div>
+            <div class="col-lg-2">
+                <!-- Product Card -->
+                <div class="card">
+                    <img src="images/products/MekeniKikiam-AsianFlavoredFishRolls-250g.jpg" class=" card-img-top"
+                        alt="...">
+                    <div class="card-body">
+                        <h6 class="card-title">Product Card</h6>
+                        <p class="card-text">Price</p>
+                        <div class="d-grid gap-2 mx-auto">
+                            <button class="btn btn-primary" type="button">Edit</button>
+                            <button class="btn btn-danger" type="button">Delete</button>
+                        </div>
+                    </div>
+                </div><!-- End Product Card -->
+            </div>
+            <div class="col-lg-2">
+                <!-- Product Card -->
+                <div class="card">
+                    <img src="images/products/Purefoods-Tender-Juicy.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h6 class="card-title">Product Card</h6>
+                        <p class="card-text">Price</p>
+                        <div class="d-grid gap-2 mx-auto">
+                            <button class="btn btn-primary" type="button">Edit</button>
+                            <button class="btn btn-danger" type="button">Delete</button>
+                        </div>
+                    </div>
+                </div><!-- End Product Card -->
+            </div>
+            <div class="col-lg-2">
+                <!-- Product Card -->
+                <div class="card">
+                    <img src="images/products/39.-CDO-Ulam-Burger-Regular-Patties-228g.jpg" class="card-img-top"
+                        alt="...">
+                    <div class="card-body">
+                        <h6 class="card-title">Product Card</h6>
+                        <p class="card-text">Price</p>
+                        <div class="d-grid gap-2 mx-auto">
+                            <button class="btn btn-primary" type="button">Edit</button>
+                            <button class="btn btn-danger" type="button">Delete</button>
+                        </div>
+                    </div>
+                </div><!-- End Product Card -->
+            </div>
+            <div class="col-lg-2">
+                <!-- Product Card -->
+                <div class="card">
+                    <img src="images/products/5951-003-20-2023-140350-685.jpg" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h6 class="card-title">Product Card</h6>
+                        <p class="card-text">Price</p>
+                        <div class="d-grid gap-2 mx-auto">
+                            <button class="btn btn-primary" type="button">Edit</button>
+                            <button class="btn btn-danger" type="button">Delete</button>
+                        </div>
+                    </div>
+                </div><!-- End Product Card -->
+            </div>
+        </div>
     </section>
 
 </main><!-- End #main -->

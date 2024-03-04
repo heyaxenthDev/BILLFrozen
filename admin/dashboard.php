@@ -193,9 +193,6 @@ unset($_SESSION['logged']);
                                         }, {
                                             name: 'Revenue',
                                             data: [11, 32, 45, 32, 34, 52, 41]
-                                        }, {
-                                            name: 'Customers',
-                                            data: [15, 11, 32, 18, 9, 24, 11]
                                         }],
                                         chart: {
                                             height: 350,
@@ -207,7 +204,7 @@ unset($_SESSION['logged']);
                                         markers: {
                                             size: 4
                                         },
-                                        colors: ['#4154f1', '#2eca6a', '#ff771d'],
+                                        colors: ['#4154f1', '#2eca6a'],
                                         fill: {
                                             type: "gradient",
                                             gradient: {
