@@ -86,7 +86,7 @@ include "alert.php";
                                     <div class="col-lg-12">
                                         <!-- Product Image Preview -->
                                         <center>
-                                            <img id="productImagePreview" src="images/default-product-image.png"
+                                            <img id="productPreview" src="images/default-product-image.png"
                                                 alt="Product Image Preview" style="max-width: 100%; max-height: 300px;">
                                         </center>
                                         <div class="form-floating mb-3">
@@ -136,7 +136,7 @@ include "alert.php";
                     <div class="card-body">
                         <h5 class="card-title">Order List</h5>
                         <!-- Product Inventory Table -->
-                        <table class="table datatable table-striped-columns">
+                        <table class="table datatable">
                             <thead>
                                 <tr>
                                     <th scope="col">Product Code</th>
@@ -147,6 +147,7 @@ include "alert.php";
                                     <th scope="col">Out</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Expiry Date</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -161,12 +162,21 @@ include "alert.php";
                                     echo "<th scope='row'>{$row['product_code']}</th>";
                                     echo "<td><img src='{$row['product_picture']}' style='max-width: 100px; max-height: 65px;' alt='Product Image'> {$row['product_name']}</td>";
                                     echo "<td>{$row['price']}</td>";
-                                    echo "<td>{$row['quantity']}</td>";
-                                    echo "<td></td>"; // In column
-                                    echo "<td></td>"; // Out column
-                                    echo "<td><span class='badge bg-" . getStatusBadgeClass($row['product_status']) . "'>" . $row['product_status'] . "</span></td>";
-                                    echo "<td>{$row['expiry_date']}</td>";
+                                    if ($row['quantity'] == 0) {
+                                        echo "<td colspan='5'><center>Out of Stock</center></td>";
+                                    } else {
+                                        echo "<td>{$row['quantity']}</td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
+                                        echo "<td><span class='badge bg-" . getStatusBadgeClass($row['product_status']) . "'>" . $row['product_status'] . "</span></td>";
+                                        echo "<td>{$row['expiry_date']}</td>";
+                                    }
+                                    echo "<td><div class='d-grid gap-2 d-md-block'>";
+                                    echo "<button class='btn btn-primary' type='button'>Button</button>";
+                                    echo "<button class='btn btn-primary' type='button'>Button</button>";
+                                    echo "</div></td>";
                                     echo "</tr>";
+
                                 }
 
                                 function getStatusBadgeClass($status)
@@ -186,8 +196,6 @@ include "alert.php";
                             </tbody>
                         </table>
                         <!-- End Product Inventory Table -->
-
-
                     </div>
                 </div>
 

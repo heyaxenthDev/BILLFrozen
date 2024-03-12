@@ -24,9 +24,9 @@ $(document).ready(function () {
         data: { id: productId },
         success: function (response) {
           if (response) {
-            $("#productImagePreview").attr("src", response);
+            $("#productPreview").attr("src", response);
           } else {
-            $("#productImagePreview").attr(
+            $("#productPreview").attr(
               "src",
               "images/default-product-image.png"
             );

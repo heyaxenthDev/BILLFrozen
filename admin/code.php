@@ -27,6 +27,11 @@ if (isset($_POST['addNewProduct'])) {
         }
     }
 
+    // Check if the file already exists
+    if (file_exists($target_file)) {
+        unlink($target_file); // Delete the existing file
+    }
+
     // Check file size
     if ($_FILES["productImage"]["size"] > 500000) {
         $_SESSION['status'] = "Error";
