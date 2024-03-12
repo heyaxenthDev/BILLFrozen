@@ -65,43 +65,128 @@ include "alert.php";
 
     <section class="section">
         <div class="row">
-            <div class="col-lg-12">
 
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#productList">
+                    <i class="bi bi-cart-plus-fill"></i> Add Product</button>
+            </div>
+
+            <!-- Add Product Modal -->
+            <div class="modal fade" id="productList" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="productListLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add New Product</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="code.php" method="POST" enctype="multipart/form-data">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <!-- Product Image Preview -->
+                                        <center>
+                                            <img id="productImagePreview" src="images/default-product-image.png"
+                                                alt="Product Image Preview" style="max-width: 100%; max-height: 300px;">
+                                        </center>
+                                        <div class="form-floating mb-3">
+                                            <select class="form-select" id="product_name" name="product_name" required>
+                                                <option value="" selected disabled>Select a Product</option>
+                                                <?php
+
+                                                // Query to fetch product names from the database
+                                                $query = "SELECT * FROM `product_list`";
+                                                $result = mysqli_query($conn, $query);
+
+                                                // Loop through the results and create an option for each product name
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    
+                                                    echo "<option value='{$row['id']}'>{$row['product_name']}</option>";
+                                                }
+                                                ?>
+                                            </select>
+                                            <label for="product-name">Product Name</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="number" class="form-control" id="quantity" name="quantity"
+                                                placeholder=" " required>
+                                            <label for="quantity">Quantity</label>
+                                        </div>
+                                        <div class="form-floating mb-3">
+                                            <input type="date" class="form-control" id="expiry-date" name="expiry-date"
+                                                placeholder=" " required>
+                                            <label for="expiry-date">Expiry Date</label>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" name="addInventoryProduct"><i
+                                        class="bi bi-plus"></i> Add
+                                    Product</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Order List</h5>
-                        <p>Add lightweight datatables to your project with using the <a
-                                href="https://github.com/fiduswriter/Simple-DataTables" target="_blank">Simple
-                                DataTables</a> library. Just add <code>.datatable</code> class name to any table you
-                            wish to conver to a datatable</p>
-
-                        <!-- Table with stripped rows -->
-                        <table class="table datatable">
+                        <!-- Product Inventory Table -->
+                        <table class="table datatable table-striped-columns">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Position</th>
-                                    <th scope="col">Age</th>
-                                    <th scope="col">Start Date</th>
-                                    <th scope="col">Actions</th>
+                                    <th scope="col">Product Code</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">In</th>
+                                    <th scope="col">Out</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Expiry Date</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Brandon Jacob</td>
-                                    <td>Designer</td>
-                                    <td>28</td>
-                                    <td>2016-05-25</td>
-                                    <td>
-                                        <a class="btn btn-success"><i class="bi bi-check"></i></a>
-                                        <a class="btn btn-danger"><i class="bi bi-x"></i></a>
-                                    </td>
-                                </tr>
+                                <?php
+                                // Fetch data from the inventory table
+                                $query = "SELECT * FROM `inventory`";
+                                $result = mysqli_query($conn, $query);
+
+                                // Loop through the results and create table rows
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    echo "<tr>";
+                                    echo "<th scope='row'>{$row['product_code']}</th>";
+                                    echo "<td><img src='{$row['product_picture']}' style='max-width: 100px; max-height: 65px;' alt='Product Image'> {$row['product_name']}</td>";
+                                    echo "<td>{$row['price']}</td>";
+                                    echo "<td>{$row['quantity']}</td>";
+                                    echo "<td></td>"; // In column
+                                    echo "<td></td>"; // Out column
+                                    echo "<td><span class='badge bg-" . getStatusBadgeClass($row['product_status']) . "'>" . $row['product_status'] . "</span></td>";
+                                    echo "<td>{$row['expiry_date']}</td>";
+                                    echo "</tr>";
+                                }
+
+                                function getStatusBadgeClass($status)
+                                {
+                                    switch ($status) {
+                                        case 'Good':
+                                            return 'success';
+                                        case 'Expired':
+                                            return 'danger';
+                                        case 'Expiring Soon':
+                                            return 'warning';
+                                        default:
+                                            return 'secondary';
+                                    }
+                                }
+                                ?>
                             </tbody>
                         </table>
-                        <!-- End Table with stripped rows -->
+                        <!-- End Product Inventory Table -->
+
 
                     </div>
                 </div>

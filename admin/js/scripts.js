@@ -1,68 +1,40 @@
-function previewProfilePicture() {
-    var preview = document.getElementById('profilePicturePreview');
-    var fileInput = document.getElementById('profilePicture').files[0];
-    var reader = new FileReader();
+// Function to preview the selected product image
+function previewProductImage() {
+  var fileInput = document.getElementById("productImage");
+  var file = fileInput.files[0];
+  var reader = new FileReader();
 
-    reader.onloadend = function() {
-        preview.src = reader.result;
-        preview.style.display = 'block';
-    }
+  // Set up the onload event handler for the FileReader
+  reader.onload = function (e) {
+    var preview = document.getElementById("productImagePreview");
+    preview.src = e.target.result;
+  };
 
-    if (fileInput) {
-        reader.readAsDataURL(fileInput);
-    } else {
-        preview.src = '\SJNHSAlumniSystem/admin/assets/img/user.png'; // Set default image
-    }
+  // Read the selected file as a data URL
+  reader.readAsDataURL(file);
 }
 
-function previewEventPicture() {
-    var preview = document.getElementById('eventPicturePreview');
-    var fileInput = document.getElementById('eventPicture').files[0];
-    var reader = new FileReader();
-
-    reader.onloadend = function() {
-        preview.src = reader.result;
-        preview.style.display = 'block';
-    }
-
-    if (fileInput) {
-        reader.readAsDataURL(fileInput);
+$(document).ready(function () {
+  $("#product_name").change(function () {
+    var productId = $(this).val();
+    if (productId) {
+      $.ajax({
+        url: "get_product_image.php",
+        type: "post",
+        data: { id: productId },
+        success: function (response) {
+          if (response) {
+            $("#productImagePreview").attr("src", response);
+          } else {
+            $("#productImagePreview").attr(
+              "src",
+              "images/default-product-image.png"
+            );
+          }
+        },
+      });
     } else {
-        preview.src = 'assets/img/undraw_festivities_tvvj.png'; // Set default image
+      $("#productImagePreview").attr("src", "images/default-product-image.png");
     }
-}
-
-function previewNewsPicture() {
-    var preview = document.getElementById('newsPicturePreview');
-    var fileInput = document.getElementById('newsPicture').files[0];
-    var reader = new FileReader();
-
-    reader.onloadend = function() {
-        preview.src = reader.result;
-        preview.style.display = 'block';
-    }
-
-    if (fileInput) {
-        reader.readAsDataURL(fileInput);
-    } else {
-        preview.src = 'assets/img/undraw_Newspaper_re_syf5.png'; // Set default image
-    }
-}
-
-function previewEditNewsPicture() {
-    const preview = document.getElementById('newsPicturePreview');
-    const file = document.getElementById('editPicture').files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = function () {
-        preview.src = reader.result;
-    }
-
-    if (file) {
-        reader.readAsDataURL(file);
-    } else {
-        preview.src = "";
-    }
-}
-
-
+  });
+});
