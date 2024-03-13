@@ -33,6 +33,13 @@ h6 {
   font-family: "Poppins", sans-serif;
 }
 
+#welcome {
+  color: #0923ae;
+}
+#welcome-span {
+  color: #0923ae;
+}
+
 /*--------------------------------------------------------------
 # Back to top button
 --------------------------------------------------------------*/
@@ -609,59 +616,18 @@ section {
   margin-bottom: 0;
 }
 
-/*--------------------------------------------------------------
-# Breadcrumbs
---------------------------------------------------------------*/
-.breadcrumbs {
-  padding: 15px 0;
-  background: #f2f6f9;
-  min-height: 40px;
-  margin-top: 85px;
+.transparent-input {
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: none;
+  border-bottom: 1px solid #000; /* You can change the color to whatever you like */
+  outline: none; /* Removes the default focus outline */
+}
+.form-floating > input:not(:focus):placeholder-shown + label {
+  background-color: rgba(0, 0, 0, 0) !important;
 }
 
-@media (max-width: 992px) {
-  .breadcrumbs {
-    margin-top: 56px;
-  }
-}
-
-.breadcrumbs h2 {
-  font-size: 28px;
-  font-weight: 300;
-}
-
-.breadcrumbs ol {
-  display: flex;
-  flex-wrap: wrap;
-  list-style: none;
-  padding: 0;
-  font-size: 14px;
-  margin: 0;
-}
-
-.breadcrumbs ol li + li {
-  padding-left: 10px;
-}
-
-.breadcrumbs ol li + li::before {
-  display: inline-block;
-  padding-right: 10px;
-  color: #3c6387;
-  content: "/";
-}
-
-@media (max-width: 768px) {
-  .breadcrumbs .d-flex {
-    display: block !important;
-  }
-
-  .breadcrumbs ol {
-    display: block;
-  }
-
-  .breadcrumbs ol li {
-    display: inline-block;
-  }
+.form-floating > input + label:after {
+  background-color: rgba(0, 0, 0, 0) !important;
 }
 
 /*--------------------------------------------------------------

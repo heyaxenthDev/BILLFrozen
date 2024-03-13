@@ -162,21 +162,32 @@ include "alert.php";
                                     echo "<th scope='row'>{$row['product_code']}</th>";
                                     echo "<td><img src='{$row['product_picture']}' style='max-width: 100px; max-height: 65px;' alt='Product Image'> {$row['product_name']}</td>";
                                     echo "<td>{$row['price']}</td>";
+                                    // if ($row['quantity'] == 0) {
+                                    // echo "<td colspan='5' class='text-center'><span class='badge bg-secondary'>Out of Stock</span></td>";
+                                    // }else{
+                                    // echo "<td>{$row['quantity']}</td>";
+                                    // echo "<td></td>"; // In column
+                                    // echo "<td></td>"; // Out column
+                                    // echo "<td><span class='badge bg-" . getStatusBadgeClass($row['product_status']) . "'>" . $row['product_status'] . "</span></td>";
+                                    // echo "<td>{$row['expiry_date']}</td>";
+                                    // }
+                                    
+                                    echo "<td>";
                                     if ($row['quantity'] == 0) {
-                                        echo "<td colspan='5'><center>Out of Stock</center></td>";
+                                        echo "<span class='badge bg-secondary'>Out of Stock</span>";
                                     } else {
-                                        echo "<td>{$row['quantity']}</td>";
-                                        echo "<td></td>";
-                                        echo "<td></td>";
-                                        echo "<td><span class='badge bg-" . getStatusBadgeClass($row['product_status']) . "'>" . $row['product_status'] . "</span></td>";
-                                        echo "<td>{$row['expiry_date']}</td>";
+                                        echo "{$row['quantity']}";
                                     }
-                                    echo "<td><div class='d-grid gap-2 d-md-block'>";
-                                    echo "<button class='btn btn-primary' type='button'>Button</button>";
-                                    echo "<button class='btn btn-primary' type='button'>Button</button>";
-                                    echo "</div></td>";
+                                    echo "</td>";
+                                    echo "<td></td>"; // In column
+                                    echo "<td></td>"; // Out column
+                                    echo "<td><span class='badge bg-" . getStatusBadgeClass($row['product_status']) . "'>" . $row['product_status'] . "</span></td>";
+                                    echo "<td>{$row['expiry_date']}</td>";  
+                                    echo "<td>";
+                                    echo "<a class='btn btn-success mx-2'><i class='bi bi-pencil-square'></i></a>";
+                                    echo "<a class='btn btn-danger'><i class='bi bi-trash'></i></a>";
+                                    echo "</td>";
                                     echo "</tr>";
-
                                 }
 
                                 function getStatusBadgeClass($status)
