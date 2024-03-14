@@ -46,7 +46,8 @@ session_start();
             <div class="row justify-content-center">
                 <div class="col-xl-4 col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="150">
                     <img src="assets/img/android-chrome-512x512.png" class="img-fluid animated" alt>
-                    <div class="text-center mt-2"><a href="#" class="btn-get-started scrollto">Order Now</a></div>
+                    <div class="text-center mt-2"><a href="user-login.php" class="btn-get-started scrollto">Order
+                            Now</a></div>
                 </div>
             </div>
         </div>

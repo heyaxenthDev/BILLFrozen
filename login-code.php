@@ -95,12 +95,20 @@ if (isset($_POST['userLogin'])) {
         $row = $result->fetch_assoc();
         if (password_verify($password, $row['password'])) {
             // Password is correct, set session variables
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['email'] = $row['email_or_phone_number'];
+            $_SESSION['user_auth'] = true;
+            
+            $_SESSION['user'] = [
+                'username'=> $row['username'],
+                'user_id' => $row['user_id'],
+                'name'=> $row['full_name'],
+                'email_phone'=> $row['email_or_phone_number'],
+            ];
+
+            $_SESSION['logged'] = "Logged in successfully";
+            $_SESSION['logged_icon'] = "success";
 
             // Redirect to dashboard or home page
-            header("Location: user/dashboard.php");
+            header("Location: user/home.php");
             exit;
         } else {
             // Password is incorrect

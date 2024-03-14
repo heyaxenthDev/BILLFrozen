@@ -619,7 +619,7 @@ section {
 .transparent-input {
   background-color: rgba(0, 0, 0, 0) !important;
   border: none;
-  border-bottom: 1px solid #000; /* You can change the color to whatever you like */
+  border-bottom: 2px solid #000; /* You can change the color to whatever you like */
   outline: none; /* Removes the default focus outline */
 }
 .form-floating > input:not(:focus):placeholder-shown + label {

@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-include('admin/includes/conn.php');
+include('includes/conn.php');
 
 // Check if user is authenticated as a regular user
-if (isset($_SESSION['authenticated'])) {
-    $username = $_SESSION['auth_user']['username'];
+if (isset($_SESSION['user_auth'])) {
+    $username = $_SESSION['user']['username'];
     // Set session variables for status message
     $_SESSION['status'] = "Logged Out Successfully!";
     $_SESSION['status_text'] = "You have been logged out.";
@@ -14,7 +14,7 @@ if (isset($_SESSION['authenticated'])) {
 
     // Unset session variables
     unset($_SESSION['authenticated']);
-    unset($_SESSION['auth_user']);
+    unset($_SESSION['user']);
     
     // Redirect to index page
     header("Location: index");
