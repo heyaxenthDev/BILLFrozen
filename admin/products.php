@@ -144,7 +144,7 @@ include "alert.php";
                 // Loop through each row
                 while ($row = $result->fetch_assoc()) {
                     ?>
-            <div class="col-lg-2">
+            <div class="col-lg-2 col-md-2">
                 <!-- Product Card -->
                 <div class="card">
                     <img src="<?php echo $row['product_picture']; ?>" class="card-img-top" alt="...">
