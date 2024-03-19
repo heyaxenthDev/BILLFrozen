@@ -181,7 +181,7 @@ unset($_SESSION['logged']);
                 <hr>
                 <!-- Additional content for the product list -->
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-lg-4 col-6">
                         <!-- Card with an image on top -->
                         <div class="card">
                             <img src="images\default-product-image.png" class="card-img-top" alt="...">
@@ -191,7 +191,7 @@ unset($_SESSION['logged']);
                         </div><!-- End Card with an image on top -->
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-lg-4 col-6">
                         <!-- Card with an image on top -->
                         <div class="card">
                             <img src="images\default-product-image.png" class="card-img-top" alt="...">
@@ -201,7 +201,7 @@ unset($_SESSION['logged']);
                         </div><!-- End Card with an image on top -->
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-lg-4 col-6">
                         <!-- Card with an image on top -->
                         <div class="card">
                             <img src="images\default-product-image.png" class="card-img-top" alt="...">
@@ -211,38 +211,6 @@ unset($_SESSION['logged']);
                         </div><!-- End Card with an image on top -->
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-4">
-                        <!-- Card with an image on top -->
-                        <div class="card">
-                            <img src="images\default-product-image.png" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Card with an image on top</h5>
-                            </div>
-                        </div><!-- End Card with an image on top -->
-                    </div>
-
-                    <div class="col-4">
-                        <!-- Card with an image on top -->
-                        <div class="card">
-                            <img src="images\default-product-image.png" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Card with an image on top</h5>
-                            </div>
-                        </div><!-- End Card with an image on top -->
-                    </div>
-
-                    <div class="col-4">
-                        <!-- Card with an image on top -->
-                        <div class="card">
-                            <img src="images\default-product-image.png" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Card with an image on top</h5>
-                            </div>
-                        </div><!-- End Card with an image on top -->
-                    </div>
-                </div>
-
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-end">
                         <li class="page-item disabled">
