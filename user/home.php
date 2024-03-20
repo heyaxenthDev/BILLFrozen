@@ -74,114 +74,35 @@ unset($_SESSION['logged']);
 
 <main id="main" class="main">
 
-    <div class="pagetitle mb-3">
-        <h1></h1>
-    </div><!-- End Page Title -->
-
-    <section class="card p-3">
+    <section class="p-3">
         <div class="row">
-            <div class="col-lg-3">
-                <div class="accordion mb-3 mt-3" id="categoriesAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="categoriesHeading">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#categoriesCollapse" aria-expanded="true"
-                                aria-controls="categoriesCollapse">
-                                Categories
-                            </button>
-                        </h2>
-                        <div id="categoriesCollapse" class="accordion-collapse collapse show"
-                            aria-labelledby="categoriesHeading" data-bs-parent="#categoriesAccordion">
-                            <div class="accordion-body">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="frozenFoodsCheck">
-                                    <label class="form-check-label" for="frozenFoodsCheck">
-                                        Frozen Foods
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="streetFoodsCheck">
-                                    <label class="form-check-label" for="streetFoodsCheck">
-                                        Street Foods
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="dressedChickenCheck">
-                                    <label class="form-check-label" for="dressedChickenCheck">
-                                        Dressed Chicken
-                                    </label>
-                                </div>
+            <div class="col-lg-9 mb-3">
+                <div class="pagetitle mb-3">
+                    <div class="row">
+
+                        <div class="col-md-6 mb-2 ">
+                            <h1>Product List</h1>
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <div class="gap-2 d-md-flex justify-content-md-end">
+                                <div class="search-bar">
+                                    <form class="search-form d-flex align-items-center" method="POST" action="#">
+                                        <input type="text" name="query" placeholder="Search"
+                                            title="Enter search keyword">
+                                        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                                    </form>
+                                </div><!-- End Search Bar -->
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="accordion mb-3" id="availabilityAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="availabilityHeading">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#availabilityCollapse" aria-expanded="true"
-                                aria-controls="availabilityCollapse">
-                                Availability
-                            </button>
-                        </h2>
-                        <div id="availabilityCollapse" class="accordion-collapse collapse show"
-                            aria-labelledby="availabilityHeading" data-bs-parent="#availabilityAccordion">
-                            <div class="accordion-body">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="inStockCheck">
-                                    <label class="form-check-label" for="inStockCheck">
-                                        In Stock
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="outOfStockCheck">
-                                    <label class="form-check-label" for="outOfStockCheck">
-                                        Out of Stock
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                </div>
-
-
-                <h4 class="">Best Sellers</h4>
-                <a href="#">
-                    <div class="card mb-3">
-                        <div class="row g-0">
-                            <div class="col-md-4 align-content-md">
-                                <img src="images\default-product-image.png" class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h6 class="card-title">Product 1</h6>
-                                    <span class="card-text">Lorem Ipsum</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-
-            <div class="col-lg-9">
-                <div class="row mt-3">
-                    <div class="col-8">
-                        <h3>Product List <small>(123)</small></h3>
-                    </div>
-                    <div class="col-4">
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Search..." aria-label="Search"
-                                aria-describedby="searchButton">
-                            <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
-                        </div>
-                    </div>
-                </div>
+                </div><!-- End Page Title -->
                 <hr>
                 <!-- Additional content for the product list -->
                 <div class="row">
-                    <div class="col-lg-4 col-6">
+
+                    <div class="col-lg-3 col-6">
                         <!-- Card with an image on top -->
                         <div class="card">
                             <img src="images\default-product-image.png" class="card-img-top" alt="...">
@@ -191,7 +112,7 @@ unset($_SESSION['logged']);
                         </div><!-- End Card with an image on top -->
                     </div>
 
-                    <div class="col-lg-4 col-6">
+                    <div class="col-lg-3 col-6">
                         <!-- Card with an image on top -->
                         <div class="card">
                             <img src="images\default-product-image.png" class="card-img-top" alt="...">
@@ -201,7 +122,7 @@ unset($_SESSION['logged']);
                         </div><!-- End Card with an image on top -->
                     </div>
 
-                    <div class="col-lg-4 col-6">
+                    <div class="col-lg-3 col-6">
                         <!-- Card with an image on top -->
                         <div class="card">
                             <img src="images\default-product-image.png" class="card-img-top" alt="...">
@@ -209,23 +130,44 @@ unset($_SESSION['logged']);
                                 <h5 class="card-title">Card with an image on top</h5>
                             </div>
                         </div><!-- End Card with an image on top -->
+                    </div>
+
+                    <div class="col-lg-3 col-6">
+                        <!-- Card with an image on top -->
+                        <div class="card">
+                            <img src="images\default-product-image.png" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">Card with an image on top</h5>
+                            </div>
+                        </div><!-- End Card with an image on top -->
+                    </div>
+
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                        <button class="btn btn-primary" type="button">See More <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+
+                </div><!-- row end -->
+            </div>
+
+            <!-- Best sellers -->
+            <div class="col-lg-3">
+
+                <h4 class="fw-semibold">Best Sellers</h4>
+
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4 col-4">
+                            <img src="images\default-product-image.png" class="card-img-top" alt="...">
+                        </div>
+                        <div class="col-md-8 col-8">
+                            <div class="card-body">
+                                <h5 class="card-title">Card title</h5>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-end">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                        </li>
-                        <li class="page-item active" aria-current="page">
-                            <a class="page-link" href="#">1 <span class="visually-hidden">(current)</span></a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+
             </div>
 
 
