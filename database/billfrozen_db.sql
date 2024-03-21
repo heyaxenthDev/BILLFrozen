@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2024 at 09:30 AM
+-- Generation Time: Mar 21, 2024 at 08:41 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -20,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Database: `billfrozen_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `user_id` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `added_quantity` int(11) NOT NULL,
+  `date_created` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- --------------------------------------------------------
 
@@ -48,6 +62,20 @@ INSERT INTO `inventory` (`id`, `product_code`, `product_name`, `price`, `categor
 (1, 'PROD346792', 'Magnolia Whole Chicken', 230.00, 'Dressed Chicken', 10, 'Expiring Soon', '2024-03-29', 'uploads/SM3012-4.jpg', '2024-03-12 08:17:59'),
 (2, 'PROD291373', 'CDO - Funtastyk Young Pork', 92.25, 'Frozen Foods', 50, 'Good', '2025-03-07', 'uploads/funtastyk-young-pork-tocino-flatpack-225g_1.jpg', '2024-03-12 08:18:28'),
 (3, 'PROD283520', 'Mekeni - Kikiam', 110.00, 'Street Foods', 0, 'Expired', '2024-03-12', 'uploads/MekeniKikiam-AsianFlavoredFishRolls-250g.jpg', '2024-03-12 08:22:12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `user_id` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `status` varchar(50) DEFAULT NULL,
+  `date_created` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- --------------------------------------------------------
 
@@ -81,6 +109,7 @@ INSERT INTO `product_list` (`id`, `product_name`, `category`, `price`, `product_
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
   `email_or_phone_number` varchar(255) NOT NULL,
   `full_name` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
@@ -93,8 +122,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email_or_phone_number`, `full_name`, `username`, `password`, `profile_picture`, `date_created`) VALUES
-(1, '09651168472', 'Hya Cynth Dojillo', 'hyacynth', '$2y$10$1ZyN9FbpJg0kWNA2bAfQWOfF/bvEM/Apd2GJitLTBF6iPmoK0BupS', NULL, '2024-03-13 08:17:00');
+INSERT INTO `users` (`id`, `user_id`, `email_or_phone_number`, `full_name`, `username`, `password`, `profile_picture`, `date_created`) VALUES
+(1, 'BFU342966', '09651168472', 'Hya Cynth Dojillo', 'hyacynth', '$2y$10$LA8MNMshGEV/Pt2Iv5kexuNERQB/25yjoyb8cDlBdsvCHg9loq7XW', NULL, '2024-03-21 06:18:48');
 
 --
 -- Indexes for dumped tables
@@ -105,6 +134,12 @@ INSERT INTO `users` (`id`, `email_or_phone_number`, `full_name`, `username`, `pa
 --
 ALTER TABLE `inventory`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- Indexes for table `product_list`
