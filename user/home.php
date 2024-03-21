@@ -104,42 +104,50 @@ unset($_SESSION['logged']);
 
                     <div class="col-lg-3 col-6">
                         <!-- Card with an image on top -->
-                        <div class="card">
-                            <img src="images\default-product-image.png" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Card with an image on top</h5>
-                            </div>
-                        </div><!-- End Card with an image on top -->
+                        <a href="">
+                            <div class="card">
+                                <img src="images\default-product-image.png" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card with an image on top</h5>
+                                </div>
+                            </div><!-- End Card with an image on top -->
+                        </a>
                     </div>
 
                     <div class="col-lg-3 col-6">
                         <!-- Card with an image on top -->
-                        <div class="card">
-                            <img src="images\default-product-image.png" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Card with an image on top</h5>
-                            </div>
-                        </div><!-- End Card with an image on top -->
+                        <a href="">
+                            <div class="card">
+                                <img src="images\default-product-image.png" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card with an image on top</h5>
+                                </div>
+                            </div><!-- End Card with an image on top -->
+                        </a>
                     </div>
 
                     <div class="col-lg-3 col-6">
                         <!-- Card with an image on top -->
-                        <div class="card">
-                            <img src="images\default-product-image.png" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Card with an image on top</h5>
-                            </div>
-                        </div><!-- End Card with an image on top -->
+                        <a href="">
+                            <div class="card">
+                                <img src="images\default-product-image.png" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card with an image on top</h5>
+                                </div>
+                            </div><!-- End Card with an image on top -->
+                        </a>
                     </div>
 
                     <div class="col-lg-3 col-6">
                         <!-- Card with an image on top -->
-                        <div class="card">
-                            <img src="images\default-product-image.png" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Card with an image on top</h5>
-                            </div>
-                        </div><!-- End Card with an image on top -->
+                        <a href="">
+                            <div class="card">
+                                <img src="images\default-product-image.png" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card with an image on top</h5>
+                                </div>
+                            </div><!-- End Card with an image on top -->
+                        </a>
                     </div>
 
                     <div class="d-grid gap-2 d-flex justify-content-end">
@@ -154,19 +162,20 @@ unset($_SESSION['logged']);
             <div class="col-lg-3">
 
                 <h4 class="fw-semibold">Best Sellers</h4>
-
-                <div class="card mb-3" style="max-width: 540px;">
-                    <div class="row g-0">
-                        <div class="col-md-4 col-4">
-                            <img src="images\default-product-image.png" class="card-img-top" alt="...">
-                        </div>
-                        <div class="col-md-8 col-8">
-                            <div class="card-body">
-                                <h5 class="card-title">Card title</h5>
+                <a href="">
+                    <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4 col-4">
+                                <img src="images\default-product-image.png" class="card-img-top" alt="...">
+                            </div>
+                            <div class="col-md-8 col-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
             </div>
 

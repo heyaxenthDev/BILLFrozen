@@ -52,10 +52,13 @@ if (isset($_POST["userSignUp"])) {
     // Encrypt the password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
+    // Generate a unique user id
+    $userId = "BFU" . mt_rand(100000, 999999); // BFU + random 6-digit number
+
     // Insert data into the database
-    $sql = "INSERT INTO users (email_or_phone_number, full_name, username, password) VALUES (?, ?, ?, ?)";
+    $sql = "INSERT INTO users (user_id, email_or_phone_number, full_name, username, password) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssss", $emailOrPhoneNumber, $fullName, $username, $hashedPassword);
+    $stmt->bind_param("sssss", $userId, $emailOrPhoneNumber, $fullName, $username, $hashedPassword);
     $stmt->execute();
 
     // Check if the insertion was successful
@@ -80,6 +83,7 @@ if (isset($_POST["userSignUp"])) {
     // Close the database connection
     $conn->close();
 }
+
 
 if (isset($_POST['userLogin'])) {
     
