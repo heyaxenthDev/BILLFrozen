@@ -21,7 +21,7 @@ include "alert.php";
 
         <li class="nav-item">
             <a class="nav-link " href="orders.php">
-                <i class="bi bi-cart"></i>
+                <i class="bi bi-cart3"></i>
                 <span>Orders</span>
             </a>
         </li><!-- End Orders Page Nav -->
@@ -79,11 +79,14 @@ include "alert.php";
                         <table class="table datatable">
                             <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Position</th>
-                                    <th scope="col">Age</th>
-                                    <th scope="col">Start Date</th>
+                                    <th scope="col">Order Code</th>
+                                    <th scope="col">User ID</th>
+                                    <th scope="col">Order Qty</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Order Date</th>
+                                    <th scope="col">Delivery Date</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Order Status</th>
                                     <th scope="col">Actions</th>
                                 </tr>
                             </thead>
@@ -93,10 +96,21 @@ include "alert.php";
                                     <td>Brandon Jacob</td>
                                     <td>Designer</td>
                                     <td>28</td>
+                                    <td>28</td>
+                                    <td>2016-05-25</td>
+                                    <td>2016-05-25</td>
                                     <td>2016-05-25</td>
                                     <td>
+                                        <a class="btn btn-primary"><i class="bi bi-eye"></i></a>
+
+                                        <!-- if order status is pending { -->
                                         <a class="btn btn-success"><i class="bi bi-check"></i></a>
                                         <a class="btn btn-danger"><i class="bi bi-x"></i></a>
+                                        <!-- } -->
+
+                                        <!-- if order status is for delivery { -->
+                                        <a class="btn btn-success"><i class="bi bi-cart-check"></i></a>
+                                        <!-- } -->
                                     </td>
                                 </tr>
                             </tbody>

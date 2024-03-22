@@ -125,7 +125,7 @@ if (isset($_POST['addInventoryProduct'])) {
         $productStatus = 'Good';
     }
 
-    $query = "INSERT INTO `inventory`(`product_code`, `product_name`, `price`, `category`, `quantity`, `product_status`, `expiry_date`, `product_picture`, `date_created`) VALUES ('$productCode', '$productName', '$price', '$category', '$quantity', '$productStatus', '$expiryDate', '$productPicture', NOW())";
+    $query = 'INSERT INTO `inventory`(`product_code`, `product_name`, `price`, `category`, `quantity`, `product_status`, `expiry_date`, `product_picture`) VALUES ("$productCode", "$productName", "$price", "$category", "$quantity", "$productStatus", "$expiryDate", "$productPicture")';
 
     if (mysqli_query($conn, $query)) {
         $_SESSION['status'] = "Success";

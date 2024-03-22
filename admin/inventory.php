@@ -143,8 +143,7 @@ include "alert.php";
                                     <th scope="col">Product</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">Quantity</th>
-                                    <th scope="col">In</th>
-                                    <th scope="col">Out</th>
+                                    <th scope="col">Sold</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Expiry Date</th>
                                     <th scope="col">Actions</th>
@@ -179,8 +178,7 @@ include "alert.php";
                                         echo "{$row['quantity']}";
                                     }
                                     echo "</td>";
-                                    echo "<td></td>"; // In column
-                                    echo "<td></td>"; // Out column
+                                    echo "<td>{$row['sold']}</td>"; // Sold
                                     echo "<td><span class='badge bg-" . getStatusBadgeClass($row['product_status']) . "'>" . $row['product_status'] . "</span></td>";
                                     echo "<td>{$row['expiry_date']}</td>";  
                                     echo "<td>";

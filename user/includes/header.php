@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Admin - Bill Frozen</title>
+    <title>Bill Frozen</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -35,6 +35,10 @@
     <script src="js/scripts.js"></script>
 
 </head>
+
+<?php 
+$src = "\BILLFrozen/admin/";
+?>
 
 <body>
 
@@ -74,7 +78,7 @@
                 <li class="nav-item dropdown pe-3">
 
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                        <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
+                        <img src="assets/img/user.png" alt="Profile" class="rounded-circle">
                         <span
                             class="d-none d-md-block dropdown-toggle ps-2"><?php echo $_SESSION['user']['username'];?></span>
                     </a><!-- End Profile Iamge Icon -->

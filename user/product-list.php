@@ -7,34 +7,6 @@ include "includes/conn.php";
 include "alert.php";
 
 ?>
-<script src="js/sweetalert2.all.min.js"></script>
-<?php
-if (isset($_SESSION['logged'])) {
-    ?>
-<script type="text/javascript">
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-});
-
-Toast.fire({
-    background: '#53a653',
-    color: '#fff',
-    icon: '<?php echo $_SESSION['logged_icon']; ?>',
-    title: '<?php echo $_SESSION['logged']; ?>'
-});
-</script>
-<?php
-unset($_SESSION['logged']);
-}
-?>
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
 
@@ -74,14 +46,14 @@ unset($_SESSION['logged']);
 
 <main id="main" class="main">
 
-    <section class="p-3">
+    <section class="p-2">
         <div class="row">
-            <div class="col-lg-9 mb-3">
+            <div class="col-lg-12 mb-3">
                 <div class="pagetitle mb-3">
                     <div class="row">
 
-                        <div class="col-md-6 mb-2 ">
-                            <h1>Product List</h1>
+                        <div class="col-md-6 mb-3 ">
+                            <h1><a href="home.php"><i class="ri ri-arrow-left-s-line"></i></a> Product List</h1>
                         </div>
 
                         <div class="col-md-6 mb-2">
@@ -107,7 +79,7 @@ unset($_SESSION['logged']);
                     // Perform database query to fetch product information
                     $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity 
                             FROM product_list pl
-                            JOIN inventory inv ON pl.product_name = inv.product_name LIMIT 4";
+                            JOIN inventory inv ON pl.product_name = inv.product_name";
                     $result = $conn->query($sql);
 
                     // Check if query was successful
@@ -142,33 +114,6 @@ unset($_SESSION['logged']);
                     $conn->close();
                     ?>
                 </div><!-- row end -->
-
-
-                <div class="d-grid gap-2 d-flex justify-content-end">
-                    <a class="btn btn-primary" href="product-list.php">See More <i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
-
-            </div>
-
-            <!-- Best sellers -->
-            <div class="col-lg-3">
-
-                <h4 class="fw-semibold">Best Sellers</h4>
-                <a href="">
-                    <div class="card mb-3" style="max-width: 540px;">
-                        <div class="row g-0">
-                            <div class="col-md-4 col-4">
-                                <img src="images\default-product-image.png" class="card-img-top" alt="...">
-                            </div>
-                            <div class="col-md-8 col-8">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </a>
 
             </div>
 

@@ -129,7 +129,7 @@ include 'includes/conn.php';
     <script src="assets/vendor/php-email-form/validate.js"></script>
 
     <!-- Template Main JS File -->
-    <script src="js/show-password.js"></script>
+    <script src="js/password.js"></script>
 
 </body>
 
