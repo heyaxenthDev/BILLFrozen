@@ -104,43 +104,43 @@ unset($_SESSION['logged']);
                 <!-- Additional content for the product list -->
                 <div class="row">
                     <?php
-                    // Perform database query to fetch product information
-                    $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity 
-                            FROM product_list pl
-                            JOIN inventory inv ON pl.product_name = inv.product_name LIMIT 4";
-                    $result = $conn->query($sql);
+                // Perform database query to fetch product information
+                $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity 
+                        FROM product_list pl
+                        JOIN inventory inv ON pl.product_name = inv.product_name LIMIT 4";
+                $result = $conn->query($sql);
 
-                    // Check if query was successful
-                    if ($result && $result->num_rows > 0) {
-                        // Output data of each row
-                        while ($row = $result->fetch_assoc()) {
-                            ?>
+                // Check if query was successful
+                if ($result && $result->num_rows > 0) {
+                    // Output data of each row
+                    while ($row = $result->fetch_assoc()) {
+                        ?>
                     <div class="col-lg-3 col-6">
                         <!-- Card with an image on top -->
-                        <a href="">
+                        <a href="#" class="product-card" data-product-name="<?php echo $row['product_name']; ?>"
+                            data-category="<?php echo $row['category']; ?>" data-price="<?php echo $row['price']; ?>"
+                            data-quantity="<?php echo $row['quantity']; ?>"
+                            data-product-picture="<?php echo $src.$row['product_picture']; ?>">
                             <div class="card">
                                 <img src="<?php echo $src.$row['product_picture']; ?>" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title"><?php echo $row['product_name']; ?></h5>
                                     <!-- <p class="card-text">Price: <?php echo $row['price']; ?></p>
-                                    <?php if ($row['quantity'] == 0): ?>
-                                    <p class="card-text"><span class="badge bg-danger">Sold Out</span></p>
-                                    <?php else: ?>
-                                    <p class="card-text"><span class="badge bg-success">Available</span></p>
-                                    <?php endif; ?> -->
+                                        <?php if ($row['quantity'] == 0): ?>
+                                            <p class="card-text"><span class="badge bg-danger">Sold Out</span></p>
+                                        <?php else: ?>
+                                            <p class="card-text"><span class="badge bg-success">Available</span></p>
+                                        <?php endif; ?> -->
                                 </div>
                             </div><!-- End Card with an image on top -->
                         </a>
                     </div>
                     <?php
-                        }
-                    } else {
-                        echo "No products found.";
                     }
-
-                    // Close the database connection
-                    $conn->close();
-                    ?>
+                } else {
+                    echo "No products found.";
+                }
+                ?>
                 </div><!-- row end -->
 
 
@@ -152,29 +152,63 @@ unset($_SESSION['logged']);
             </div>
 
             <!-- Best sellers -->
-            <div class="col-lg-3">
 
+
+            <div class="col-lg-3">
                 <h4 class="fw-semibold">Best Sellers</h4>
+                <?php
+            $query = "SELECT `product_name`, SUM(`sold`) AS `total_sold`, `product_picture` FROM `inventory` GROUP BY `product_name` HAVING `total_sold` > 0 ORDER BY `total_sold` DESC LIMIT 1";
+            $result = mysqli_query($conn, $query);
+
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $productName = $row['product_name'];
+                    $totalSold = $row['total_sold'];
+                    $productPicture = $src.$row['product_picture'];
+                    ?>
                 <a href="">
                     <div class="card mb-3" style="max-width: 540px;">
                         <div class="row g-0">
                             <div class="col-md-4 col-4">
-                                <img src="images\default-product-image.png" class="card-img-top" alt="...">
+                                <img src="<?php echo $productPicture; ?>" class="card-img-top" alt="...">
                             </div>
                             <div class="col-md-8 col-8">
                                 <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
+                                    <h5 class="card-title"><?php echo $productName; ?></h5>
+                                    <p>Total Sold: <?php echo $totalSold; ?></p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </a>
+                <?php
+                }
+            }
+
+            ?>
 
             </div>
 
-
         </div>
+
     </section>
+
+    <!-- Offcanvas for product details -->
+    <div class="offcanvas offcanvas-end w-100" tabindex="-1" id="productDetailsOffcanvas">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="productDetailsOffcanvasLabel">Product Details</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body" id="productDetailsBody">
+            <!-- Product details will be dynamically inserted here -->
+            <div class="container product-details-container"></div>
+        </div>
+        <div class="offcanvas-footer">
+            <button type="button" class="btn btn-primary add-to-cart-btn">Add to Cart</button>
+        </div>
+    </div>
+
+
 
 
 

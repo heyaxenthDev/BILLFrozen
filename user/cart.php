@@ -47,7 +47,9 @@ include "alert.php";
 <main id="main" class="main">
 
     <div class="pagetitle mb-3">
-        <h1>Cart</h1>
+        <a href="home.php">
+            <h1><i class="ri ri-arrow-left-s-line"></i> Cart</h1>
+        </a>
     </div><!-- End Page Title -->
 
     <section class="h-100">

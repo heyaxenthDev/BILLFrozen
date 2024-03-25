@@ -64,35 +64,37 @@ include "alert.php";
     </div><!-- End Page Title -->
 
     <section class="section">
-        <div class="row">
 
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+        <div class="row">
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3 col-lg-12 col-5">
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#productList">
                     <i class="bi bi-cart-plus-fill"></i> Add Product</button>
             </div>
+        </div>
 
-            <!-- Add Product Modal -->
-            <div class="modal fade" id="productList" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="productListLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Add New Product</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form action="code.php" method="POST" enctype="multipart/form-data">
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <!-- Product Image Preview -->
-                                        <center>
-                                            <img id="productPreview" src="images/default-product-image.png"
-                                                alt="Product Image Preview" style="max-width: 100%; max-height: 300px;">
-                                        </center>
-                                        <div class="form-floating mb-3">
-                                            <select class="form-select" id="product_name" name="product_name" required>
-                                                <option value="" selected disabled>Select a Product</option>
-                                                <?php
+
+        <!-- Add Product Modal -->
+        <div class="modal fade" id="productList" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="productListLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Add New Product</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="code.php" method="POST" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <!-- Product Image Preview -->
+                                    <center>
+                                        <img id="productPreview" src="images/default-product-image.png"
+                                            alt="Product Image Preview" style="max-width: 100%; max-height: 300px;">
+                                    </center>
+                                    <div class="form-floating mb-3">
+                                        <select class="form-select" id="product_name" name="product_name" required>
+                                            <option value="" selected disabled>Select a Product</option>
+                                            <?php
 
                                                 // Query to fetch product names from the database
                                                 $query = "SELECT * FROM `product_list`";
@@ -104,33 +106,36 @@ include "alert.php";
                                                     echo "<option value='{$row['id']}'>{$row['product_name']}</option>";
                                                 }
                                                 ?>
-                                            </select>
-                                            <label for="product-name">Product Name</label>
-                                        </div>
-
-                                        <div class="form-floating mb-3">
-                                            <input type="number" class="form-control" id="quantity" name="quantity"
-                                                placeholder=" " required>
-                                            <label for="quantity">Quantity</label>
-                                        </div>
-                                        <div class="form-floating mb-3">
-                                            <input type="date" class="form-control" id="expiry-date" name="expiry-date"
-                                                placeholder=" " required>
-                                            <label for="expiry-date">Expiry Date</label>
-                                        </div>
-
+                                        </select>
+                                        <label for="product-name">Product Name</label>
                                     </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input type="number" class="form-control" id="quantity" name="quantity"
+                                            placeholder=" " required>
+                                        <label for="quantity">Quantity</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input type="date" class="form-control" id="expiry-date" name="expiry-date"
+                                            placeholder=" " required>
+                                        <label for="expiry-date">Expiry Date</label>
+                                    </div>
+
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary" name="addInventoryProduct"><i
-                                        class="bi bi-plus"></i> Add
-                                    Product</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary" name="addInventoryProduct"><i
+                                    class="bi bi-plus"></i> Add
+                                Product</button>
+                        </div>
+                    </form>
                 </div>
             </div>
+        </div>
+
+        <div class="row">
+
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">

@@ -65,10 +65,10 @@ include "alert.php";
 
     <section class="section">
         <div class="row mt-4 mb-4">
-            <div class="col-3 d-grid gap-2 d-md-block">
+            <div class="col-lg-3 col-7 d-grid gap-2 d-md-block">
                 <input type="email" class="form-control" id="SearchBar" placeholder="Search Product...">
             </div>
-            <div class="col-9 d-grid gap-2 d-md-flex justify-content-md-end">
+            <div class="col-lg-9 col-5 d-grid gap-2 d-md-flex justify-content-md-end">
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#productList">
                     <i class="bi bi-cart-plus-fill"></i> Add Product</button>
             </div>
@@ -144,7 +144,7 @@ include "alert.php";
                 // Loop through each row
                 while ($row = $result->fetch_assoc()) {
                     ?>
-            <div class="col-lg-2 col-md-2">
+            <div class="col-lg-2 col-6">
                 <!-- Product Card -->
                 <div class="card">
                     <img src="<?php echo $row['product_picture']; ?>" class="card-img-top" alt="...">

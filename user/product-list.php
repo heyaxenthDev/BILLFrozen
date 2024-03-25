@@ -53,7 +53,10 @@ include "alert.php";
                     <div class="row">
 
                         <div class="col-md-6 mb-3 ">
-                            <h1><a href="home.php"><i class="ri ri-arrow-left-s-line"></i></a> Product List</h1>
+                            <a href="home.php">
+                                <h1><i class="ri ri-arrow-left-s-line"></i>
+                                    Product List</h1>
+                            </a>
                         </div>
 
                         <div class="col-md-6 mb-2">
