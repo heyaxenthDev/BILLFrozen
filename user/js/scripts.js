@@ -51,11 +51,14 @@ $(document).ready(function () {
     var productPicture = $(this).data("product-picture");
 
     var html = `
-            <img src="${productPicture}" class="img-fluid mb-2" alt="${productName}">
+            <center>
+            <img src="${productPicture}" class="img-fluid mb-2" alt="${productName}" height="250px">
+            </center>
             <h5>${productName}</h5>
             <p>Category: ${category}</p>
             <p>Price: ${price}</p>
             <p>Quantity: ${quantity}</p>
+            
         `;
 
     $(".product-details-container").html(html);

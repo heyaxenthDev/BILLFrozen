@@ -53,13 +53,16 @@ include "alert.php";
     <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
         aria-controls="offcanvasRight">Toggle right offcanvas</button>
 
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas offcanvas-end w-100" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasRightLabel">Offcanvas right</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <a href="" data-bs-dismiss="offcanvas" aria-label="Close">
+                <h5 class="offcanvas-title" id="offcanvasRightLabel"><i class="ri ri-arrow-left-s-line"></i>
+                </h5>
+            </a>
+            <!-- <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button> -->
         </div>
         <div class="offcanvas-body">
-            ...
+
         </div>
     </div>
 
