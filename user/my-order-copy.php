@@ -50,21 +50,112 @@ include "alert.php";
         <h1></h1>
     </div><!-- End Page Title -->
 
-    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-        aria-controls="offcanvasRight">Toggle right offcanvas</button>
+    <button class="btn btn-primary" type="button" id="toggleButton">Toggle right offcanvas</button>
 
+    <!-- offcanvas -->
     <div class="offcanvas offcanvas-end w-100" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
             <a href="" data-bs-dismiss="offcanvas" aria-label="Close">
-                <h5 class="offcanvas-title" id="offcanvasRightLabel"><i class="ri ri-arrow-left-s-line"></i>
-                </h5>
+                <h5 class="offcanvas-title" id="offcanvasRightLabel"><i class="ri ri-arrow-left-s-line"></i></h5>
             </a>
-            <!-- <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button> -->
         </div>
         <div class="offcanvas-body">
-
+            ...
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body m-4">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <img src="images/default-product-image.png" class="rounded mx-auto d-block img-thumbnail"
+                                alt="...">
+                        </div>
+
+                        <div class="col-md-7">
+                            <h1 class="card-title">Product Name</h1>
+                            <small>Category: Frozen Foods</small><br>
+                            <h2 class="badge text-bg-primary">Price</h2>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-2">
+                                <button class="btn btn-primary w-100" type="button">Buy Now</button>
+                                <button class="btn btn-primary w-100" type="button">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+        let isOffcanvasOpen = false;
+        let isModalOpen = false;
+
+        // Function to toggle the offcanvas or modal based on screen width
+        function toggleOffcanvasOrModal() {
+            const screenWidth = window.innerWidth;
+
+            if (screenWidth <= 1199) {
+                // Toggle offcanvas
+                const offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasRight'));
+                isOffcanvasOpen = !isOffcanvasOpen;
+
+                if (isOffcanvasOpen) {
+                    offcanvas.show();
+                } else {
+                    offcanvas.hide();
+                }
+            } else {
+                // Toggle modal
+                const modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+                isModalOpen = !isModalOpen;
+
+                if (isModalOpen) {
+                    modal.show();
+                } else {
+                    modal.hide();
+                }
+            }
+        }
+
+        // Add click event listener to the button
+        document.getElementById('toggleButton').addEventListener('click', toggleOffcanvasOrModal);
+
+        // Listen for the 'hidden.bs.offcanvas' event and reset the offcanvas state
+        document.getElementById('offcanvasRight').addEventListener('hidden.bs.offcanvas', () => {
+            isOffcanvasOpen = false;
+        });
+
+        // Listen for the 'hidden.bs.modal' event and reset the modal state
+        document.getElementById('staticBackdrop').addEventListener('hidden.bs.modal', () => {
+            isModalOpen = false;
+        });
+
+        // Listen for the window resize event
+        window.addEventListener('resize', () => {
+            if (isOffcanvasOpen) {
+                const offcanvas = new bootstrap.Offcanvas(document.getElementById('offcanvasRight'));
+                offcanvas.hide();
+                isOffcanvasOpen = false;
+            }
+
+            if (isModalOpen) {
+                const modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+                modal.hide();
+                isModalOpen = false;
+            }
+        });
+        </script>
+
 
 
 
