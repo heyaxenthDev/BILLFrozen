@@ -257,7 +257,7 @@ h6 {
 
 .card-title {
   padding: 20px 0 15px 0;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 500;
   color: #010315;
   font-family: "Poppins", sans-serif;
@@ -265,7 +265,7 @@ h6 {
 
 .card-title span {
   color: #899bbd;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
 }
 
@@ -275,6 +275,48 @@ h6 {
 
 .card-img-overlay {
   background-color: rgba(255, 255, 255, 0.6);
+}
+
+.modal-title {
+  padding: 20px 0 15px 0;
+  font-size: 24px;
+  font-weight: 500;
+  color: #010315;
+  font-family: "Poppins", sans-serif;
+}
+
+.modal-title span {
+  color: #899bbd;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+/* Offcanvas */
+.canvas-title {
+  padding: 20px 0 15px 0;
+  font-size: 24px;
+  font-weight: 500;
+  color: #010315;
+  font-family: "Poppins", sans-serif;
+}
+
+.canvas-title span {
+  color: #899bbd;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+/* Quantity Button */
+.quantity-input {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  gap: 2px;
+}
+.quantity-input input {
+  width: 50px;
+  text-align: center;
 }
 
 /* Alerts */
