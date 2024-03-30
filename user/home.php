@@ -78,14 +78,13 @@ if (isset($_SESSION['logged'])) {
         <div class="row">
             <div class="col-lg-9 mb-3">
                 <div class="pagetitle mb-3">
-                    <div class="row">
 
-                        <div class="col-md-6 mb-2 ">
+                    <div class="row">
+                        <div class="col-md-8 mb-2">
                             <h1>Product List</h1>
                         </div>
-
-                        <div class="col-md-6 mb-2">
-                            <div class="gap-2 d-md-flex justify-content-md-end">
+                        <div class="col-md-4 mb-2">
+                            <div class="justify-content-md-end">
                                 <div class="search-bar">
                                     <form class="search-form d-flex align-items-center" method="POST" action="#">
                                         <input type="text" name="query" placeholder="Search" title="Enter search keyword">
@@ -94,9 +93,9 @@ if (isset($_SESSION['logged'])) {
                                 </div><!-- End Search Bar -->
                             </div>
                         </div>
-
                     </div>
                 </div><!-- End Page Title -->
+
 
                 <hr>
 
@@ -104,7 +103,7 @@ if (isset($_SESSION['logged'])) {
                 <div class="row">
                     <?php
                     // Perform database query to fetch product information
-                    $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity 
+                    $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity, inv.product_code 
                         FROM product_list pl
                         JOIN inventory inv ON pl.product_name = inv.product_name LIMIT 4";
                     $result = $conn->query($sql);
@@ -116,8 +115,8 @@ if (isset($_SESSION['logged'])) {
                     ?>
                             <div class="col-lg-3 col-6">
                                 <!-- Card with an image on top -->
-                                <a href="#" id="toggleButton">
-                                    <div class="card">
+                                <a href="#" class="product-link" data-product-id="<?php echo $row['product_code']; ?>">
+                                    <div class="card item">
                                         <img src="<?php echo $src . $row['product_picture']; ?>" class="card-img-top" alt="...">
                                         <div class="card-body">
                                             <h5 class="card-title"><?php echo $row['product_name']; ?></h5>
@@ -155,7 +154,7 @@ if (isset($_SESSION['logged'])) {
             <div class="col-lg-3">
                 <h4 class="fw-semibold">Best Sellers</h4>
                 <?php
-                $query = "SELECT `product_name`, SUM(`sold`) AS `total_sold`, `product_picture` FROM `inventory` GROUP BY `product_name` HAVING `total_sold` > 0 ORDER BY `total_sold` DESC LIMIT 1";
+                $query = "SELECT `product_name`, SUM(`sold`) AS `total_sold`, `product_picture`, `product_code` FROM `inventory` GROUP BY `product_name` HAVING `total_sold` > 0 ORDER BY `total_sold` DESC LIMIT 1";
                 $result = mysqli_query($conn, $query);
 
                 if (mysqli_num_rows($result) > 0) {
@@ -164,9 +163,9 @@ if (isset($_SESSION['logged'])) {
                         $totalSold = $row['total_sold'];
                         $productPicture = $src . $row['product_picture'];
                 ?>
-                        <a href="">
-                            <div class="card mb-3" style="max-width: 540px;">
-                                <div class="row g-0">
+                        <a href="" class="product-link" data-product-id="<?php echo $row['product_code']; ?>">
+                            <div class="card mb-3 item" style="max-width: 540px;">
+                                <div class="row g-0 align-items-center">
                                     <div class="col-md-4 col-4">
                                         <img src="<?php echo $productPicture; ?>" class="card-img-top" alt="...">
                                     </div>
@@ -191,188 +190,110 @@ if (isset($_SESSION['logged'])) {
 
     </section>
 
-    <!-- offcanvas -->
-    <div class="offcanvas offcanvas-end w-100" tabindex="-1" id="offcanvasProduct" aria-labelledby="offcanvasProductLabel">
-        <div class="offcanvas-header">
-            <a href="" data-bs-dismiss="offcanvas" aria-label="Close">
-                <h5 class="offcanvas-title" id="offcanvasProductLabel"><i class="ri ri-arrow-left-s-line"></i>Category
-                    Here</h5>
-            </a>
-        </div>
-        <div class="offcanvas-body m-3">
-            <img src="images/default-product-image.png" class="rounded mx-auto d-block img-thumbnail" alt="...">
-            <div class="row">
-                <div class="col-8">
-                    <h1 class="canvas-title">Product Name</h1>
-                </div>
-                <div class="col-4 text-end canvas-title px-3">
-                    <span class="badge text-bg-primary">Price</span>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-                <div class="col-8 canvas-title">
-                    <span class="mx-2">Quantity</span><br>
-                </div>
-                <div class="col-4 canvas-title px-3">
-                    <div class="quantity-input">
-                        <button class="btn btn-outline-warning decrement-btn">-</button>
-                        <input type="number" class="form-control quantity" name="quantity" value="1">
-                        <button class="btn btn-outline-warning increment-btn">+</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-grid gap-3 d-md-flex justify-content-md-center mt-3">
-                <button class="btn w-100 text-white" type="button" style="background-color: #0f1b48;">Buy Now</button>
-                <button class="btn w-100 text-white" type="button" style="background-color: #029bf1;">Add to
-                    Cart</button>
-            </div>
-        </div>
-
-    </div>
-
     <!-- Modal -->
-    <div class="modal fade" id="modalProduct" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalProductLabel" aria-hidden="true">
+    <div class="modal fade" id="modalProduct" tabindex="-1" aria-labelledby="modalProductLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="d-grid d-md-flex justify-content-md-end px-3 py-3">
                     <button type="button" class="btn-close btn-lg" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body m-3 pb-4">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <img src="images/default-product-image.png" class="rounded mx-auto d-block img-thumbnail" alt="...">
-                        </div>
-
-                        <div class="col-md-7">
-                            <h1 class="modal-title">Product Name</h1>
-                            <small>Category: Frozen Foods</small><br>
-                            <h2 class="modal-title"><span class="badge text-bg-primary">Price</span></h2>
-
-                            <div class="row">
-                                <div class="col-8 modal-title">
-                                    <span class="mx-3">Quantity</span><br>
-                                </div>
-                                <div class="col-4 modal-title px-3">
-                                    <div class="quantity-input">
-                                        <button class="btn btn-outline-warning decrement-btn">-</button>
-                                        <input type="number" class="form-control quantity" name="quantity" value="1">
-                                        <button class="btn btn-outline-warning increment-btn">+</button>
-                                    </div>
-                                </div>
+                <form action="code.php" method="POST">
+                    <div class=" modal-body m-4 pb-4">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <img id="modalImage" src="" class="rounded mx-auto d-block img-thumbnail" alt="Product Image">
                             </div>
 
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-2 mb-2">
-                                <button class="btn w-100 text-white" type="button" style="background-color: #0f1b48;">Buy
-                                    Now</button>
-                                <button class="btn w-100 text-white" type="button" style="background-color: #029bf1;">Add
-                                    to
-                                    Cart</button>
+                            <div class="col-md-7">
+                                <div class="row">
+                                    <div class="col-9">
+                                        <h1 class="modal-title" id="modalProductName">Product Name</h1>
+                                        <input type="hidden" name="product_name" id="modProductName" value="">
+                                        <input type="hidden" name="product_code" id="productCode" value="">
+                                    </div>
+                                    <div class="col-3">
+                                        <h2 class="modal-title"><span class="badge text-bg-primary" id="modalPrice">Price</span>
+                                    </div>
+                                </div>
+
+                                <small id="modalCategory">Category: Frozen Foods</small><br>
+                                </h2>
+
+                                <div class="row">
+                                    <div class="col-8 modal-title">
+                                        <span class="mx-3">Quantity</span><br>
+                                    </div>
+                                    <div class="col-4 modal-title px-3">
+                                        <div class="input-group">
+                                            <button class="btn btn-outline-warning decrement-btn">-</button>
+                                            <input type="number" class="form-control quantity" name="quantity" value="1">
+                                            <button class="btn btn-outline-warning increment-btn">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid gap-3 d-md-flex justify-content-md-center mt-3">
+                                    <a class="btn w-100 text-white" href="checkout.php" role="button" style="background-color: #0f1b48;">Buy
+                                        Now</a>
+                                    <button class="btn w-100 text-white" type="submit" name="AddtoCartBtn" style="background-color: #029bf1;">Add
+                                        to
+                                        Cart</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                </div>
+                </form>
             </div>
         </div>
+    </div>
 
+    <!-- offcanvas -->
+    <div class="offcanvas offcanvas-end w-100" data-bs-scroll="true" data-bs-backdrop="static" tabindex="-1" id="offcanvasProduct" aria-labelledby="offcanvasProductLabel">
+        <div class="offcanvas-header">
+            <a href="" data-bs-dismiss="offcanvas" aria-label="Close">
+                <h5 class="offcanvas-title fw-bold" id="offcanvasCategory"></h5>
+            </a>
+        </div>
+        <form action="code.php" method="POST">
+            <div class="offcanvas-body m-3">
+                <img id="offcanvasImage" src="" class="rounded mx-auto d-block img-thumbnail" alt="...">
 
+                <div class="row">
+                    <div class="col-8">
+                        <h1 class="canvas-title" id="offcanvasProductName">Product Name</h1>
+                        <input type="hidden" name="product_name" id="offProductName" value="">
+                        <input type="hidden" name="product_code" id="offproductCode" value="">
+                    </div>
+                    <div class="col-4 text-end canvas-title px-3">
+                        <span class="badge text-bg-primary" id="offcanvasPrice">Price</span>
+                    </div>
+                </div>
 
+                <div class="row mt-2">
+                    <div class="col-7">
+                        <span class="mx-2">Quantity</span><br>
+                    </div>
+                    <div class="col-5 px-3">
+                        <div class="input-group">
+                            <button class="btn btn-outline-warning decrement-btn">-</button>
+                            <input type="number" class="form-control quantity" name="quantity" value="1">
+                            <button class="btn btn-outline-warning increment-btn">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-3 d-md-flex justify-content-md-center mt-3">
+                    <a class="btn w-100 text-white" href="checkout.php" role="button" style="background-color: #0f1b48;">Buy
+                        Now</a>
+                    <button class="btn w-100 text-white" type="submit" name="AddtoCartBtn" style="background-color: #029bf1;">Add
+                        to
+                        Cart</button>
+                </div>
+            </div>
+        </form>
+    </div>
 
 </main><!-- End #main -->
-
-<script>
-    let isOffcanvasOpen = false;
-    let isModalOpen = false;
-
-    // Function to toggle the offcanvas or modal based on screen width
-    function toggleOffcanvasOrModal() {
-        const screenWidth = window.innerWidth;
-
-        if (screenWidth <= 1199) {
-            // Toggle offcanvas
-            const offcanvas = new bootstrap.Offcanvas(
-                document.getElementById("offcanvasProduct")
-            );
-            isOffcanvasOpen = !isOffcanvasOpen;
-
-            if (isOffcanvasOpen) {
-                offcanvas.show();
-            } else {
-                offcanvas.hide();
-            }
-        } else {
-            // Toggle modal
-            const modal = new bootstrap.Modal(
-                document.getElementById("modalProduct")
-            );
-            isModalOpen = !isModalOpen;
-
-            if (isModalOpen) {
-                modal.show();
-            } else {
-                modal.hide();
-            }
-        }
-    }
-
-    // Add click event listener to the button
-    document
-        .getElementById("toggleButton")
-        .addEventListener("click", toggleOffcanvasOrModal);
-
-    // Listen for the 'hidden.bs.offcanvas' event and reset the offcanvas state
-    document
-        .getElementById("offcanvasProduct")
-        .addEventListener("hidden.bs.offcanvas", () => {
-            isOffcanvasOpen = false;
-        });
-
-    // Listen for the 'hidden.bs.modal' event and reset the modal state
-    document
-        .getElementById("modalProduct")
-        .addEventListener("hidden.bs.modal", () => {
-            isModalOpen = false;
-        });
-
-    // Listen for the window resize event
-    window.addEventListener("resize", () => {
-        if (isOffcanvasOpen) {
-            const offcanvas = new bootstrap.Offcanvas(
-                document.getElementById("offcanvasProduct")
-            );
-            offcanvas.hide();
-            isOffcanvasOpen = false;
-        }
-
-        if (isModalOpen) {
-            const modal = new bootstrap.Modal(
-                document.getElementById("modalProduct")
-            );
-            modal.hide();
-            isModalOpen = false;
-        }
-    });
-
-    $(document).ready(function() {
-        $(".increment-btn").click(function(e) {
-            e.preventDefault();
-            var quantityInput = $(this).siblings(".quantity");
-            var currentValue = parseInt(quantityInput.val());
-            quantityInput.val(currentValue + 1);
-        });
-
-        $(".decrement-btn").click(function(e) {
-            e.preventDefault();
-            var quantityInput = $(this).siblings(".quantity");
-            var currentValue = parseInt(quantityInput.val());
-            if (currentValue > 1) {
-                quantityInput.val(currentValue - 1);
-            }
-        });
-    });
-</script>
 
 <?php
 include 'includes/footer.php';

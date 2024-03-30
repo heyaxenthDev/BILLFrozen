@@ -50,6 +50,10 @@ include "alert.php";
         <h1></h1>
     </div><!-- End Page Title -->
 
+    <a class="btn btn-primary" id="product">
+        Test Button
+    </a>
+
     <button class="btn btn-primary" type="button" id="toggleButton">Toggle right offcanvas</button>
 
     <!-- offcanvas -->
@@ -143,100 +147,80 @@ include "alert.php";
         </div>
 
 
-
-
 </main><!-- End #main -->
 
 <script>
-let isOffcanvasOpen = false;
-let isModalOpen = false;
+// let isOffcanvasOpen = false;
+// let isModalOpen = false;
 
-// Function to toggle the offcanvas or modal based on screen width
-function toggleOffcanvasOrModal() {
-    const screenWidth = window.innerWidth;
+// // Function to toggle the offcanvas or modal based on screen width
+// function toggleOffcanvasOrModal() {
+//     const screenWidth = window.innerWidth;
 
-    if (screenWidth <= 1199) {
-        // Toggle offcanvas
-        const offcanvas = new bootstrap.Offcanvas(
-            document.getElementById("offcanvasRight")
-        );
-        isOffcanvasOpen = !isOffcanvasOpen;
+//     if (screenWidth <= 1199) {
+//         // Toggle offcanvas
+//         const offcanvas = new bootstrap.Offcanvas(
+//             document.getElementById("offcanvasRight")
+//         );
+//         isOffcanvasOpen = !isOffcanvasOpen;
 
-        if (isOffcanvasOpen) {
-            offcanvas.show();
-        } else {
-            offcanvas.hide();
-        }
-    } else {
-        // Toggle modal
-        const modal = new bootstrap.Modal(
-            document.getElementById("staticBackdrop")
-        );
-        isModalOpen = !isModalOpen;
+//         if (isOffcanvasOpen) {
+//             offcanvas.show();
+//         } else {
+//             offcanvas.hide();
+//         }
+//     } else {
+//         // Toggle modal
+//         const modal = new bootstrap.Modal(
+//             document.getElementById("staticBackdrop")
+//         );
+//         isModalOpen = !isModalOpen;
 
-        if (isModalOpen) {
-            modal.show();
-        } else {
-            modal.hide();
-        }
-    }
-}
+//         if (isModalOpen) {
+//             modal.show();
+//         } else {
+//             modal.hide();
+//         }
+//     }
+// }
 
-// Add click event listener to the button
-document
-    .getElementById("toggleButton")
-    .addEventListener("click", toggleOffcanvasOrModal);
+// // Add click event listener to the button
+// document
+//     .getElementById("toggleButton")
+//     .addEventListener("click", toggleOffcanvasOrModal);
 
-// Listen for the 'hidden.bs.offcanvas' event and reset the offcanvas state
-document
-    .getElementById("offcanvasRight")
-    .addEventListener("hidden.bs.offcanvas", () => {
-        isOffcanvasOpen = false;
-    });
+// // Listen for the 'hidden.bs.offcanvas' event and reset the offcanvas state
+// document
+//     .getElementById("offcanvasRight")
+//     .addEventListener("hidden.bs.offcanvas", () => {
+//         isOffcanvasOpen = false;
+//     });
 
-// Listen for the 'hidden.bs.modal' event and reset the modal state
-document
-    .getElementById("staticBackdrop")
-    .addEventListener("hidden.bs.modal", () => {
-        isModalOpen = false;
-    });
+// // Listen for the 'hidden.bs.modal' event and reset the modal state
+// document
+//     .getElementById("staticBackdrop")
+//     .addEventListener("hidden.bs.modal", () => {
+//         isModalOpen = false;
+//     });
 
 // Listen for the window resize event
-window.addEventListener("resize", () => {
-    if (isOffcanvasOpen) {
-        const offcanvas = new bootstrap.Offcanvas(
-            document.getElementById("offcanvasRight")
-        );
-        offcanvas.hide();
-        isOffcanvasOpen = false;
-    }
+// window.addEventListener("resize", () => {
+//     if (isOffcanvasOpen) {
+//         const offcanvas = new bootstrap.Offcanvas(
+//             document.getElementById("offcanvasRight")
+//         );
+//         offcanvas.hide();
+//         isOffcanvasOpen = false;
+//     }
 
-    if (isModalOpen) {
-        const modal = new bootstrap.Modal(
-            document.getElementById("staticBackdrop")
-        );
-        modal.hide();
-        isModalOpen = false;
-    }
-});
-
-$(document).ready(function() {
-    $(".increment-btn").click(function(e) {
-        e.preventDefault();
-        var quantityInput = $(this).siblings(".quantity");
-        var currentValue = parseInt(quantityInput.val());
-        quantityInput.val(currentValue + 1);
-    });
-
-    $(".decrement-btn").click(function(e) {
-        e.preventDefault();
-        var quantityInput = $(this).siblings(".quantity");
-        var currentValue = parseInt(quantityInput.val());
-        if (currentValue > 1) {
-            quantityInput.val(currentValue - 1);
-        }
-    });
-});
+//     if (isModalOpen) {
+//         const modal = new bootstrap.Modal(
+//             document.getElementById("staticBackdrop")
+//         );
+//         modal.hide();
+//         isModalOpen = false;
+//     }
+// });
 </script>
 
 <?php
