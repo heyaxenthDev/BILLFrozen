@@ -269,38 +269,9 @@ h6 {
   font-weight: 400;
 }
 
-.item .card-title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 20px 0 15px 0;
-  font-size: 18px;
-  font-weight: 500;
-  color: #010315;
-  font-family: "Poppins", sans-serif;
-  transition: text-indent 0.5s ease-in-out;
-  text-indent: 0;
-}
-
-.item .card-title:hover {
-  animation: slide-text 5s linear infinite;
-  text-indent: 0; /* Ensures text is not indented when animation ends */
-}
-
-@keyframes slide-text {
-  0% {
-    text-indent: 0;
-  }
-  50% {
-    text-indent: -100%;
-  }
-  100% {
-    text-indent: 0;
-  }
-}
-
 @media (max-width: 767px) {
   .item .card-title {
+    padding: 20px 0 10px 0;
     font-size: 18px;
     padding: 15px 0;
   }
@@ -312,7 +283,9 @@ h6 {
 
 @media (max-width: 575px) {
   .item .card-title {
-    font-size: 16px;
+    padding: 20px 0 5px 0;
+    font-size: 14px;
+    
   }
 
   .item .card-title span {
