@@ -157,10 +157,10 @@ include "alert.php";
                                 </h2>
 
                                 <div class="row">
-                                    <div class="col-8 modal-title">
+                                    <div class="col-7 modal-title">
                                         <span class="mx-3">Quantity</span><br>
                                     </div>
-                                    <div class="col-4 modal-title px-3">
+                                    <div class="col-5 modal-title px-3">
                                         <div class="input-group">
                                             <button class="btn btn-outline-warning decrement-btn">-</button>
                                             <input type="number" class="form-control quantity" name="quantity"

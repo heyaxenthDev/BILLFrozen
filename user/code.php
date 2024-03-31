@@ -22,7 +22,7 @@ if (isset($_POST['AddtoCartBtn'])) {
         $new_quantity = $row['added_quantity'] + $quantity;
         $update_query = "UPDATE `cart` SET `added_quantity` = ? WHERE `user_id` = ? AND `product_code` = ? AND `product_name` = ?";
         $update_stmt = mysqli_prepare($conn, $update_query);
-        mysqli_stmt_bind_param($update_stmt, "iiss", $new_quantity, $user_id, $product_code, $product_name);
+        mysqli_stmt_bind_param($update_stmt, "isss", $new_quantity, $user_id, $product_code, $product_name);
         mysqli_stmt_execute($update_stmt);
         $_SESSION['cart'] = "success";
         $_SESSION['cart_text'] = "Item quantity updated in cart.";
@@ -41,4 +41,25 @@ if (isset($_POST['AddtoCartBtn'])) {
     // mysqli_stmt_close($insert_stmt);
     header("Location: {$_SERVER['HTTP_REFERER']}");
     exit();
+}
+
+// Check if product code is provided in the POST request
+if (isset($_POST['product_code'])) {
+    $productCode = $_POST['product_code'];
+
+    // Prepare a delete statement
+    $stmt = $conn->prepare("DELETE FROM cart WHERE product_code = ?");
+    $stmt->bind_param("s", $productCode);
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "Item deleted successfully";
+    } else {
+        echo "Error deleting item: " . $conn->error;
+    }
+
+    // Close the statement
+    $stmt->close();
+} else {
+    echo "Product code not provided";
 }

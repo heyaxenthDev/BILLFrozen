@@ -255,6 +255,39 @@ h6 {
   }
 }
 
+@media (min-width: 1199px) {
+  #product-user .card-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 20px 0 15px 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: #010315;
+    font-family: "Poppins", sans-serif;
+    transition: text-indent 0.5s ease-in-out;
+    text-indent: 0;
+  }
+
+  #product-user .card-title:hover {
+    animation: slide-text 5s linear infinite;
+    text-indent: 0; /* Ensures text is not indented when animation ends */
+  }
+
+  #product-user .small-title {
+    font-size: 1rem; /* Font size for longer text */
+  }
+
+  @keyframes slide-text {
+    0% {
+      text-indent: 0;
+    }
+    100% {
+      text-indent: -100%; /* Slide text to the left */
+    }
+  }
+}
+
 .card-title {
   padding: 20px 0 15px 0;
   font-size: 20px;
@@ -285,7 +318,6 @@ h6 {
   .item .card-title {
     padding: 20px 0 5px 0;
     font-size: 14px;
-    
   }
 
   .item .card-title span {

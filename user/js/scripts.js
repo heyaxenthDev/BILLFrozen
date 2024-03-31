@@ -21,7 +21,7 @@ $(document).ready(function () {
     const screenWidth = window.innerWidth;
     if (productLinks) {
       productLinks.forEach((product) => {
-        if (screenWidth <= 1199) {
+        if (screenWidth <= 530) {
           product.setAttribute("data-bs-toggle", "offcanvas");
           product.setAttribute("data-bs-target", "#offcanvasProduct");
           product.setAttribute("aria-controls", "offcanvasProduct");
@@ -76,7 +76,7 @@ $(document).ready(function () {
       "\\BillFrozen\\admin\\" + product.product_picture
     );
     $("#modalProductName").text(product.product_name);
-    $("#modProductName").text(product.product_name);
+    $("#modProductName").val(product.product_name);
     $("#productCode").val(product.product_code);
     $("#modalCategory").text("Category: " + product.category);
     $("#modalPrice").text("₱" + product.price);
@@ -98,3 +98,5 @@ $(document).ready(function () {
     $("#offcanvasQuantity").text("Quantity: " + product.quantity);
   }
 });
+
+
