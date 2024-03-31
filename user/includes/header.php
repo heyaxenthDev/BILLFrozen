@@ -1,3 +1,6 @@
+<?php
+include "includes/conn.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,7 +39,7 @@
 
 </head>
 
-<?php 
+<?php
 $src = "\BILLFrozen/admin/";
 ?>
 
@@ -67,10 +70,24 @@ $src = "\BILLFrozen/admin/";
                 </li><!-- End Notification Nav -->
 
                 <li class="nav-item dropdown">
+                    <?php
+                    // Assuming you have already started the session and connected to the database
+                    // Fetch cart items count
+                    $count_query = "SELECT COUNT(added_quantity) AS total_items FROM cart WHERE 1";
+                    $count_result = mysqli_query($conn, $count_query);
 
-                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                    if ($count_result && mysqli_num_rows($count_result) > 0) {
+                        $count_row = mysqli_fetch_assoc($count_result);
+                        $total_items = $count_row['total_items'];
+                    } else {
+                        // Handle error or no items in cart
+                        $total_items = 0;
+                    }
+                    ?>
+
+                    <a class="nav-link nav-icon" href="cart.php">
                         <i class="bi bi-cart"></i>
-                        <span class="badge bg-success badge-number">3</span>
+                        <span class="badge bg-success badge-number"><?= $total_items ?></span>
                     </a><!-- End Messages Icon -->
 
                 </li><!-- End Messages Nav -->
@@ -80,16 +97,16 @@ $src = "\BILLFrozen/admin/";
                     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                         <img src="assets/img/user.png" alt="Profile" class="rounded-circle">
                         <span
-                            class="d-none d-md-block dropdown-toggle ps-2"><?php echo $_SESSION['user']['username'];?></span>
+                            class="d-none d-md-block dropdown-toggle ps-2"><?php echo $_SESSION['user']['username']; ?></span>
                     </a><!-- End Profile Iamge Icon -->
 
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                         <li class="dropdown-header">
-                            <?php 
-                            
-                            echo "<h6>".$_SESSION['user']['name']."</h6>";
-                            echo "<span>".$_SESSION['user']['email_phone']."</span>";
-                            
+                            <?php
+
+                            echo "<h6>" . $_SESSION['user']['name'] . "</h6>";
+                            echo "<span>" . $_SESSION['user']['email_phone'] . "</span>";
+
                             ?>
                         </li>
                         <li>

@@ -2,8 +2,6 @@
 include 'authentication.php';
 include_once 'includes/header.php';
 
-include "includes/conn.php";
-
 include "alert.php";
 
 ?>

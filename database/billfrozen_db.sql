@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 30, 2024 at 04:25 PM
+-- Generation Time: Mar 31, 2024 at 07:29 PM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -41,10 +41,11 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`user_id`, `username`, `product_code`, `product_name`, `added_quantity`, `date_created`) VALUES
-('BFU342966', 'hyacynth', 'PROD779539', 'Tender Juicy - 1kg', 4, '2024-03-30 14:45:48'),
-('BFU342966', 'hyacynth', 'PROD346792', 'Magnolia Whole Chicken', 3, '2024-03-30 14:45:54'),
-('BFU342966', 'hyacynth', 'PROD863845', 'Pampanga`s Best - Sisig', 2, '2024-03-30 14:47:47'),
-('BFU342966', 'hyacynth', 'PROD291373', 'CDO - Funtastyk Young Pork', 1, '2024-03-30 14:58:45');
+('BFU342966', 'hyacynth', 'PROD346792', 'Magnolia Whole Chicken', 4, '2024-03-31 06:09:56'),
+('BFU342966', 'hyacynth', 'PROD291373', 'CDO - Funtastyk Young Pork', 1, '2024-03-31 06:09:58'),
+('BFU342966', 'hyacynth', 'PROD283520', 'Mekeni - Kikiam', 1, '2024-03-31 06:10:01'),
+('BFU342966', 'hyacynth', 'PROD779539', 'Tender Juicy - 1kg', 2, '2024-03-31 06:10:03'),
+('BFU342966', 'hyacynth', 'PROD863845', 'Pampanga`s Best - Sisig', 3, '2024-03-31 06:10:07');
 
 -- --------------------------------------------------------
 
@@ -100,6 +101,8 @@ CREATE TABLE `notifications` (
 CREATE TABLE `orders` (
   `order_code` varchar(255) NOT NULL,
   `user_id` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `contact` varchar(255) NOT NULL,
   `product_code` varchar(255) NOT NULL,
   `product_name` varchar(255) NOT NULL,
   `quantity` int(11) NOT NULL,

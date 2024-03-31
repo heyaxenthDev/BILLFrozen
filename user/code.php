@@ -63,3 +63,39 @@ if (isset($_POST['product_code'])) {
 } else {
     echo "Product code not provided";
 }
+
+if (isset($_POST['checkOutBtn'])) {
+    // Generate the order code (you can use any method to generate this)
+    $order_code = generate_order_code(); // Function to generate order code
+
+    // Prepare and bind the statement
+    $stmt = $conn->prepare("INSERT INTO orders (order_code, quantity, product_name, total_price) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("siss", $order_code, $quantity, $product_name, $total_price);
+
+    // Set parameters and execute
+    $total_items = $_POST["total_items"];
+    $quantity = $_POST["quantity"];
+    $product_name = $_POST["product_name"];
+    $total_price = $_POST["total_price"];
+    // Add other necessary fields
+
+    if ($stmt->execute()) {
+        header ("Location: check-out.php?Order=".$order_code."&Items=".$total_items."&Price=".$total_price);
+    } else {
+        $_SESSION['status'] = "Failed!";
+        $_SESSION['status_text'] = "Error: " . $stmt->error;
+        $_SESSION['status_code'] = "error";
+        $_SESSION['status_btn'] = "ok";
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+    }
+
+    // Close statement and connection
+    $stmt->close();
+    $conn->close();
+}
+
+function generate_order_code()
+{
+    // Generate your order code here (e.g., using timestamp and random numbers)
+    return "ORD" . date("YmdHis") . rand(1000, 9999);
+}

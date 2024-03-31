@@ -8,10 +8,8 @@ if (!isset($_SESSION['user_auth'])) {
     $_SESSION['status_text'] = "Please Login to Access the Page";
     $_SESSION['status_code'] = "warning";
     $_SESSION['status_btn'] = "Back";
-    
+
     // Redirect to login page
-    header("Location: {$_SERVER['HTTP_REFERER']}");
+    header("Location: /BILLFrozen/index.php");
     exit; // Exit script to prevent further execution
 }
-
-?>
