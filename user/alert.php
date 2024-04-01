@@ -1,6 +1,4 @@
 <script src="js/sweetalert.min.js"></script>
-<script src="js/sweetalert2.all.min.js"></script>
-
 <?php
 if (isset($_SESSION['status'])) {
 ?>
@@ -17,6 +15,8 @@ swal({
     unset($_SESSION['status']);
 }
 ?>
+
+<script src="js/sweetalert2.all.min.js"></script>
 
 <?php
 if (isset($_SESSION['cart'])) {

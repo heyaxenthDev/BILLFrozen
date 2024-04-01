@@ -50,7 +50,7 @@ include "alert.php";
 
     <section class="p-2">
         <div class="row justify-content-center">
-            <div class="col-lg-6 col-md-6">
+            <div class="col-lg-6 col-md-6 col-12">
                 <!-- Checkout Card -->
                 <div class="card">
                     <a href="">
@@ -83,11 +83,14 @@ include "alert.php";
                             <hr class="text-primary">
 
                             <h6 class="card-subtitle mb-2 mt-3 text-muted fw-semibold">Order Summary</h6>
+                            <?php
+                            if (isset($_SESSION['order_items'])) {
+                            ?>
                             <ul class="list-group list-group-flush">
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                                     Items (<?php echo $_GET['Items'] ?>)
-                                    <span>₱<?php echo $_GET['Price'] ?></span> <!-- Display total price -->
+                                    <span>₱<?php echo $_GET['Price'] ?></span> <!-- Display total items -->
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     Order Code
@@ -106,12 +109,55 @@ include "alert.php";
                                 </li>
                             </ul>
 
+                            <div class="d-grid gap-2 col-md-6 mt-3 mx-auto">
+                                <button class="btn text-white" type="submit" name="placeOrder"
+                                    style="background-color: #0f1b48;">Place
+                                    Order</button>
+                            </div>
+
+                            <?php
+                            } else {
+                            ?>
+                            <ul class="list-group list-group-flush">
+                                <li
+                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                    Order Code
+                                    <span><?php echo $_SESSION['order']['order_code'] ?></span>
+                                </li>
+                                <li
+                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                    Product Name
+                                    <small><?php echo $_SESSION['order']['product_name'] ?></small>
+                                </li>
+                                <li
+                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                    Unit Price
+                                    <small>₱<?php echo $_SESSION['order']['price'] ?></small>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    Qty.
+                                    <small><?php echo $_SESSION['order']['quantity'] ?></small>
+                                </li>
+                                <li
+                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                    <div>
+                                        <strong>Total amount</strong>
+                                        <strong>
+                                            <p class="mb-0">(including VAT)</p>
+                                        </strong>
+                                    </div>
+                                    <span><strong>₱<?php echo (number_format($_SESSION['order']['total_price'], 2)) ?></strong></span>
+                                    <!-- Display total price -->
+                                </li>
+                            </ul>
 
                             <div class="d-grid gap-2 col-md-6 mt-3 mx-auto">
                                 <button class="btn text-white" type="submit" name="placeOrderBtn"
                                     style="background-color: #0f1b48;">Place
                                     Order</button>
                             </div>
+                            <?php
+                            } ?>
 
                         </div>
                     </form>

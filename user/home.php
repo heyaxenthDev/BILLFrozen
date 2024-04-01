@@ -215,6 +215,8 @@ Toast.fire({
                                     <div class="col-3">
                                         <h2 class="modal-title"><span class="badge text-bg-primary"
                                                 id="modalPrice">Price</span>
+                                            <input type="hidden" name="price" id="modalPriceRaw" value="">
+
                                     </div>
                                 </div>
 
@@ -236,9 +238,9 @@ Toast.fire({
                                 </div>
 
                                 <div class="d-grid gap-3 d-md-flex justify-content-md-center mt-3">
-                                    <a class="btn w-100 text-white" href="checkout.php" role="button"
+                                    <button class="btn w-100 text-white" type="submit" name="BuyNowBtn"
                                         style="background-color: #0f1b48;">Buy
-                                        Now</a>
+                                        Now</button>
                                     <button class="btn w-100 text-white" type="submit" name="AddtoCartBtn"
                                         style="background-color: #029bf1;">Add
                                         to
@@ -272,6 +274,7 @@ Toast.fire({
                     </div>
                     <div class="col-4 text-end canvas-title px-3">
                         <span class="badge text-bg-primary" id="offcanvasPrice">Price</span>
+                        <input type="hidden" name="price" id="offcanvasPriceRaw" value="">
                     </div>
                 </div>
 
@@ -289,9 +292,9 @@ Toast.fire({
                 </div>
 
                 <div class="d-grid gap-3 d-md-flex justify-content-md-center mt-3">
-                    <a class="btn w-100 text-white" href="checkout.php" role="button"
+                    <button class="btn w-100 text-white" type="submit" name="BuyNowBtn"
                         style="background-color: #0f1b48;">Buy
-                        Now</a>
+                        Now</button>
                     <button class="btn w-100 text-white" type="submit" name="AddtoCartBtn"
                         style="background-color: #029bf1;">Add
                         to

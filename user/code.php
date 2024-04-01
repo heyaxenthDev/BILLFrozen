@@ -43,59 +43,135 @@ if (isset($_POST['AddtoCartBtn'])) {
     exit();
 }
 
-// Check if product code is provided in the POST request
-if (isset($_POST['product_code'])) {
-    $productCode = $_POST['product_code'];
+if (isset($_POST['BuyNowBtn'])) {
+    // Generate a unique order code
+    $order_code = "ORD" . date("m-d-Y") . rand(1000, 9999);
 
-    // Prepare a delete statement
-    $stmt = $conn->prepare("DELETE FROM cart WHERE product_code = ?");
-    $stmt->bind_param("s", $productCode);
+    $total_price = $_POST['quantity'] * $_POST['price'];
+
+    $_SESSION['order'] = [
+        'product_code' => $_POST['product_code'],
+        'product_name' => $_POST['product_name'],
+        'quantity' => $_POST['quantity'],
+        'price' => $_POST['price'],
+        'order_code' => $order_code,
+        'total_price' => $total_price
+    ];
+    header("Location: check-out.php");
+    exit();
+}
+
+if (isset($_POST['placeOrderBtn'])) {
+    // Assuming you have already sanitized the input data
+    $order_code = $_SESSION['order']['order_code'];
+    $user_id = $_SESSION['user']['user_id'];
+    $name = $_POST['name'];
+    $contact = $_POST['contact'];
+    $product_code = $_SESSION['order']['product_code'];
+    $product_name = $_SESSION['order']['product_name'];
+    $quantity = $_SESSION['order']['quantity'];
+    $total_price = $_SESSION['order']['total_price'];
+    $delivery_address = $_POST['brgy'] . ', ' . $_POST['municipality'] . ', ' . $_POST['zip'];
+    $order_status = 'Pending'; // Assuming the default order status is 'Pending'
+
+    // Prepare the statement
+    $stmt = $conn->prepare("INSERT INTO `orders` (`order_code`, `user_id`, `name`, `contact`, `product_code`, `product_name`, `quantity`, `total_price`, `delivery_address`, `order_status`) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    // Bind parameters
+    $stmt->bind_param("ssssssidss", $order_code, $user_id, $name, $contact, $product_code, $product_name, $quantity, $total_price, $delivery_address, $order_status);
 
     // Execute the statement
     if ($stmt->execute()) {
-        echo "Item deleted successfully";
+        $_SESSION['status'] = "Success!";
+        $_SESSION['status_text'] = "Your order has been placed successfully!";
+        $_SESSION['status_code'] = "success";
+        $_SESSION['status_btn'] = "Continue";
+        unset($_SESSION['order']);
+        header("Location: home.php");
+        // echo "Order placed successfully!";
     } else {
-        echo "Error deleting item: " . $conn->error;
+        $_SESSION['status'] = "Error";
+        $_SESSION['status_text'] = "Error: " . $stmt->error;
+        $_SESSION['status_code'] = "error";
+        $_SESSION['status_btn'] = "Back";
+        // echo "Error: " . $stmt->error;
+        header("Location: cart.php");
     }
+    exit();
+}
 
-    // Close the statement
-    $stmt->close();
-} else {
-    echo "Product code not provided";
+// Initialize the session variable if it doesn't exist
+if (!isset($_SESSION['order_items'])) {
+    $_SESSION['order_items'] = array();
 }
 
 if (isset($_POST['checkOutBtn'])) {
-    // Generate the order code (you can use any method to generate this)
-    $order_code = generate_order_code(); // Function to generate order code
+    // Process each cart item
+    $order_code = "ORD" . date("m-d-Y") . rand(1000, 9999);
 
-    // Prepare and bind the statement
-    $stmt = $conn->prepare("INSERT INTO orders (order_code, quantity, product_name, total_price) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("siss", $order_code, $quantity, $product_name, $total_price);
+    $_SESSION['cart'] = [
+        'price_summary' => $_POST['price_summary'],
+        'total_items' => $_POST['total_items'],
+        'order_code' => $order_code
+    ];
 
-    // Set parameters and execute
-    $total_items = $_POST["total_items"];
-    $quantity = $_POST["quantity"];
-    $product_name = $_POST["product_name"];
-    $total_price = $_POST["total_price"];
-    // Add other necessary fields
+    foreach ($_POST['product_code'] as $key => $product_code) {
+        $product_name = $_POST['product_name'][$key];
+        $quantity = $_POST['quantity'][$key];
+        $price = $_POST['price'][$key];
 
-    if ($stmt->execute()) {
-        header ("Location: check-out.php?Order=".$order_code."&Items=".$total_items."&Price=".$total_price);
-    } else {
-        $_SESSION['status'] = "Failed!";
-        $_SESSION['status_text'] = "Error: " . $stmt->error;
-        $_SESSION['status_code'] = "error";
-        $_SESSION['status_btn'] = "ok";
-        header("Location: {$_SERVER['HTTP_REFERER']}");
+        // Add the item to the session variable
+        $_SESSION['order_items'][] = array(
+            'product_code' => $product_code,
+            'product_name' => $product_name,
+            'quantity' => $quantity,
+            'price' => $price
+        );
     }
 
-    // Close statement and connection
-    $stmt->close();
-    $conn->close();
+    // Redirect to a thank you page or order summary page
+    // For example:
+    // header('Location: order_summary.php');
+    // exit;
 }
 
-function generate_order_code()
-{
-    // Generate your order code here (e.g., using timestamp and random numbers)
-    return "ORD" . date("YmdHis") . rand(1000, 9999);
+if (isset($_POST['placeOrder'])) {
+    // Assuming you have already sanitized the input data
+    $order_code = $_SESSION['cart']['order_code'];
+    $user_id = $_SESSION['user']['user_id'];
+    $name = $_POST['name'];
+    $contact = $_POST['contact'];
+    $product_code = $_SESSION['order']['product_code'];
+    $product_name = $_SESSION['order']['product_name'];
+    $quantity = $_SESSION['order']['quantity'];
+    $total_price = $_SESSION['order']['total_price'];
+    $delivery_address = $_POST['brgy'] . ', ' . $_POST['municipality'] . ', ' . $_POST['zip'];
+    $order_status = 'Pending'; // Assuming the default order status is 'Pending'
+
+    // Prepare the statement
+    $stmt = $conn->prepare("INSERT INTO `orders` (`order_code`, `user_id`, `name`, `contact`, `product_code`, `product_name`, `quantity`, `total_price`, `delivery_address`, `order_status`) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    // Bind parameters
+    $stmt->bind_param("ssssssidss", $order_code, $user_id, $name, $contact, $product_code, $product_name, $quantity, $total_price, $delivery_address, $order_status);
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        $_SESSION['status'] = "Success!";
+        $_SESSION['status_text'] = "Your order has been placed successfully!";
+        $_SESSION['status_code'] = "success";
+        $_SESSION['status_btn'] = "Continue";
+        unset($_SESSION['order']);
+        header("Location: home.php");
+        // echo "Order placed successfully!";
+    } else {
+        $_SESSION['status'] = "Error";
+        $_SESSION['status_text'] = "Error: " . $stmt->error;
+        $_SESSION['status_code'] = "error";
+        $_SESSION['status_btn'] = "Back";
+        // echo "Error: " . $stmt->error;
+        header("Location: home.php");
+    }
+    exit();
 }

@@ -80,6 +80,7 @@ $(document).ready(function () {
     $("#productCode").val(product.product_code);
     $("#modalCategory").text("Category: " + product.category);
     $("#modalPrice").text("₱" + product.price);
+    $("#modalPriceRaw").val(product.price);
     $("#modalQuantity").text("Quantity: " + product.quantity);
   }
 
@@ -95,8 +96,8 @@ $(document).ready(function () {
       "<i class='ri ri-arrow-left-s-line'></i>" + product.category
     );
     $("#offcanvasPrice").text("₱" + product.price);
+    $("#offcanvasPriceRaw").val(product.price);
+
     $("#offcanvasQuantity").text("Quantity: " + product.quantity);
   }
 });
-
-
