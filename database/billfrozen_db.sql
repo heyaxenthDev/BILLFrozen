@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 31, 2024 at 07:29 PM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Generation Time: Apr 01, 2024 at 10:34 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,18 +34,17 @@ CREATE TABLE `cart` (
   `product_name` varchar(255) NOT NULL,
   `added_quantity` int(11) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `cart`
 --
 
 INSERT INTO `cart` (`user_id`, `username`, `product_code`, `product_name`, `added_quantity`, `date_created`) VALUES
-('BFU342966', 'hyacynth', 'PROD346792', 'Magnolia Whole Chicken', 4, '2024-03-31 06:09:56'),
-('BFU342966', 'hyacynth', 'PROD291373', 'CDO - Funtastyk Young Pork', 1, '2024-03-31 06:09:58'),
-('BFU342966', 'hyacynth', 'PROD283520', 'Mekeni - Kikiam', 1, '2024-03-31 06:10:01'),
-('BFU342966', 'hyacynth', 'PROD779539', 'Tender Juicy - 1kg', 2, '2024-03-31 06:10:03'),
-('BFU342966', 'hyacynth', 'PROD863845', 'Pampanga`s Best - Sisig', 3, '2024-03-31 06:10:07');
+('BFU342966', 'hyacynth', 'PROD346792', 'Magnolia Whole Chicken', 5, '2024-03-31 06:09:56'),
+('BFU342966', 'hyacynth', 'PROD291373', 'CDO - Funtastyk Young Pork', 9, '2024-03-31 06:09:58'),
+('BFU342966', 'hyacynth', 'PROD779539', 'Tender Juicy - 1kg', 1, '2024-04-01 05:58:49'),
+('BFU342966', 'hyacynth', 'PROD863845', 'Pampanga`s Best - Sisig', 3, '2024-04-01 06:08:03');
 
 -- --------------------------------------------------------
 
@@ -65,18 +64,18 @@ CREATE TABLE `inventory` (
   `expiry_date` date NOT NULL,
   `product_picture` varchar(255) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `inventory`
 --
 
 INSERT INTO `inventory` (`id`, `product_code`, `product_name`, `price`, `category`, `quantity`, `sold`, `product_status`, `expiry_date`, `product_picture`, `date_created`) VALUES
-(1, 'PROD346792', 'Magnolia Whole Chicken', '230.00', 'Dressed Chicken', 10, 0, 'Expiring Soon', '2024-03-29', 'uploads/SM3012-4.jpg', '2024-03-12 08:17:59'),
-(2, 'PROD291373', 'CDO - Funtastyk Young Pork', '92.25', 'Frozen Foods', 50, 0, 'Good', '2025-03-07', 'uploads/funtastyk-young-pork-tocino-flatpack-225g_1.jpg', '2024-03-12 08:18:28'),
-(3, 'PROD283520', 'Mekeni - Kikiam', '110.00', 'Street Foods', 0, 10, 'Expired', '2024-03-12', 'uploads/MekeniKikiam-AsianFlavoredFishRolls-250g.jpg', '2024-03-12 08:22:12'),
-(4, 'PROD779539', 'Tender Juicy - 1kg', '243.00', 'Frozen Foods', 10, 0, 'Good', '2024-08-29', 'uploads/Purefoods-Tender-Juicy.jpg', '2024-03-22 01:36:05'),
-(5, 'PROD863845', 'Pampanga`s Best - Sisig', '81.00', 'Frozen Foods', 15, 0, 'Good', '2024-06-22', 'uploads/5951-003-20-2023-140350-685.jpg', '2024-03-22 02:10:24');
+(1, 'PROD346792', 'Magnolia Whole Chicken', 230.00, 'Dressed Chicken', 10, 0, 'Expiring Soon', '2024-03-29', 'uploads/SM3012-4.jpg', '2024-03-12 08:17:59'),
+(2, 'PROD291373', 'CDO - Funtastyk Young Pork', 92.25, 'Frozen Foods', 50, 0, 'Good', '2025-03-07', 'uploads/funtastyk-young-pork-tocino-flatpack-225g_1.jpg', '2024-03-12 08:18:28'),
+(3, 'PROD283520', 'Mekeni - Kikiam', 110.00, 'Street Foods', 0, 10, 'Expired', '2024-03-12', 'uploads/MekeniKikiam-AsianFlavoredFishRolls-250g.jpg', '2024-03-12 08:22:12'),
+(4, 'PROD779539', 'Tender Juicy - 1kg', 243.00, 'Frozen Foods', 10, 0, 'Good', '2024-08-29', 'uploads/Purefoods-Tender-Juicy.jpg', '2024-03-22 01:36:05'),
+(5, 'PROD863845', 'Pampanga`s Best - Sisig', 81.00, 'Frozen Foods', 15, 0, 'Good', '2024-06-22', 'uploads/5951-003-20-2023-140350-685.jpg', '2024-03-22 02:10:24');
 
 -- --------------------------------------------------------
 
@@ -90,7 +89,7 @@ CREATE TABLE `notifications` (
   `description` text DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- --------------------------------------------------------
 
@@ -107,12 +106,20 @@ CREATE TABLE `orders` (
   `product_name` varchar(255) NOT NULL,
   `quantity` int(11) NOT NULL,
   `total_price` decimal(10,2) NOT NULL,
-  `order_date` date NOT NULL,
+  `order_date` date NOT NULL DEFAULT current_timestamp(),
   `delivery_date` date DEFAULT NULL,
   `delivery_address` varchar(255) DEFAULT NULL,
   `order_status` varchar(50) DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_code`, `user_id`, `name`, `contact`, `product_code`, `product_name`, `quantity`, `total_price`, `order_date`, `delivery_date`, `delivery_address`, `order_status`, `date_created`) VALUES
+('ORD04-01-20248809', 'BFU342966', 'Hya Cynth Dojillo', '09651168472', 'PROD291373', 'CDO - Funtastyk Young Pork', 4, 369.00, '2024-04-01', NULL, 'asdasd, asddas, 564', 'Pending', '2024-04-01 07:48:45'),
+('ORD04-01-20246471', 'BFU342966', 'Hya Cynth Dojillo', '09651168472', 'PROD283520', 'Mekeni - Kikiam', 2, 220.00, '2024-04-01', NULL, 'asdsa, dsad, asdas', 'Pending', '2024-04-01 07:51:13');
 
 -- --------------------------------------------------------
 
@@ -126,18 +133,18 @@ CREATE TABLE `product_list` (
   `category` varchar(255) NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `product_picture` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `product_list`
 --
 
 INSERT INTO `product_list` (`id`, `product_name`, `category`, `price`, `product_picture`) VALUES
-(1, 'Magnolia Whole Chicken', 'Dressed Chicken', '230.00', 'uploads/SM3012-4.jpg'),
-(2, 'CDO - Funtastyk Young Pork', 'Frozen Foods', '92.25', 'uploads/funtastyk-young-pork-tocino-flatpack-225g_1.jpg'),
-(3, 'Tender Juicy - 1kg', 'Frozen Foods', '243.00', 'uploads/Purefoods-Tender-Juicy.jpg'),
-(4, 'Mekeni - Kikiam', 'Street Foods', '110.00', 'uploads/MekeniKikiam-AsianFlavoredFishRolls-250g.jpg'),
-(5, 'Pampanga`s Best - Sisig', 'Frozen Foods', '81.00', 'uploads/5951-003-20-2023-140350-685.jpg');
+(1, 'Magnolia Whole Chicken', 'Dressed Chicken', 230.00, 'uploads/SM3012-4.jpg'),
+(2, 'CDO - Funtastyk Young Pork', 'Frozen Foods', 92.25, 'uploads/funtastyk-young-pork-tocino-flatpack-225g_1.jpg'),
+(3, 'Tender Juicy - 1kg', 'Frozen Foods', 243.00, 'uploads/Purefoods-Tender-Juicy.jpg'),
+(4, 'Mekeni - Kikiam', 'Street Foods', 110.00, 'uploads/MekeniKikiam-AsianFlavoredFishRolls-250g.jpg'),
+(5, 'Pampanga`s Best - Sisig', 'Frozen Foods', 81.00, 'uploads/5951-003-20-2023-140350-685.jpg');
 
 -- --------------------------------------------------------
 
@@ -154,7 +161,7 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `profile_picture` varchar(255) DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `users`
@@ -178,12 +185,6 @@ ALTER TABLE `inventory`
 --
 ALTER TABLE `notifications`
   ADD PRIMARY KEY (`user_id`);
-
---
--- Indexes for table `orders`
---
-ALTER TABLE `orders`
-  ADD PRIMARY KEY (`order_code`);
 
 --
 -- Indexes for table `product_list`
