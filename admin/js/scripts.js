@@ -38,3 +38,48 @@ $(document).ready(function () {
     }
   });
 });
+
+ $(document).ready(function () {
+   $(".view-order").click(function () {
+     var orderCode = $(this).data("order-code");
+     // AJAX request to fetch order details using the order code
+     $.ajax({
+       url: "fetch_order_details.php",
+       method: "POST",
+       data: { orderCode: orderCode },
+       success: function (response) {
+         // Populate modal with the fetched order details
+         var data = JSON.parse(response);
+         $("#orderCode").val(data.orderCode);
+         $("#customerName").val(data.customerName);
+         $("#deliveryAddress").val(data.deliveryAddress);
+         $("#deliveryDate").val(data.deliveryDate);
+         // Populate table with item details
+         var itemsHtml = "";
+         $.each(data.items, function (index, item) {
+           itemsHtml +=
+             "<tr>" +
+             "<td>" +
+             (index + 1) +
+             "</td>" +
+             "<td>" +
+             item.productName +
+             "</td>" +
+             "<td>" +
+             item.unitPrice +
+             "</td>" +
+             "<td>" +
+             item.quantity +
+             "</td>" +
+             "<td>" +
+             item.totalPrice +
+             "</td>" +
+             "</tr>";
+         });
+         $("#itemTable tbody").html(itemsHtml);
+         // Update grand total
+         $("#grandTotal").text(data.grandTotal);
+       },
+     });
+   });
+ });

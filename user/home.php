@@ -103,8 +103,11 @@ Toast.fire({
                     <?php
                     // Perform database query to fetch product information
                     $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity, inv.product_code 
-                        FROM product_list pl
-                        JOIN inventory inv ON pl.product_name = inv.product_name LIMIT 4";
+                            FROM product_list pl
+                            JOIN inventory inv ON pl.product_name = inv.product_name 
+                            WHERE inv.quantity > 0 
+                            LIMIT 4";
+
                     $result = $conn->query($sql);
 
                     // Check if query was successful
@@ -307,5 +310,8 @@ Toast.fire({
 </main><!-- End #main -->
 
 <?php
+unset($_SESSION['order']);
+unset($_SESSION['orders']);
+
 include 'includes/footer.php';
 ?>

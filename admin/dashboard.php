@@ -10,7 +10,7 @@ include "alert.php";
 <script src="js/sweetalert2.all.min.js"></script>
 <?php
 if (isset($_SESSION['logged'])) {
-    ?>
+?>
 <script type="text/javascript">
 const Toast = Swal.mixin({
     toast: true,
@@ -32,7 +32,7 @@ Toast.fire({
 });
 </script>
 <?php
-unset($_SESSION['logged']);
+    unset($_SESSION['logged']);
 }
 ?>
 <!-- ======= Sidebar ======= -->
@@ -92,6 +92,28 @@ unset($_SESSION['logged']);
             <div class="col-lg-8">
                 <div class="row">
 
+                    <?php
+                    // Assume you have established a database connection
+
+                    // Query to fetch total orders
+                    $totalOrdersQuery = "SELECT COUNT(DISTINCT `order_code`) AS total_orders FROM orders WHERE `order_status` = 'Pending'";
+
+                    // Query to fetch total delivered orders
+                    $deliveredOrdersQuery = "SELECT COUNT(DISTINCT `order_code`) AS total_delivered FROM orders WHERE order_status = 'Delivered'";
+
+                    // Execute queries
+                    $totalOrdersResult = mysqli_query($conn, $totalOrdersQuery);
+                    $deliveredOrdersResult = mysqli_query($conn, $deliveredOrdersQuery);
+
+                    // Fetch counts
+                    $totalOrdersRow = mysqli_fetch_assoc($totalOrdersResult);
+                    $totalDeliveredRow = mysqli_fetch_assoc($deliveredOrdersResult);
+
+                    // Assign counts to variables
+                    $totalOrders = $totalOrdersRow['total_orders'];
+                    $totalDelivered = $totalDeliveredRow['total_delivered'];
+                    ?>
+
                     <!-- Order Card -->
                     <div class="col-xxl-4 col-md-6">
                         <div class="card info-card order-card">
@@ -118,7 +140,10 @@ unset($_SESSION['logged']);
                                         <i class="bi bi-cart"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>145</h6>
+                                        <h6>
+                                            <?php echo $totalOrders; ?>
+                                            <!-- Count of orders -->
+                                        </h6>
                                     </div>
                                 </div>
                             </div>
@@ -152,13 +177,17 @@ unset($_SESSION['logged']);
                                         <i class="bi bi-truck"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>264</h6>
+                                        <h6>
+                                            <?php echo $totalDelivered; ?>
+                                            <!-- Count of order status = Delivered -->
+                                        </h6>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div><!-- End Delivered Card -->
+
 
 
                     <!-- Reports -->
@@ -186,13 +215,18 @@ unset($_SESSION['logged']);
 
                                 <script>
                                 document.addEventListener("DOMContentLoaded", () => {
-                                    new ApexCharts(document.querySelector("#reportsChart"), {
+                                    new ApexCharts(document.querySelector(
+                                        "#reportsChart"), {
                                         series: [{
                                             name: 'Sales',
-                                            data: [31, 40, 28, 51, 42, 82, 56],
+                                            data: [31, 40, 28, 51, 42,
+                                                82, 56
+                                            ],
                                         }, {
                                             name: 'Revenue',
-                                            data: [11, 32, 45, 32, 34, 52, 41]
+                                            data: [11, 32, 45, 32, 34,
+                                                52, 41
+                                            ]
                                         }],
                                         chart: {
                                             height: 350,
@@ -223,7 +257,8 @@ unset($_SESSION['logged']);
                                         },
                                         xaxis: {
                                             type: 'datetime',
-                                            categories: ["2018-09-19T00:00:00.000Z",
+                                            categories: [
+                                                "2018-09-19T00:00:00.000Z",
                                                 "2018-09-19T01:30:00.000Z",
                                                 "2018-09-19T02:30:00.000Z",
                                                 "2018-09-19T03:30:00.000Z",
@@ -281,7 +316,8 @@ unset($_SESSION['logged']);
                                         <tr>
                                             <th scope="row"><a href="#"><img src="assets/img/product-1.jpg" alt=""></a>
                                             </th>
-                                            <td><a href="#" class="text-primary fw-bold">Ut inventore ipsa
+                                            <td><a href="#" class="text-primary fw-bold">Ut
+                                                    inventore ipsa
                                                     voluptas
                                                     nulla</a></td>
                                             <td>$64</td>
@@ -310,7 +346,8 @@ unset($_SESSION['logged']);
                                         <tr>
                                             <th scope="row"><a href="#"><img src="assets/img/product-4.jpg" alt=""></a>
                                             </th>
-                                            <td><a href="#" class="text-primary fw-bold">Officiis quaerat sint
+                                            <td><a href="#" class="text-primary fw-bold">Officiis
+                                                    quaerat sint
                                                     rerum
                                                     error</a></td>
                                             <td>$32</td>
@@ -320,7 +357,8 @@ unset($_SESSION['logged']);
                                         <tr>
                                             <th scope="row"><a href="#"><img src="assets/img/product-5.jpg" alt=""></a>
                                             </th>
-                                            <td><a href="#" class="text-primary fw-bold">Sit unde debitis
+                                            <td><a href="#" class="text-primary fw-bold">Sit
+                                                    unde debitis
                                                     delectus
                                                     repellendus</a></td>
                                             <td>$79</td>
@@ -363,22 +401,26 @@ unset($_SESSION['logged']);
                             <div class="post-item clearfix">
                                 <img src="assets/img/news-1.jpg" alt="">
                                 <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
-                                <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed ut harum...
+                                <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed
+                                    ut harum...
                                 </p>
                             </div>
 
                             <div class="post-item clearfix">
                                 <img src="assets/img/news-2.jpg" alt="">
                                 <h4><a href="#">Quidem autem et impedit</a></h4>
-                                <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries werona
+                                <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries
+                                    werona
                                     nande...
                                 </p>
                             </div>
 
                             <div class="post-item clearfix">
                                 <img src="assets/img/news-3.jpg" alt="">
-                                <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a></h4>
-                                <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed ipsam et
+                                <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a>
+                                </h4>
+                                <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed
+                                    ipsam et
                                     totam...
                                 </p>
                             </div>
@@ -386,7 +428,8 @@ unset($_SESSION['logged']);
                             <div class="post-item clearfix">
                                 <img src="assets/img/news-4.jpg" alt="">
                                 <h4><a href="#">Laborum corporis quo dara net para</a></h4>
-                                <p>Qui enim quia optio. Eligendi aut asperiores enim repellendusvel rerum
+                                <p>Qui enim quia optio. Eligendi aut asperiores enim repellendusvel
+                                    rerum
                                     cuder...
                                 </p>
                             </div>
@@ -394,7 +437,8 @@ unset($_SESSION['logged']);
                             <div class="post-item clearfix">
                                 <img src="assets/img/news-5.jpg" alt="">
                                 <h4><a href="#">Et dolores corrupti quae illo quod dolor</a></h4>
-                                <p>Odit ut eveniet modi reiciendis. Atque cupiditate libero beatae dignissimos
+                                <p>Odit ut eveniet modi reiciendis. Atque cupiditate libero beatae
+                                    dignissimos
                                     eius...</p>
                             </div>
 

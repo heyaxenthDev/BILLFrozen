@@ -101,3 +101,4 @@ $(document).ready(function () {
     $("#offcanvasQuantity").text("Quantity: " + product.quantity);
   }
 });
+

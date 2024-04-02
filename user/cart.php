@@ -1,10 +1,28 @@
 <?php
 include 'authentication.php';
-include_once 'includes/header.php';
+include 'includes/header.php';
 
 include "alert.php";
 
+// Fetch cart items count
+$user_id = $_SESSION['user']['user_id'];
+$count_query = "SELECT COUNT(added_quantity) AS total_items FROM cart WHERE `user_id` = '$user_id'";
+$result_count = mysqli_query($conn, $count_query);
+$total_items = 0;
+
+if ($result_count && mysqli_num_rows($result_count) > 0) {
+    $row_count = mysqli_fetch_assoc($result_count);
+    $total_items = $row_count['total_items'];
+}
+
+// Fetch cart items and calculate total price
+$sql = "SELECT c.user_id, c.username, c.product_code, c.product_name, c.added_quantity, i.price, i.category, i.product_picture
+        FROM cart c
+        JOIN inventory i ON c.product_code = i.product_code";
+$result = mysqli_query($conn, $sql);
+$total_price = 0;
 ?>
+
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
 
@@ -51,51 +69,22 @@ include "alert.php";
     </div><!-- End Page Title -->
 
     <section class="">
-        <div class="row">
-            <!-- Browser layout form -->
-            <div class="col-md-8">
-                <form action="code.php" method="POST" class="d-none d-md-block">
-
+        <!-- Browser layout form -->
+        <form action="code.php" method="POST" class="d-none d-md-block">
+            <div class="row">
+                <div class="col-md-8">
                     <h1 class="card-title">Shop Cart</h1>
 
-                    <?php
-                    // Fetch cart items
-                    $user_id = $_SESSION['user']['user_id'];
-
-                    $count = "SELECT COUNT(added_quantity) AS total_items FROM cart WHERE `user_id` = '$user_id'";
-
-                    $result = mysqli_query($conn, $count);
-
-                    if ($result && mysqli_num_rows($result) > 0) {
-                        $row = mysqli_fetch_assoc($result);
-                        $total_items = $row['total_items'];
-
-                    ?>
                     <span class="">You have <?= $total_items ?> items in your Cart</span>
                     <input type="hidden" name="total_items" id="" value="<?= $total_items ?>">
                     <hr>
-                    <?php
-                    } else {
-                        echo "No items in cart.";
-                    }
-                    ?>
 
-                    <?php
-                    // Fetch cart items
-                    $sql = "SELECT c.user_id, c.username, c.product_code, c.product_name, c.added_quantity, i.price, i.category, i.product_picture
-                            FROM cart c
-                            JOIN inventory i ON c.product_code = i.product_code";
-
-                    $result = mysqli_query($conn, $sql);
-                    $total_price = 0; // Initialize total price variable
-
-                    if (mysqli_num_rows($result) > 0) {
-                        while ($row = mysqli_fetch_assoc($result)) :
-
+                    <?php if (mysqli_num_rows($result) > 0) : ?>
+                    <?php while ($row = mysqli_fetch_assoc($result)) :
                             $product_price = $row['price'] * $row['added_quantity'];
                             $total_price += $product_price; // Add to total price
-                    ?>
-                    <!-- Below is for the Browser layout -->
+                        ?>
+
                     <div class="d-none d-md-block card mb-3">
                         <div class="row g-0 align-items-center">
                             <div class="col-md-2 col-2">
@@ -136,96 +125,74 @@ include "alert.php";
                             </div>
                         </div>
                     </div><!-- End cart item -->
-                    <?php
-                        endwhile;
-                    }
-                    ?>
-            </div>
+                    <?php endwhile; ?>
+                    <?php else : ?>
+                    <p>No items in cart.</p>
+                    <?php endif; ?>
+                </div>
 
-            <!-- Summary for Browser Layout -->
-            <div class="summary col-md-4 d-none d-md-block">
-                <div class="card mb-4">
-                    <div class="card-header py-3">
-                        <h5 class="mb-0">Summary</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li
-                                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                                Products
-                                <span>₱<?= number_format($total_price, 2) ?></span>
-                                <!-- Display total price -->
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <!-- Shipping
+                <!-- Summary for Browser Layout -->
+                <div class="summary col-md-4 ">
+                    <div class="card mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="mb-0">Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li
+                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                    Products
+                                    <span>₱<?= number_format($total_price, 2) ?></span>
+                                    <!-- Display total price -->
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <!-- Shipping
                                 <span>NULL</span> -->
-                            </li>
-                            <li
-                                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                                <div>
-                                    <strong>Total amount</strong>
-                                    <strong>
-                                        <p class="mb-0">(including VAT)</p>
-                                    </strong>
-                                </div>
-                                <span><strong>₱<?= number_format($total_price, 2) ?></strong></span>
-                                <input type="hidden" name="price_summary" value="<?= number_format($total_price, 2) ?>">
-                                <!-- Display total price -->
-                            </li>
-                        </ul>
+                                </li>
+                                <li
+                                    class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                                    <div>
+                                        <strong>Total amount</strong>
+                                        <strong>
+                                            <p class="mb-0">(including VAT)</p>
+                                        </strong>
+                                    </div>
+                                    <span><strong>₱<?= number_format($total_price, 2) ?></strong></span>
+                                    <input type="hidden" name="price_summary"
+                                        value="<?= number_format($total_price, 2) ?>">
+                                    <!-- Display total price -->
+                                </li>
+                            </ul>
 
-                        <button type="submit" class="btn btn-lg btn-block text-white" name="checkOutBtn"
-                            style="background-color: #0f1b48;">
-                            Go to checkout
-                        </button>
+                            <button type="submit" class="btn btn-lg btn-block text-white" name="checkOutBtn"
+                                style="background-color: #0f1b48;">
+                                Go to checkout
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            </form>
+        </form>
 
-            <!-- Mobile layout form -->
-            <form action="code.php" method="POST" class="d-md-none">
-                <h1 class="card-title">Shop Cart</h1>
+        <!-- Mobile layout form -->
+        <form action="code.php" method="POST" class="d-md-none">
+            <h1 class="card-title">Shop Cart</h1>
 
-                <?php
-                // Fetch cart items
-                $user_id = $_SESSION['user']['user_id'];
+            <span class="">You have <?= $total_items ?> items in your Cart</span>
+            <input type="hidden" name="total_items" id="" value="<?= $total_items ?>">
+            <hr>
 
-                $count = "SELECT COUNT(added_quantity) AS total_items FROM cart WHERE `user_id` = '$user_id'";
-
-                $result = mysqli_query($conn, $count);
-
-                if ($result && mysqli_num_rows($result) > 0) {
-                    $row = mysqli_fetch_assoc($result);
-                    $total_items = $row['total_items'];
-
+            <?php if (mysqli_num_rows($result) > 0) : ?>
+            <?php mysqli_data_seek($result, 0); // Reset result set pointer 
                 ?>
-                <span class="">You have <?= $total_items ?> items in your Cart</span>
-                <input type="hidden" name="total_items" id="" value="<?= $total_items ?>">
-                <hr>
-                <?php
-                } else {
-                    echo "No items in cart.";
-                }
+            <?php while ($row = mysqli_fetch_assoc($result)) :
+
+                    $product_price = $row['price'] * $row['added_quantity'];
+                    $total_price += $product_price; // Add to total price
                 ?>
-
-                <?php
-                // Fetch cart items
-                $sql = "SELECT c.user_id, c.username, c.product_code, c.product_name, c.added_quantity, i.price, i.category, i.product_picture
-                            FROM cart c
-                            JOIN inventory i ON c.product_code = i.product_code";
-
-                $result = mysqli_query($conn, $sql);
-                $total_price = 0; // Initialize total price variable
-
-                if (mysqli_num_rows($result) > 0) {
-                    while ($row = mysqli_fetch_assoc($result)) :
-
-                        $product_price = $row['price'] * $row['added_quantity'];
-                        $total_price += $product_price; // Add to total price
-                ?>
-                <div class="col-md-8">
-                    <div class="d-md-none card mb-3 position-relative">
+            <div class="row">
+                <div class="col-md-8 d-md-none d-block">
+                    <div class="card mb-3 position-relative">
                         <a href="#" class="text-danger cart position-absolute top-0 end-0 p-3"
                             data-product-code="<?= $row['product_code'] ?>"><i class="bi bi-trash-fill"></i></a>
                         <div class="row g-0 align-items-center">
@@ -259,13 +226,15 @@ include "alert.php";
                             </div>
                         </div>
                     </div><!-- End cart item -->
-                    <?php
-                    endwhile;
-                    // echo "No items in cart.";
-                }
-                    ?>
                 </div>
-                <!-- Summary for mobile layout -->
+            </div>
+            <?php endwhile; ?>
+            <?php else : ?>
+            <p>No items in cart.</p>
+            <?php endif; ?>
+
+            <!-- Summary for mobile layout -->
+            <nav class="navbar fixed-bottom" style="background-color: #fff394;">
                 <nav class="navbar fixed-bottom d-md-none d-block" style="background-color: #fff394;">
                     <div class="container-fluid d-flex justify-content-center">
                         <div class="row w-100">
@@ -283,10 +252,8 @@ include "alert.php";
                         </div>
                     </div>
                 </nav>
-
-            </form>
-
-        </div>
+            </nav>
+        </form>
 
     </section>
 

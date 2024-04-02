@@ -53,9 +53,10 @@ include "alert.php";
             <div class="col-lg-6 col-md-6 col-12">
                 <!-- Checkout Card -->
                 <div class="card">
-                    <a href="">
+                    <a href="#" onclick="history.back();">
                         <h5 class="card-title cart px-3"><i class="bi bi-chevron-left"></i>Check Out</h5>
                     </a>
+
                     <form action="code.php" method="POST">
                         <div class="card-body m-2">
                             <h6 class="card-subtitle mb-2 text-muted fw-semibold">Delivery Information</h6>
@@ -84,17 +85,18 @@ include "alert.php";
 
                             <h6 class="card-subtitle mb-2 mt-3 text-muted fw-semibold">Order Summary</h6>
                             <?php
-                            if (isset($_SESSION['order_items'])) {
+                            if (isset($_SESSION['orders'])) {
                             ?>
                             <ul class="list-group list-group-flush">
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                                    Items (<?php echo $_GET['Items'] ?>)
-                                    <span>₱<?php echo $_GET['Price'] ?></span> <!-- Display total items -->
+                                    Order Code
+                                    <span><?php echo $_SESSION['orders']['order_code'] ?></span>
+                                    <!-- Display total items -->
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    Order Code
-                                    <span><?php echo $_GET['Order'] ?></span>
+                                    Items (<?php echo $_SESSION['orders']['total_items'] ?>)
+                                    <span>₱<?php echo $_SESSION['orders']['price_summary'] ?></span>
                                 </li>
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
@@ -104,7 +106,7 @@ include "alert.php";
                                             <p class="mb-0">(including VAT)</p>
                                         </strong>
                                     </div>
-                                    <span><strong>₱<?php echo $_GET['Price'] ?></strong></span>
+                                    <span><strong>₱<?php echo $_SESSION['orders']['price_summary'] ?></strong></span>
                                     <!-- Display total price -->
                                 </li>
                             </ul>
@@ -116,7 +118,7 @@ include "alert.php";
                             </div>
 
                             <?php
-                            } else {
+                            } elseif (isset($_SESSION['order'])) {
                             ?>
                             <ul class="list-group list-group-flush">
                                 <li
@@ -153,12 +155,13 @@ include "alert.php";
 
                             <div class="d-grid gap-2 col-md-6 mt-3 mx-auto">
                                 <button class="btn text-white" type="submit" name="placeOrderBtn"
-                                    style="background-color: #0f1b48;">Place
-                                    Order</button>
+                                    style="background-color: #0f1b48;">Place Order</button>
                             </div>
                             <?php
-                            } ?>
-
+                            } else {
+                                echo "No order details found.";
+                            }
+                            ?>
                         </div>
                     </form>
                 </div><!-- End Checkout Card -->
