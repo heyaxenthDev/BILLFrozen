@@ -143,6 +143,61 @@ if (isset($_POST['addInventoryProduct'])) {
 }
 
 
+if (isset($_POST['confirmBtn'])) {
+    $orderCode = $_POST['orderCode'];
+    $deliveryDate = $_POST['deliveryDate'];
+
+    // Update the delivery date and order status in the database
+    $updateQuery = "UPDATE orders SET delivery_date = '$deliveryDate', order_status = 'for delivery' WHERE order_code = '$orderCode'";
+    if (mysqli_query($conn, $updateQuery)) {
+        // Fetch user_id and username from the orders table
+        $fetchOrderInfoQuery = "SELECT user_id, name FROM orders WHERE order_code = '$orderCode'";
+        $result = mysqli_query($conn, $fetchOrderInfoQuery);
+        $row = mysqli_fetch_assoc($result);
+        $userId = $row['user_id'];
+        $username = $row['name'];
+
+        // Insert notification into the notifications table
+        $description = "Your order with order code $orderCode has been confirmed and is now scheduled for delivery on $deliveryDate.";
+        $status = 'unread';
+        $dateCreated = date('Y-m-d H:i:s');
+
+        $insertNotificationQuery = "INSERT INTO `notifications`(`user_id`, `username`, `description`, `status`, `date_created`) VALUES ('$userId','$username','$description','$status','$dateCreated')";
+        mysqli_query($conn, $insertNotificationQuery);
+
+        $_SESSION['alert'] = "success";
+        $_SESSION['alert_text'] = "Order successfully confirmed.";
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+    } else {
+        $_SESSION['alert'] = "error";
+        $_SESSION['alert_text'] = "Error updating order: " . mysqli_error($conn);
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+    }
+}
+
+
+
+if(isset($_GET['order']) == 'Delivered'){
+    
+    $status = $_GET['order'];
+    $orderCode = $_GET['OrderCode'];
+    
+    $updateQuery = "UPDATE orders SET order_status = '$status' WHERE order_code = '$orderCode'";
+    if (mysqli_query($conn, $updateQuery)) {
+        $_SESSION['alert'] = "success";
+        $_SESSION['alert_text'] = "Order has been Delivered";
+        // echo "Order updated successfully.";
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+    } else {
+        $_SESSION['alert'] = "error";
+        $_SESSION['alert_text'] = "Error updating order: " . mysqli_error($conn);
+        // echo "Error updating order: " . mysqli_error($conn);
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+    }
+}
+
+
+
 // Close connection
 $conn->close();
 ?>

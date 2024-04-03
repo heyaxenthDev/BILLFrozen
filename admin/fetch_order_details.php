@@ -2,45 +2,54 @@
 // Include your database connection file
 include 'includes/conn.php';
 
-if (isset($_POST['orderCode'])) {
-    $orderCode = $_POST['orderCode'];
+// Get the order_code from the POST request
+$data = json_decode(file_get_contents("php://input"), true);
+$orderCode = $data['order_code'];
 
-    // Fetch order details from the database
-    $query = "SELECT * FROM orders WHERE order_code = '$orderCode'";
-    $result = mysqli_query($conn, $query);
+// Query to fetch order information
+$query = "SELECT * FROM `orders` WHERE order_code = '$orderCode'";
+$result = mysqli_query($conn, $query);
 
-    if (mysqli_num_rows($result) > 0) {
-        $orderDetails = mysqli_fetch_assoc($result);
+if (mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
 
-        // Fetch items for the order
-        $itemQuery = "SELECT * FROM order_items WHERE order_code = '$orderCode'";
-        $itemResult = mysqli_query($conn, $itemQuery);
-        $items = array();
-        $grandTotal = 0;
-        while ($itemRow = mysqli_fetch_assoc($itemResult)) {
-            $itemTotal = $itemRow['unit_price'] * $itemRow['quantity'];
-            $grandTotal += $itemTotal;
-            $items[] = array(
-                'productName' => $itemRow['product_name'],
-                'unitPrice' => $itemRow['unit_price'],
-                'quantity' => $itemRow['quantity'],
-                'totalPrice' => $itemTotal
-            );
-        }
-
-        // Prepare data to be sent back as JSON
-        $response = array(
-            'orderCode' => $orderDetails['order_code'],
-            'customerName' => $orderDetails['customer_name'],
-            'deliveryAddress' => $orderDetails['delivery_address'],
-            'deliveryDate' => $orderDetails['delivery_date'],
-            'items' => $items,
-            'grandTotal' => $grandTotal
-        );
-        echo json_encode($response);
-    } else {
-        echo json_encode(array('error' => 'Order not found'));
+    // Fetch order items information
+    $itemQuery = "SELECT `product_name`, `quantity`, `total_price`, `order_status` FROM `orders` WHERE `order_code` = ?";
+    $stmt = $conn->prepare($itemQuery);
+    $stmt->bind_param("s", $orderCode);
+    $stmt->execute();
+    $itemResult = $stmt->get_result();
+    $items = [];
+    while ($itemRow = $itemResult->fetch_assoc()) {
+        $items[] = $itemRow;
     }
+
+    // Calculate grand total
+    $grandTotal = 0;
+    foreach ($items as $item) {
+        $grandTotal += $item['total_price'];
+    }
+
+    // Construct the response data
+    $responseData = [
+        'order_status' => $row['order_status'],
+        'order_code' => $row['order_code'],
+        'name' => $row['name'],
+        'contact' => $row['contact'],
+        'delivery_address' => $row['delivery_address'],
+        'delivery_date' => $row['delivery_date'],
+        'items' => $items,
+        'grand_total' => number_format($grandTotal, 2)
+    ];
+
+
+    // Return the response data as JSON
+    echo json_encode($responseData);
 } else {
-    echo json_encode(array('error' => 'Order code not provided'));
+    // If no order found, return an empty response
+    echo json_encode([]);
 }
+
+// Close the database connection
+mysqli_close($conn);
+?>
