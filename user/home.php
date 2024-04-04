@@ -49,6 +49,11 @@ Toast.fire({
             <a class="nav-link collapsed" href="cart.php">
                 <i class="bi bi-cart3"></i>
                 <span>Cart</span>
+                <div class="mx-5 px-5">
+                    <span class="badge bg-success rounded-pill mx-5">
+                        <?= $total_items ?>
+                    </span>
+                </div>
             </a>
         </li><!-- End Cart Page Nav -->
 
@@ -56,6 +61,11 @@ Toast.fire({
             <a class="nav-link collapsed" href="#">
                 <i class="bi bi-bell"></i>
                 <span>Notifications</span>
+                <div class="mx-4 px-2">
+                    <span class="badge bg-primary rounded-pill mx-5">
+                        <?= $notifs ?>
+                    </span>
+                </div>
             </a>
         </li><!-- End Inventory Page Nav -->
 

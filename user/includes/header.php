@@ -60,10 +60,25 @@ $src = "\BILLFrozen/admin/";
             <ul class="d-flex align-items-center">
 
                 <li class="nav-item dropdown">
+                    <?php
+                    // Assuming you have already started the session and connected to the database
+                    // Fetch cart items count
+                    $userID = $_SESSION['user']['user_id'];
+                    $notif_query = "SELECT COUNT(`user_id`) AS notifs FROM notifications WHERE `user_id` = '$userID' AND `status` = 'unread'";
+                    $notif_result = mysqli_query($conn, $notif_query);
+
+                    if ($notif_result && mysqli_num_rows($notif_result) > 0) {
+                        $notif_row = mysqli_fetch_assoc($notif_result);
+                        $notifs = $notif_row['notifs'];
+                    } else {
+                        // Handle error or no items in cart
+                        $notifs = 0;
+                    }
+                    ?>
 
                     <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-bell"></i>
-                        <span class="badge bg-primary badge-number">4</span>
+                        <span class="badge bg-primary badge-number"><?= $notifs ?></span>
                     </a><!-- End Notification Icon -->
 
 
@@ -73,7 +88,8 @@ $src = "\BILLFrozen/admin/";
                     <?php
                     // Assuming you have already started the session and connected to the database
                     // Fetch cart items count
-                    $count_query = "SELECT COUNT(added_quantity) AS total_items FROM cart WHERE 1";
+                    $userID = $_SESSION['user']['user_id'];
+                    $count_query = "SELECT COUNT(added_quantity) AS total_items FROM cart WHERE `user_id` = '$userID'";
                     $count_result = mysqli_query($conn, $count_query);
 
                     if ($count_result && mysqli_num_rows($count_result) > 0) {

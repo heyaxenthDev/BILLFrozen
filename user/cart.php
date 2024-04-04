@@ -39,6 +39,11 @@ $total_price = 0;
             <a class="nav-link " href="cart.php">
                 <i class="bi bi-cart3"></i>
                 <span>Cart</span>
+                <div class="mx-5 px-5">
+                    <span class="badge bg-success rounded-pill mx-5">
+                        <?= $total_items ?>
+                    </span>
+                </div>
             </a>
         </li><!-- End Cart Page Nav -->
 
@@ -46,6 +51,11 @@ $total_price = 0;
             <a class="nav-link collapsed" href="#">
                 <i class="bi bi-bell"></i>
                 <span>Notifications</span>
+                <div class="mx-4 px-2">
+                    <span class="badge bg-primary rounded-pill mx-5">
+                        <?= $notifs ?>
+                    </span>
+                </div>
             </a>
         </li><!-- End Inventory Page Nav -->
 
@@ -322,8 +332,8 @@ $total_price = 0;
     </div>
 </footer><!-- End Footer -->
 
-<!-- <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
-        class="bi bi-arrow-up-short"></i></a> -->
+<a href="#" class="back-to-top d-flex d-md-none align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
 <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>

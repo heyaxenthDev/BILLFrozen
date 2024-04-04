@@ -115,10 +115,13 @@ include "alert.php";
                                                 case 'Pending':
                                                     $badgeClass = 'badge bg-warning';
                                                     break;
-                                                case 'for delivery':
+                                                case 'For Delivery':
                                                     $badgeClass = 'badge bg-primary';
                                                     break;
                                                 case 'Delivered':
+                                                    $badgeClass = 'badge bg-info';
+                                                    break;
+                                                case 'Recieved':
                                                     $badgeClass = 'badge bg-success';
                                                     break;
                                                 default:

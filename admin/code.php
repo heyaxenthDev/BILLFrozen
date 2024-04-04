@@ -148,7 +148,7 @@ if (isset($_POST['confirmBtn'])) {
     $deliveryDate = $_POST['deliveryDate'];
 
     // Update the delivery date and order status in the database
-    $updateQuery = "UPDATE orders SET delivery_date = '$deliveryDate', order_status = 'for delivery' WHERE order_code = '$orderCode'";
+    $updateQuery = "UPDATE orders SET delivery_date = '$deliveryDate', order_status = 'For Delivery' WHERE order_code = '$orderCode'";
     if (mysqli_query($conn, $updateQuery)) {
         // Fetch user_id and username from the orders table
         $fetchOrderInfoQuery = "SELECT user_id, name FROM orders WHERE order_code = '$orderCode'";
@@ -160,9 +160,8 @@ if (isset($_POST['confirmBtn'])) {
         // Insert notification into the notifications table
         $description = "Your order with order code $orderCode has been confirmed and is now scheduled for delivery on $deliveryDate.";
         $status = 'unread';
-        $dateCreated = date('Y-m-d H:i:s');
 
-        $insertNotificationQuery = "INSERT INTO `notifications`(`user_id`, `username`, `description`, `status`, `date_created`) VALUES ('$userId','$username','$description','$status','$dateCreated')";
+        $insertNotificationQuery = "INSERT INTO `notifications`(`user_id`, `username`, `description`, `status`) VALUES ('$userId','$username','$description','$status')";
         mysqli_query($conn, $insertNotificationQuery);
 
         $_SESSION['alert'] = "success";
