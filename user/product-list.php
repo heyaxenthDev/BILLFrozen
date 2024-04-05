@@ -21,15 +21,39 @@ include "alert.php";
             <a class="nav-link collapsed" href="cart.php">
                 <i class="bi bi-cart3"></i>
                 <span>Cart</span>
+                <div class="mx-5 px-5">
+                    <?php
+                    if ($total_items != 0) {
+
+                    ?>
+                    <span class="badge bg-success rounded-pill mx-5">
+                        <?= $total_items ?>
+                    </span>
+                    <?php
+                    }
+                    ?>
+                </div>
             </a>
         </li><!-- End Cart Page Nav -->
 
+
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
+            <a class="nav-link collapsed" href="#" data-bs-toggle="modal" data-bs-target="#notificationsModal">
                 <i class="bi bi-bell"></i>
                 <span>Notifications</span>
+                <div class="mx-4 px-2">
+                    <?php
+                    if ($notifs != 0 && $stat == "unread") {
+                    ?>
+                    <span class="badge bg-primary rounded-pill mx-5">
+                        <?= $notifs ?>
+                    </span>
+                    <?php
+                    }
+                    ?>
+                </div>
             </a>
-        </li><!-- End Inventory Page Nav -->
+        </li><!-- End Notifications Modal Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="my-order.php">
@@ -79,8 +103,9 @@ include "alert.php";
                     <?php
                     // Perform database query to fetch product information
                     $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity, inv.product_code 
-                        FROM product_list pl
-                        JOIN inventory inv ON pl.product_name = inv.product_name";
+                            FROM product_list pl
+                            JOIN inventory inv ON pl.product_name = inv.product_name 
+                            WHERE inv.quantity > 0";
                     $result = $conn->query($sql);
 
                     // Check if query was successful
@@ -95,12 +120,12 @@ include "alert.php";
                                 <img src="<?php echo $src . $row['product_picture']; ?>" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title"><?php echo $row['product_name']; ?></h5>
-                                    <!-- <p class="card-text">Price: <?php echo $row['price']; ?></p>
+                                    <p class="card-text">Price: <?php echo $row['price']; ?></p>
                                     <?php if ($row['quantity'] == 0) : ?>
                                     <p class="card-text"><span class="badge bg-danger">Sold Out</span></p>
                                     <?php else : ?>
                                     <p class="card-text"><span class="badge bg-success">Available</span></p>
-                                    <?php endif; ?> -->
+                                    <?php endif; ?>
                                 </div>
                             </div><!-- End Card with an image on top -->
                         </a>
@@ -117,9 +142,8 @@ include "alert.php";
                 </div><!-- row end -->
 
             </div>
-
-
         </div>
+
     </section>
 
     <!-- Modal -->
@@ -148,6 +172,8 @@ include "alert.php";
                                     <div class="col-3">
                                         <h2 class="modal-title"><span class="badge text-bg-primary"
                                                 id="modalPrice">Price</span>
+                                            <input type="hidden" name="price" id="modalPriceRaw" value="">
+
                                     </div>
                                 </div>
 
@@ -169,9 +195,9 @@ include "alert.php";
                                 </div>
 
                                 <div class="d-grid gap-3 d-md-flex justify-content-md-center mt-3">
-                                    <a class="btn w-100 text-white" href="checkout.php" role="button"
+                                    <button class="btn w-100 text-white" type="submit" name="BuyNowBtn"
                                         style="background-color: #0f1b48;">Buy
-                                        Now</a>
+                                        Now</button>
                                     <button class="btn w-100 text-white" type="submit" name="AddtoCartBtn"
                                         style="background-color: #029bf1;">Add
                                         to
@@ -194,7 +220,7 @@ include "alert.php";
             </a>
         </div>
         <form action="code.php" method="POST">
-            <div class="offcanvas-body m-3  ">
+            <div class="offcanvas-body m-3">
                 <img id="offcanvasImage" src="" class="rounded mx-auto d-block img-thumbnail" alt="...">
 
                 <div class="row">
@@ -205,6 +231,7 @@ include "alert.php";
                     </div>
                     <div class="col-4 text-end canvas-title px-3">
                         <span class="badge text-bg-primary" id="offcanvasPrice">Price</span>
+                        <input type="hidden" name="price" id="offcanvasPriceRaw" value="">
                     </div>
                 </div>
 
@@ -222,9 +249,9 @@ include "alert.php";
                 </div>
 
                 <div class="d-grid gap-3 d-md-flex justify-content-md-center mt-3">
-                    <a class="btn w-100 text-white" href="checkout.php" role="button"
+                    <button class="btn w-100 text-white" type="submit" name="BuyNowBtn"
                         style="background-color: #0f1b48;">Buy
-                        Now</a>
+                        Now</button>
                     <button class="btn w-100 text-white" type="submit" name="AddtoCartBtn"
                         style="background-color: #029bf1;">Add
                         to
@@ -237,5 +264,8 @@ include "alert.php";
 </main><!-- End #main -->
 
 <?php
+unset($_SESSION['order']);
+unset($_SESSION['orders']);
+
 include 'includes/footer.php';
 ?>

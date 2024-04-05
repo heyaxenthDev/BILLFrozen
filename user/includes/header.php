@@ -64,21 +64,30 @@ $src = "\BILLFrozen/admin/";
                     // Assuming you have already started the session and connected to the database
                     // Fetch cart items count
                     $userID = $_SESSION['user']['user_id'];
-                    $notif_query = "SELECT COUNT(`user_id`) AS notifs FROM notifications WHERE `user_id` = '$userID' AND `status` = 'unread'";
+                    $notif_query = "SELECT COUNT(`status`) AS `notifs`, `description`, `status`, `date_created` FROM notifications WHERE `user_id` = '$userID'";
                     $notif_result = mysqli_query($conn, $notif_query);
 
                     if ($notif_result && mysqli_num_rows($notif_result) > 0) {
                         $notif_row = mysqli_fetch_assoc($notif_result);
                         $notifs = $notif_row['notifs'];
+                        $desc = $notif_row['description'];
+                        $date_create = $notif_row['date_created'];
+                        $stat = $notif_row['status'];
                     } else {
                         // Handle error or no items in cart
                         $notifs = 0;
                     }
                     ?>
 
-                    <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
+                    <a class="nav-link nav-icon" href="#" data-bs-toggle="modal" data-bs-target="#notificationsModal">
                         <i class="bi bi-bell"></i>
+                        <?php
+                        if ($notifs != 0 && $stat == "unread") {
+                        ?>
                         <span class="badge bg-primary badge-number"><?= $notifs ?></span>
+                        <?php
+                        }
+                        ?>
                     </a><!-- End Notification Icon -->
 
 
@@ -103,7 +112,13 @@ $src = "\BILLFrozen/admin/";
 
                     <a class="nav-link nav-icon" href="cart.php">
                         <i class="bi bi-cart"></i>
+                        <?php
+                            if ($total_items != 0) {
+                        ?>
                         <span class="badge bg-success badge-number"><?= $total_items ?></span>
+                        <?php
+                        }
+                        ?>
                     </a><!-- End Messages Icon -->
 
                 </li><!-- End Messages Nav -->

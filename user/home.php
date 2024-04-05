@@ -50,24 +50,38 @@ Toast.fire({
                 <i class="bi bi-cart3"></i>
                 <span>Cart</span>
                 <div class="mx-5 px-5">
+                    <?php
+                    if ($total_items != 0) {
+
+                    ?>
                     <span class="badge bg-success rounded-pill mx-5">
                         <?= $total_items ?>
                     </span>
+                    <?php
+                    }
+                    ?>
                 </div>
             </a>
         </li><!-- End Cart Page Nav -->
 
+
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
+            <a class="nav-link collapsed" href="#" data-bs-toggle="modal" data-bs-target="#notificationsModal">
                 <i class="bi bi-bell"></i>
                 <span>Notifications</span>
                 <div class="mx-4 px-2">
+                    <?php
+                    if ($notifs != 0 && $stat == "unread") {
+                    ?>
                     <span class="badge bg-primary rounded-pill mx-5">
                         <?= $notifs ?>
                     </span>
+                    <?php
+                    }
+                    ?>
                 </div>
             </a>
-        </li><!-- End Inventory Page Nav -->
+        </li><!-- End Notifications Modal Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="my-order.php">
@@ -132,12 +146,12 @@ Toast.fire({
                                 <img src="<?php echo $src . $row['product_picture']; ?>" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title"><?php echo $row['product_name']; ?></h5>
-                                    <!-- <p class="card-text">Price: <?php echo $row['price']; ?></p>
-                                        <?php if ($row['quantity'] == 0) : ?>
-                                            <p class="card-text"><span class="badge bg-danger">Sold Out</span></p>
-                                        <?php else : ?>
-                                            <p class="card-text"><span class="badge bg-success">Available</span></p>
-                                        <?php endif; ?> -->
+                                    <p class="card-text">Price: <?php echo $row['price']; ?></p>
+                                    <?php if ($row['quantity'] == 0) : ?>
+                                    <p class="card-text"><span class="badge bg-danger">Sold Out</span></p>
+                                    <?php else : ?>
+                                    <p class="card-text"><span class="badge bg-success">Available</span></p>
+                                    <?php endif; ?>
                                 </div>
                             </div><!-- End Card with an image on top -->
 

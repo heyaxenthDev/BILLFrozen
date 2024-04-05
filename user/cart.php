@@ -40,24 +40,37 @@ $total_price = 0;
                 <i class="bi bi-cart3"></i>
                 <span>Cart</span>
                 <div class="mx-5 px-5">
+                    <?php
+                    if ($total_items != 0) {
+                       
+                    ?>
                     <span class="badge bg-success rounded-pill mx-5">
                         <?= $total_items ?>
                     </span>
+                    <?php
+                    }
+                    ?>
                 </div>
             </a>
         </li><!-- End Cart Page Nav -->
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
+            <a class="nav-link collapsed" href="#" data-bs-toggle="modal" data-bs-target="#notificationsModal">
                 <i class="bi bi-bell"></i>
                 <span>Notifications</span>
                 <div class="mx-4 px-2">
+                    <?php
+                    if ($notifs != 0 && $stat == "unread") {
+                    ?>
                     <span class="badge bg-primary rounded-pill mx-5">
                         <?= $notifs ?>
                     </span>
+                    <?php
+                    }
+                    ?>
                 </div>
             </a>
-        </li><!-- End Inventory Page Nav -->
+        </li><!-- End Notifications Modal Nav -->
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="my-order.php">
@@ -322,6 +335,42 @@ $total_price = 0;
     </script>
 
 </main><!-- End #main -->
+
+<!-- Modal -->
+<div class="modal fade" id="notificationsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-titles fs-5" id="staticBackdropLabel"><i class="bi bi-bell text-primary"></i>
+                    Notifications</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php
+                if ($notifs != 0) {
+                ?>
+                <!-- Notification -->
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <?= $desc ?>
+                        <span class="badge bg-primary rounded-pill"><?= $stat ?></span>
+                    </li>
+                </ul><!-- End Notifications -->
+                <?php
+                } else {
+                    echo "No notifications found.";
+                }
+                ?>
+
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Understood</button>
+            </div> -->
+        </div>
+    </div>
+</div>
 
 <footer id="footer" class="footer">
     <div class="copyright">
