@@ -102,7 +102,7 @@ if (isset($_POST['addInventoryProduct'])) {
     $productCode = 'PROD' . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
 
     $id = mysqli_real_escape_string($conn, $_POST['product_name']);
-    
+
     // Fetch category and product_picture for the selected product
     $query = "SELECT * FROM `product_list` WHERE `id` = '$id'";
     $result = mysqli_query($conn, $query);
@@ -114,18 +114,9 @@ if (isset($_POST['addInventoryProduct'])) {
 
     $quantity = mysqli_real_escape_string($conn, $_POST['quantity']);
     $expiryDate = mysqli_real_escape_string($conn, $_POST['expiry-date']);
-    
-// Determine the product status
-    $productStatus = '';
-    if (strtotime($expiryDate) < strtotime('now')) {
-        $productStatus = 'Expired';
-    } elseif (strtotime($expiryDate) < strtotime('+1 month')) {
-        $productStatus = 'Expiring Soon';
-    } else {
-        $productStatus = 'Good';
-    }
 
-    $query = 'INSERT INTO `inventory`(`product_code`, `product_name`, `price`, `category`, `quantity`, `product_status`, `expiry_date`, `product_picture`) VALUES ("$productCode", "$productName", "$price", "$category", "$quantity", "$productStatus", "$expiryDate", "$productPicture")';
+
+    $query = "INSERT INTO `inventory`(`product_code`, `product_name`, `price`, `category`, `quantity`, `expiry_date`, `product_picture`) VALUES ('$productCode', '$productName', '$price', '$category', '$quantity', '$expiryDate', '$productPicture')";
 
     if (mysqli_query($conn, $query)) {
         $_SESSION['status'] = "Success";
@@ -141,6 +132,7 @@ if (isset($_POST['addInventoryProduct'])) {
         header("Location: {$_SERVER['HTTP_REFERER']}");
     }
 }
+
 
 
 if (isset($_POST['confirmBtn'])) {
@@ -195,7 +187,43 @@ if(isset($_GET['order']) == 'Delivered'){
     }
 }
 
+if (isset($_POST['editProductId'])) {
+   // Get the form data
+    $productId = $_POST['editProductId'];
+    $productName = $_POST['editProductName'];
+    $productPrice = $_POST['editProductPrice'];
+    $productCategory = $_POST['editProductCategory'];
 
+    // Prepare the SQL query
+    $query = "UPDATE `product_list` SET `product_name`=?, `price`=?, `category`=? WHERE `id`=?";
+    
+    // Create a prepared statement
+    $stmt = mysqli_prepare($conn, $query);
+
+    // Bind the parameters
+    mysqli_stmt_bind_param($stmt, 'sdsi', $productName, $productPrice, $productCategory, $productId);
+
+    // Execute the statement
+    if (mysqli_stmt_execute($stmt)) {
+        $_SESSION['status'] = "Success";
+        $_SESSION['status_text'] = "Product updated successfully";
+        $_SESSION['status_code'] = "success";
+        $_SESSION['status_btn'] = "Done";
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+    } else {
+        $_SESSION['status'] = "Error";
+        $_SESSION['status_text'] = "Error updating product: " . mysqli_error($conn);
+        $_SESSION['status_code'] = "error";
+        $_SESSION['status_btn'] = "Back";
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+    }
+
+    // Close the statement
+    mysqli_stmt_close($stmt);
+} else {
+    // If the form was not submitted, redirect back
+    header("Location: {$_SERVER['HTTP_REFERER']}");
+}
 
 // Close connection
 $conn->close();

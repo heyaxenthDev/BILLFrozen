@@ -304,7 +304,7 @@ $total_price = 0;
                                 Swal.fire({
                                     title: "Deleted!",
                                     text: "Your file has been deleted.",
-                                    icon: "success",
+                                    icon: "warning",
                                     showConfirmButton: false, // Prevents the user from closing the alert manually
                                     timer: 1500 // Show the alert for 1.5 seconds
                                 }).then(() => {

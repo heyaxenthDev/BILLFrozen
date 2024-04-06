@@ -70,10 +70,7 @@ include "alert.php";
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Order List</h5>
-                        <p>Add lightweight datatables to your project with using the <a
-                                href="https://github.com/fiduswriter/Simple-DataTables" target="_blank">Simple
-                                DataTables</a> library. Just add <code>.datatable</code> class name to any table you
-                            wish to convert to a datatable</p>
+                        <p></p>
 
                         <!-- Table with stripped rows -->
                         <table class="table datatable">
@@ -98,16 +95,16 @@ include "alert.php";
                                 $result = mysqli_query($conn, $query);
                                 while ($row = mysqli_fetch_assoc($result)) {
                                 ?>
-                                <tr>
-                                    <td><?php echo $row['order_code']; ?></td>
-                                    <td><?php echo $row['user_id']; ?></td>
-                                    <td><?php echo $row['total_quantity']; ?></td>
-                                    <td><?php echo "₱" . $row['grand_total']; ?></td>
-                                    <td><?php echo $row['order_date']; ?></td>
-                                    <td><?php echo $row['delivery_date']; ?></td>
-                                    <td><?php echo $row['delivery_address']; ?></td>
-                                    <td>
-                                        <?php
+                                    <tr>
+                                        <td><?php echo $row['order_code']; ?></td>
+                                        <td><?php echo $row['user_id']; ?></td>
+                                        <td><?php echo $row['total_quantity']; ?></td>
+                                        <td><?php echo "₱" . $row['grand_total']; ?></td>
+                                        <td><?php echo $row['order_date']; ?></td>
+                                        <td><?php echo $row['delivery_date']; ?></td>
+                                        <td><?php echo $row['delivery_address']; ?></td>
+                                        <td>
+                                            <?php
                                             $status = $row['order_status'];
                                             $badgeClass = '';
 
@@ -130,20 +127,17 @@ include "alert.php";
                                             }
                                             ?>
 
-                                        <span class="<?php echo $badgeClass; ?>"><?php echo $status; ?></span>
-                                    <td>
-                                        <button class="btn btn-primary view-order-btn" data-bs-toggle="modal"
-                                            data-bs-target="#ViewModal"
-                                            data-order-code="<?php echo $row['order_code']; ?>">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                        <?php if ($row['order_status'] == 'for delivery') { ?>
-                                        <a href="code.php?order=Delivered&OrderCode=<?php echo $row['order_code']; ?>"
-                                            class="btn btn-success"><i class="bi bi-cart-check"></i></a>
-                                        <?php } ?>
-                                    </td>
+                                            <span class="<?php echo $badgeClass; ?>"><?php echo $status; ?></span>
+                                        <td>
+                                            <button class="btn btn-primary view-order-btn" data-bs-toggle="modal" data-bs-target="#ViewModal" data-order-code="<?php echo $row['order_code']; ?>">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <?php if ($row['order_status'] == 'for delivery') { ?>
+                                                <a href="code.php?order=Delivered&OrderCode=<?php echo $row['order_code']; ?>" class="btn btn-success"><i class="bi bi-cart-check"></i></a>
+                                            <?php } ?>
+                                        </td>
 
-                                </tr>
+                                    </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -154,15 +148,13 @@ include "alert.php";
                 </div>
 
                 <!-- View Order Modal -->
-                <div class=" modal fade" id="ViewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class=" modal fade" id="ViewModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="staticBackdropLabel">Order
                                     Information</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <form action="code.php" method="POST">
                                 <div class="modal-body m-4">
@@ -175,8 +167,7 @@ include "alert.php";
                                     <div class="row mb-3">
                                         <label for="inputEmail3" class="col-sm-3 col-form-label">Order Code: </label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="orderCode" name="orderCode"
-                                                readonly>
+                                            <input type="text" class="form-control" id="orderCode" name="orderCode" readonly>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -204,8 +195,7 @@ include "alert.php";
                                         <label for="inputEmail3" class="col-sm-3 col-form-label">Set Delivery
                                             Date:</label>
                                         <div class="col-sm-9">
-                                            <input type="date" class="form-control" id="deliveryDate"
-                                                name="deliveryDate" required>
+                                            <input type="date" class="form-control" id="deliveryDate" name="deliveryDate" required>
                                         </div>
                                     </div>
                                     <span>Item/s:</span>
@@ -252,80 +242,80 @@ include "alert.php";
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var viewOrderButtons = document.querySelectorAll('.view-order-btn');
+        document.addEventListener('DOMContentLoaded', function() {
+            var viewOrderButtons = document.querySelectorAll('.view-order-btn');
 
-        viewOrderButtons.forEach(function(button) {
-            button.addEventListener('click', function() {
-                var orderCode = this.getAttribute('data-order-code');
-                fetchOrderInformation(orderCode);
+            viewOrderButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var orderCode = this.getAttribute('data-order-code');
+                    fetchOrderInformation(orderCode);
+                });
             });
-        });
 
-        function fetchOrderInformation(orderCode) {
-            fetch('fetch_order_details.php', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        order_code: orderCode
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    var orderStatusElement = document.getElementById('orderStatus');
-                    var status = data.order_status;
-                    var badgeClass = '';
+            function fetchOrderInformation(orderCode) {
+                fetch('fetch_order_details.php', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            order_code: orderCode
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        var orderStatusElement = document.getElementById('orderStatus');
+                        var status = data.order_status;
+                        var badgeClass = '';
 
-                    switch (status) {
-                        case 'Pending':
-                            badgeClass = 'badge bg-warning';
-                            break;
-                        case 'for delivery':
-                            badgeClass = 'badge bg-primary';
-                            break;
-                        case 'Delivered':
-                            badgeClass = 'badge bg-success';
-                            break;
-                        default:
-                            badgeClass = 'badge bg-secondary';
-                            break;
-                    }
+                        switch (status) {
+                            case 'Pending':
+                                badgeClass = 'badge bg-warning';
+                                break;
+                            case 'for delivery':
+                                badgeClass = 'badge bg-primary';
+                                break;
+                            case 'Delivered':
+                                badgeClass = 'badge bg-success';
+                                break;
+                            default:
+                                badgeClass = 'badge bg-secondary';
+                                break;
+                        }
 
-                    orderStatusElement.innerHTML = `<span class="${badgeClass}">${status}</span>`;
+                        orderStatusElement.innerHTML = `<span class="${badgeClass}">${status}</span>`;
 
-                    var confirmBtn = document.querySelector('[name="confirmBtn"]');
-                    var declineBtn = document.querySelector('[name="declineBtn"]');
+                        var confirmBtn = document.querySelector('[name="confirmBtn"]');
+                        var declineBtn = document.querySelector('[name="declineBtn"]');
 
-                    // Assuming data.order_status contains the order status
-                    if (data.order_status !== 'Pending') {
-                        confirmBtn.style.display = 'none';
-                        declineBtn.style.display = 'none';
-                    } else {
-                        confirmBtn.style.display = 'inline-block'; // or 'block' based on your styling
-                        declineBtn.style.display = 'inline-block'; // or 'block' based on your styling
-                    }
+                        // Assuming data.order_status contains the order status
+                        if (data.order_status !== 'Pending') {
+                            confirmBtn.style.display = 'none';
+                            declineBtn.style.display = 'none';
+                        } else {
+                            confirmBtn.style.display = 'inline-block'; // or 'block' based on your styling
+                            declineBtn.style.display = 'inline-block'; // or 'block' based on your styling
+                        }
 
-                    document.getElementById('orderCode').value = data.order_code;
-                    document.getElementById('customerName').value = data.name;
-                    document.getElementById('customerContact').value = data.contact;
-                    document.getElementById('deliveryAddress').value = data.delivery_address;
-                    document.getElementById('deliveryDate').value = data.delivery_date;
+                        document.getElementById('orderCode').value = data.order_code;
+                        document.getElementById('customerName').value = data.name;
+                        document.getElementById('customerContact').value = data.contact;
+                        document.getElementById('deliveryAddress').value = data.delivery_address;
+                        document.getElementById('deliveryDate').value = data.delivery_date;
 
-                    var orderItemsTableBody = document.getElementById('orderItemsTableBody');
-                    orderItemsTableBody.innerHTML = '';
+                        var orderItemsTableBody = document.getElementById('orderItemsTableBody');
+                        orderItemsTableBody.innerHTML = '';
 
-                    data.items.forEach(function(item, index) {
-                        var unitPrice = item.total_price / item.quantity;
-                        var formattedUnitPrice = unitPrice.toLocaleString('en-PH', {
-                            style: 'currency',
-                            currency: 'PHP',
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        });
+                        data.items.forEach(function(item, index) {
+                            var unitPrice = item.total_price / item.quantity;
+                            var formattedUnitPrice = unitPrice.toLocaleString('en-PH', {
+                                style: 'currency',
+                                currency: 'PHP',
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
 
-                        var row = `
+                            var row = `
                             <tr>
                                 <th scope="row">${index + 1}</th>
                                 <td>${item.product_name}</td>
@@ -334,16 +324,16 @@ include "alert.php";
                                 <td>₱${item.total_price}</td>
                             </tr>
                         `;
-                        orderItemsTableBody.innerHTML += row;
-                    });
+                            orderItemsTableBody.innerHTML += row;
+                        });
 
 
-                    document.getElementById('grandTotalPrice').textContent = "₱" +
-                        data.grand_total;
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    });
+                        document.getElementById('grandTotalPrice').textContent = "₱" +
+                            data.grand_total;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
     </script>
 
 </main><!-- End #main -->
