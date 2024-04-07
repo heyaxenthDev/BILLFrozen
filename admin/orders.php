@@ -47,6 +47,13 @@ include "alert.php";
             </a>
         </li><!-- End Reports Page Nav -->
 
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="users.php">
+                <i class="bi bi-people"></i>
+                <span>Users</span>
+            </a>
+        </li><!-- End Users Page Nav -->
+
     </ul>
 
 </aside><!-- End Sidebar-->

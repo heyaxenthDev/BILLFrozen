@@ -75,6 +75,13 @@ Toast.fire({
             </a>
         </li><!-- End Reports Page Nav -->
 
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="users.php">
+                <i class="bi bi-people"></i>
+                <span>Users</span>
+            </a>
+        </li><!-- End Users Page Nav -->
+
     </ul>
 
 </aside><!-- End Sidebar-->
@@ -189,6 +196,72 @@ Toast.fire({
                     </div><!-- End Delivered Card -->
 
 
+                    <!-- Out of Stocks -->
+                    <div class="col-12">
+                        <div class="card top-selling overflow-auto">
+
+                            <div class="filter">
+                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                    <li class="dropdown-header text-start">
+                                        <h6>Filter</h6>
+                                    </li>
+                                    <li><a class="dropdown-item" href="#">Today</a></li>
+                                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="card-body pb-0">
+                                <h5 class="card-title">Out of Stocks</h5>
+
+                                <table class="table table-borderless">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Preview</th>
+                                            <th scope="col">Product</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">Sold</th>
+                                            <th scope="col">Revenue</th>
+                                        </tr>
+                                    </thead>
+                                    <?php
+                                    // Assuming you have already connected to your database
+                                    $sql = "SELECT * FROM `inventory` WHERE 1";
+                                    $result = mysqli_query($conn, $sql);
+
+                                    if (mysqli_num_rows($result) > 0) {
+                                    ?>
+                                    <tbody>
+                                        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                                        <?php if ($row['quantity'] <= 5) { ?>
+                                        <tr>
+                                            <th scope="row"><a href="#"><img
+                                                        src="<?php echo $row['product_picture']; ?>" alt=""></a></th>
+                                            <td><a href="#"
+                                                    class="text-primary fw-bold"><?php echo $row['product_name']; ?></a>
+                                            </td>
+                                            <td>$<?php echo $row['price']; ?></td>
+                                            <td class="fw-bold"><?php echo $row['sold']; ?></td>
+                                            <td>₱<?php echo number_format($row['price'] * $row['sold'], 2); ?></td>
+                                        </tr>
+                                        <?php } ?>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div><!-- End Out of Stocks -->
+                    <?php
+                                    } else {
+                                        echo "No inventory found.";
+                                    }
+
+                ?>
+
+
 
                     <!-- Reports -->
                     <div class="col-12">
@@ -209,7 +282,21 @@ Toast.fire({
 
                             <div class="card-body">
                                 <h5 class="card-title">Reports <span>/Today</span></h5>
+                                <?php
+                            // Assuming you have already connected to your database
+                            $sql = "SELECT `order_date`, `total_price` FROM `orders` WHERE DATE(`order_date`) = CURDATE()";
+                            $result = mysqli_query($conn, $sql);
 
+                            $dataPointsSales = [];
+                            $dataPointsRevenue = [];
+
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    $dataPointsSales[] = intval($row['total_price']); // Convert total_price to integer
+                                    $dataPointsRevenue[] = strtotime($row['order_date']) * 1000; // Convert order_date to milliseconds
+                                }
+                            }
+                            ?>
                                 <!-- Line Chart -->
                                 <div id="reportsChart"></div>
 
@@ -219,14 +306,10 @@ Toast.fire({
                                         "#reportsChart"), {
                                         series: [{
                                             name: 'Sales',
-                                            data: [31, 40, 28, 51, 42,
-                                                82, 56
-                                            ],
+                                            data: <?php echo json_encode($dataPointsSales); ?>,
                                         }, {
                                             name: 'Revenue',
-                                            data: [11, 32, 45, 32, 34,
-                                                52, 41
-                                            ]
+                                            data: <?php echo json_encode($dataPointsRevenue); ?>
                                         }],
                                         chart: {
                                             height: 350,
@@ -257,15 +340,7 @@ Toast.fire({
                                         },
                                         xaxis: {
                                             type: 'datetime',
-                                            categories: [
-                                                "2018-09-19T00:00:00.000Z",
-                                                "2018-09-19T01:30:00.000Z",
-                                                "2018-09-19T02:30:00.000Z",
-                                                "2018-09-19T03:30:00.000Z",
-                                                "2018-09-19T04:30:00.000Z",
-                                                "2018-09-19T05:30:00.000Z",
-                                                "2018-09-19T06:30:00.000Z"
-                                            ]
+                                            categories: <?php echo json_encode($dataPointsRevenue); ?>
                                         },
                                         tooltip: {
                                             x: {
@@ -282,96 +357,9 @@ Toast.fire({
                         </div>
                     </div><!-- End Reports -->
 
-                    <!-- Out of Stocks -->
-                    <div class="col-12">
-                        <div class="card top-selling overflow-auto">
 
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
 
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div>
 
-                            <div class="card-body pb-0">
-                                <h5 class="card-title">Out of Stocks</h5>
-
-                                <table class="table table-borderless">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Preview</th>
-                                            <th scope="col">Product</th>
-                                            <th scope="col">Price</th>
-                                            <th scope="col">Sold</th>
-                                            <th scope="col">Revenue</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="assets/img/product-1.jpg" alt=""></a>
-                                            </th>
-                                            <td><a href="#" class="text-primary fw-bold">Ut
-                                                    inventore ipsa
-                                                    voluptas
-                                                    nulla</a></td>
-                                            <td>$64</td>
-                                            <td class="fw-bold">124</td>
-                                            <td>$5,828</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="assets/img/product-2.jpg" alt=""></a>
-                                            </th>
-                                            <td><a href="#" class="text-primary fw-bold">Exercitationem
-                                                    similique
-                                                    doloremque</a></td>
-                                            <td>$46</td>
-                                            <td class="fw-bold">98</td>
-                                            <td>$4,508</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="assets/img/product-3.jpg" alt=""></a>
-                                            </th>
-                                            <td><a href="#" class="text-primary fw-bold">Doloribus nisi
-                                                    exercitationem</a></td>
-                                            <td>$59</td>
-                                            <td class="fw-bold">74</td>
-                                            <td>$4,366</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="assets/img/product-4.jpg" alt=""></a>
-                                            </th>
-                                            <td><a href="#" class="text-primary fw-bold">Officiis
-                                                    quaerat sint
-                                                    rerum
-                                                    error</a></td>
-                                            <td>$32</td>
-                                            <td class="fw-bold">63</td>
-                                            <td>$2,016</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="assets/img/product-5.jpg" alt=""></a>
-                                            </th>
-                                            <td><a href="#" class="text-primary fw-bold">Sit
-                                                    unde debitis
-                                                    delectus
-                                                    repellendus</a></td>
-                                            <td>$79</td>
-                                            <td class="fw-bold">41</td>
-                                            <td>$3,239</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-
-                        </div>
-                    </div><!-- End Out of Stocks -->
 
                 </div>
             </div><!-- End Left side columns -->
@@ -387,65 +375,50 @@ Toast.fire({
                             <li class="dropdown-header text-start">
                                 <h6>Filter</h6>
                             </li>
-
                             <li><a class="dropdown-item" href="#">Today</a></li>
                             <li><a class="dropdown-item" href="#">This Month</a></li>
                             <li><a class="dropdown-item" href="#">This Year</a></li>
                         </ul>
                     </div>
 
-                    <div class="card-body pb-0">
+                    <div class="card-body pb-3">
                         <h5 class="card-title">New Orders</h5>
+                        <?php
+                        // Assuming you have already connected to your database
 
+                        $currentDateTime = date('Y-m-d H:i:s');
+                        $oneDayAgo = date('Y-m-d H:i:s', strtotime('-1 day', strtotime($currentDateTime)));
+                        $sql = "SELECT * FROM `orders`  WHERE `date_created` >= '$oneDayAgo'";
+                        $result = mysqli_query($conn, $sql);
+
+                        if (mysqli_num_rows($result) > 0) {
+                        ?>
                         <div class="news">
+                            <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                             <div class="post-item clearfix">
-                                <img src="assets/img/news-1.jpg" alt="">
-                                <h4><a href="#">Nihil blanditiis at in nihil autem</a></h4>
-                                <p>Sit recusandae non aspernatur laboriosam. Quia enim eligendi sed
-                                    ut harum...
-                                </p>
+                                <h4><a href="#"><?php echo $row['product_name']; ?></a></h4>
+                                <p>Order Code: <?php echo $row['order_code']; ?></p>
+                                <p>Quantity: <?php echo $row['quantity']; ?></p>
+                                <p>Total Price: <?php echo $row['total_price']; ?></p>
+                                <p>Order Date: <?php echo $row['order_date']; ?></p>
+                                <p>Delivery Date: <?php echo $row['delivery_date']; ?></p>
+                                <p>Delivery Address: <?php echo $row['delivery_address']; ?></p>
+                                <p>Order Status: <?php echo $row['order_status']; ?></p>
                             </div>
-
-                            <div class="post-item clearfix">
-                                <img src="assets/img/news-2.jpg" alt="">
-                                <h4><a href="#">Quidem autem et impedit</a></h4>
-                                <p>Illo nemo neque maiores vitae officiis cum eum turos elan dries
-                                    werona
-                                    nande...
-                                </p>
-                            </div>
-
-                            <div class="post-item clearfix">
-                                <img src="assets/img/news-3.jpg" alt="">
-                                <h4><a href="#">Id quia et et ut maxime similique occaecati ut</a>
-                                </h4>
-                                <p>Fugiat voluptas vero eaque accusantium eos. Consequuntur sed
-                                    ipsam et
-                                    totam...
-                                </p>
-                            </div>
-
-                            <div class="post-item clearfix">
-                                <img src="assets/img/news-4.jpg" alt="">
-                                <h4><a href="#">Laborum corporis quo dara net para</a></h4>
-                                <p>Qui enim quia optio. Eligendi aut asperiores enim repellendusvel
-                                    rerum
-                                    cuder...
-                                </p>
-                            </div>
-
-                            <div class="post-item clearfix">
-                                <img src="assets/img/news-5.jpg" alt="">
-                                <h4><a href="#">Et dolores corrupti quae illo quod dolor</a></h4>
-                                <p>Odit ut eveniet modi reiciendis. Atque cupiditate libero beatae
-                                    dignissimos
-                                    eius...</p>
-                            </div>
-
+                            <?php } ?>
                         </div><!-- End sidebar recent posts-->
 
                     </div>
                 </div><!-- End New Order -->
+                <?php
+                        } else {
+                            echo "No new orders found.";
+                        }
+
+                        // Close the database connection
+                        mysqli_close($conn);
+            ?>
+
 
             </div><!-- End Right side columns -->
 
