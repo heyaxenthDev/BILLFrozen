@@ -1,3 +1,6 @@
+<?php 
+include "includes/conn.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -80,5 +83,18 @@
 
             </ul>
         </nav><!-- End Icons Navigation -->
+
+        <?php 
+            $order_query = "SELECT COUNT(*) AS count_orders FROM orders WHERE order_status = 'Pending'";
+            $order_result = mysqli_query($conn, $order_query);
+
+            if ($order_result && mysqli_num_rows($order_result) > 0) {
+                $order_row = mysqli_fetch_assoc($order_result);
+                
+                $count = $order_row['count_orders'];
+            }else{
+                $count = 0;
+            }
+        ?>
 
     </header><!-- End Header -->

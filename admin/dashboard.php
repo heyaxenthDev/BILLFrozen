@@ -49,8 +49,19 @@ Toast.fire({
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="orders.php">
-                <i class="bi bi-cart"></i>
+                <i class="bi bi-cart3"></i>
                 <span>Orders</span>
+                <div class="mx-5 px-4">
+                    <?php
+                    if ($count != 0) {
+                    ?>
+                    <span class="badge bg-primary rounded-pill mx-5">
+                        <?= $count ?>
+                    </span>
+                    <?php
+                    }
+                    ?>
+                </div>
             </a>
         </li><!-- End Orders Page Nav -->
 

@@ -21,8 +21,19 @@ include "alert.php";
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="orders.php">
-                <i class="bi bi-cart"></i>
+                <i class="bi bi-cart3"></i>
                 <span>Orders</span>
+                <div class="mx-5 px-4">
+                    <?php
+                    if ($count != 0) {
+                    ?>
+                    <span class="badge bg-primary rounded-pill mx-5">
+                        <?= $count ?>
+                    </span>
+                    <?php
+                    }
+                    ?>
+                </div>
             </a>
         </li><!-- End Orders Page Nav -->
 
@@ -83,7 +94,8 @@ include "alert.php";
         </div>
 
         <!-- Add Product Modal -->
-        <div class="modal fade" id="productList" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="productListLabel" aria-hidden="true">
+        <div class="modal fade" id="productList" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="productListLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -96,14 +108,17 @@ include "alert.php";
                                 <div class="col-lg-12">
                                     <!-- Product Image Preview -->
                                     <center>
-                                        <img id="productImagePreview" src="images/default-product-image.png" alt="Product Image Preview" style="max-width: 100%; max-height: 300px;">
+                                        <img id="productImagePreview" src="images/default-product-image.png"
+                                            alt="Product Image Preview" style="max-width: 100%; max-height: 300px;">
                                     </center>
                                     <!-- Product Image Input -->
                                     <small class="mt-2">Add Product Image</small>
-                                    <input type="file" name="productImage" class="form-control mb-3" id="productImage" onchange="previewProductImage();" accept="image/*" required>
+                                    <input type="file" name="productImage" class="form-control mb-3" id="productImage"
+                                        onchange="previewProductImage();" accept="image/*" required>
 
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="product_name" name="product_name" placeholder=" " required>
+                                        <input type="text" class="form-control" id="product_name" name="product_name"
+                                            placeholder=" " required>
                                         <label for="product_name">Product Name</label>
                                     </div>
                                     <div class="form-floating mb-3">
@@ -116,14 +131,16 @@ include "alert.php";
                                         <label for="category">Category</label>
                                     </div>
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="price" name="price" placeholder=" " required>
+                                        <input type="text" class="form-control" id="price" name="price" placeholder=" "
+                                            required>
                                         <label for="price">Price</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary" name="addNewProduct"><i class="bi bi-plus"></i> Add
+                            <button type="submit" class="btn btn-primary" name="addNewProduct"><i
+                                    class="bi bi-plus"></i> Add
                                 Product</button>
                         </div>
                     </form>
@@ -146,20 +163,25 @@ include "alert.php";
                 // Loop through each row
                 while ($row = $result->fetch_assoc()) {
             ?>
-                    <div class="col-lg-2 col-6">
-                        <!-- Product Card -->
-                        <div class="card">
-                            <img src="<?php echo $row['product_picture']; ?>" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h6 class="card-title"><?php echo $row['product_name']; ?></h6>
-                                <p class="card-text fw-semibold">₱<?php echo $row['price']; ?></p>
-                                <div class="d-grid gap-2 mx-auto">
-                                    <button class="btn btn-primary" type="submit" name="editProduct" data-bs-toggle="modal" data-bs-target="#editProductModal" data-product-id="<?php echo $row['id']; ?>" data-product-name="<?php echo $row['product_name']; ?>" data-product-price="<?php echo $row['price']; ?>" data-product-category="<?php echo $row['category']; ?>" data-product-picture="<?php echo $row['product_picture']; ?> ">Edit</button>
-                                    <a class="btn btn-danger del" data-product-idDel="<?php echo $row['id']; ?>">Delete</a>
-                                </div>
-                            </div>
-                        </div><!-- End Product Card -->
+            <div class="col-lg-2 col-6">
+                <!-- Product Card -->
+                <div class="card">
+                    <img src="<?php echo $row['product_picture']; ?>" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h6 class="card-title"><?php echo $row['product_name']; ?></h6>
+                        <p class="card-text fw-semibold">₱<?php echo $row['price']; ?></p>
+                        <div class="d-grid gap-2 mx-auto">
+                            <button class="btn btn-primary" type="submit" name="editProduct" data-bs-toggle="modal"
+                                data-bs-target="#editProductModal" data-product-id="<?php echo $row['id']; ?>"
+                                data-product-name="<?php echo $row['product_name']; ?>"
+                                data-product-price="<?php echo $row['price']; ?>"
+                                data-product-category="<?php echo $row['category']; ?>"
+                                data-product-picture="<?php echo $row['product_picture']; ?> ">Edit</button>
+                            <a class="btn btn-danger del" data-product-idDel="<?php echo $row['id']; ?>">Delete</a>
+                        </div>
                     </div>
+                </div><!-- End Product Card -->
+            </div>
             <?php
                 }
             } else {
@@ -172,11 +194,13 @@ include "alert.php";
         </div>
 
         <!-- Edit Product Modal -->
-        <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+        <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editProductModalLabel"><i class="bi bi-pencil-square text-primary"></i>
+                        <h5 class="modal-title" id="editProductModalLabel"><i
+                                class="bi bi-pencil-square text-primary"></i>
                             Edit
                             Product</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -185,19 +209,23 @@ include "alert.php";
                         <!-- Form for editing product details -->
                         <form id="editProductForm" method="POST" action="code.php">
                             <div class="mb-3">
-                                <img src="" alt="product image" class="img-fluid rounded" id="product_pic" name="product_pic">
+                                <img src="" alt="product image" class="img-fluid rounded" id="product_pic"
+                                    name="product_pic">
                             </div>
                             <div class="mb-3">
                                 <label for="editProductName" class="form-label">Product Name</label>
-                                <input type="text" class="form-control" id="editProductName" name="editProductName" required>
+                                <input type="text" class="form-control" id="editProductName" name="editProductName"
+                                    required>
                             </div>
                             <div class="mb-3">
                                 <label for="editProductPrice" class="form-label">Price</label>
-                                <input type="text" class="form-control" id="editProductPrice" name="editProductPrice" required>
+                                <input type="text" class="form-control" id="editProductPrice" name="editProductPrice"
+                                    required>
                             </div>
                             <div class="mb-3">
                                 <label for="editProductCategory" clasys="form-label">Category</label>
-                                <input type="text" class="form-control" id="editProductCategory" name="editProductCategory" required>
+                                <input type="text" class="form-control" id="editProductCategory"
+                                    name="editProductCategory" required>
                             </div>
                             <div class="justify-content-end">
                                 <input type="hidden" id="editProductId" name="editProductId">
@@ -213,77 +241,77 @@ include "alert.php";
     </section>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var editProductModal = document.getElementById('editProductModal');
-            editProductModal.addEventListener('show.bs.modal', function(event) {
-                var button = event.relatedTarget;
-                var productId = button.getAttribute('data-product-id');
-                var productPic = button.getAttribute('data-product-picture');
-                var productName = button.getAttribute('data-product-name');
-                var productPrice = button.getAttribute('data-product-price');
-                var productCategory = button.getAttribute('data-product-category');
+    document.addEventListener('DOMContentLoaded', function() {
+        var editProductModal = document.getElementById('editProductModal');
+        editProductModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget;
+            var productId = button.getAttribute('data-product-id');
+            var productPic = button.getAttribute('data-product-picture');
+            var productName = button.getAttribute('data-product-name');
+            var productPrice = button.getAttribute('data-product-price');
+            var productCategory = button.getAttribute('data-product-category');
 
-                // Populate the form fields with the product details
-                var form = document.getElementById('editProductForm');
-                form['editProductId'].value = productId;
-                form['product_pic'].src = productPic; // Set the src attribute of the image
-                form['editProductName'].value = productName;
-                form['editProductPrice'].value = productPrice;
-                form['editProductCategory'].value = productCategory;
-            });
+            // Populate the form fields with the product details
+            var form = document.getElementById('editProductForm');
+            form['editProductId'].value = productId;
+            form['product_pic'].src = productPic; // Set the src attribute of the image
+            form['editProductName'].value = productName;
+            form['editProductPrice'].value = productPrice;
+            form['editProductCategory'].value = productCategory;
         });
+    });
 
-        document.querySelectorAll(".del").forEach((item) => {
-            item.addEventListener("click", function(e) {
-                e.preventDefault();
-                const productID = this.getAttribute("data-product-idDel");
+    document.querySelectorAll(".del").forEach((item) => {
+        item.addEventListener("click", function(e) {
+            e.preventDefault();
+            const productID = this.getAttribute("data-product-idDel");
 
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Send AJAX request
-                        const xhr = new XMLHttpRequest();
-                        xhr.onreadystatechange = function() {
-                            if (xhr.readyState === XMLHttpRequest.DONE) {
-                                if (xhr.status === 200) {
-                                    Swal.fire({
-                                        title: "Deleted!",
-                                        text: "Product has been deleted.",
-                                        icon: "warning",
-                                        showConfirmButton: false, // Prevents the user from closing the alert manually
-                                        timer: 1500 // Show the alert for 1.5 seconds
-                                    }).then(() => {
-                                        // Reload page after the alert is closed
-                                        location.reload();
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        title: "Error!",
-                                        text: "Failed to delete item.",
-                                        icon: "error"
-                                    });
-                                }
-
-
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send AJAX request
+                    const xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === XMLHttpRequest.DONE) {
+                            if (xhr.status === 200) {
+                                Swal.fire({
+                                    title: "Deleted!",
+                                    text: "Product has been deleted.",
+                                    icon: "warning",
+                                    showConfirmButton: false, // Prevents the user from closing the alert manually
+                                    timer: 1500 // Show the alert for 1.5 seconds
+                                }).then(() => {
+                                    // Reload page after the alert is closed
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: "Error!",
+                                    text: "Failed to delete item.",
+                                    icon: "error"
+                                });
                             }
-                        };
-                        xhr.open("POST", "delete_product_item.php");
-                        xhr.setRequestHeader(
-                            "Content-Type",
-                            "application/x-www-form-urlencoded"
-                        );
-                        xhr.send(`id=${productID}`);
-                    }
-                });
+
+
+                        }
+                    };
+                    xhr.open("POST", "delete_product_item.php");
+                    xhr.setRequestHeader(
+                        "Content-Type",
+                        "application/x-www-form-urlencoded"
+                    );
+                    xhr.send(`id=${productID}`);
+                }
             });
         });
+    });
     </script>
 
 </main><!-- End #main -->
