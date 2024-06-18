@@ -1,9 +1,9 @@
 <?php
 include 'authentication.php';
+checkLogin(); // Call the function to check if the user is logged in
 include_once 'includes/header.php';
 
 include "alert.php";
-
 ?>
 <!-- ======= Sidebar ======= -->
 <aside id="sidebar" class="sidebar">
@@ -76,8 +76,9 @@ include "alert.php";
 
     <section class="section">
         <?php
+        $user_id = $_SESSION['user']['user_id'];
         // Assuming you have already established a database connection
-        $query = "SELECT o.`order_code`, o.`user_id`, o.`name`, o.`contact`, o.`product_code`, o.`product_name`, o.`quantity`, SUM(o.`total_price`) AS `total`, o.`order_date`, o.`delivery_date`, o.`delivery_address`, o.`order_status`, o.`date_created`, i.`product_picture` FROM `orders` o INNER JOIN `inventory` i ON o.`product_code` = i.`product_code` GROUP BY o.`order_code`";
+        $query = "SELECT o.`order_code`, o.`user_id`, o.`name`, o.`contact`, o.`product_code`, o.`product_name`, o.`quantity`, SUM(o.`total_price`) AS `total`, o.`order_date`, o.`delivery_date`, o.`delivery_address`, o.`order_status`, o.`date_created`, i.`product_picture` FROM `orders` o INNER JOIN `inventory` i ON o.`product_code` = i.`product_code` WHERE o.`user_id` = '$user_id' GROUP BY o.`order_code`";
         $result = mysqli_query($conn, $query);
 
         if ($result) {

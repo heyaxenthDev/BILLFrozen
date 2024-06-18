@@ -145,9 +145,9 @@ if (isset($_POST['placeOrder'])) {
     $delivery_address = $_POST['brgy'] . ', ' . $_POST['municipality'] . ', ' . $_POST['zip'];
     $order_status = 'Pending'; // Assuming the default order status is 'Pending'
 
-    // Prepare the statement
+    // Prepare the statement for inserting into the orders table
     $stmt = $conn->prepare("INSERT INTO `orders` (`order_code`, `user_id`, `name`, `contact`, `product_code`, `product_name`, `quantity`, `total_price`, `delivery_address`, `order_status`) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param(
         "ssssssidss",
@@ -163,7 +163,11 @@ if (isset($_POST['placeOrder'])) {
         $order_status
     );
 
-    // Insert each order item into the orders table
+    // Prepare the statement for updating the inventory quantity
+    $updateStmt = $conn->prepare("UPDATE `inventory` SET `quantity` = `quantity` - ? WHERE `product_code` = ?");
+    $updateStmt->bind_param("is", $quantity, $product_code);
+
+    // Insert each order item into the orders table and update the inventory
     foreach ($_SESSION['order_items'] as $item) {
         $product_code = $item['product_code'];
         $product_name = $item['product_name'];
@@ -171,7 +175,7 @@ if (isset($_POST['placeOrder'])) {
         $price = $item['price'];
         $total_price = $quantity * $price;
 
-        // Execute the statement
+        // Execute the insert statement
         if (!$stmt->execute()) {
             $_SESSION['status'] = "Error";
             $_SESSION['status_text'] = "Error: " . $stmt->error;
@@ -179,11 +183,24 @@ if (isset($_POST['placeOrder'])) {
             $_SESSION['status_btn'] = "Back";
             // echo "Error: " . $stmt->error;
             header("Location: cart.php");
+            exit;
+        }
+
+        // Execute the update statement
+        if (!$updateStmt->execute()) {
+            $_SESSION['status'] = "Error";
+            $_SESSION['status_text'] = "Error: " . $updateStmt->error;
+            $_SESSION['status_code'] = "error";
+            $_SESSION['status_btn'] = "Back";
+            // echo "Error: " . $updateStmt->error;
+            header("Location: cart.php");
+            exit;
         }
     }
 
-    // Close the statement
+    // Close the statements
     $stmt->close();
+    $updateStmt->close();
 
     // Remove cart items after placing the order
     $deleteStmt = $conn->prepare("DELETE FROM `cart` WHERE `user_id` = ?");
@@ -198,8 +215,7 @@ if (isset($_POST['placeOrder'])) {
     unset($_SESSION['order_items']);
     unset($_SESSION['orders']);
 
-
     // Redirect to a thank you page or order summary page
     header("Location: order-placed.html");
-    // exit;
+    exit;
 }

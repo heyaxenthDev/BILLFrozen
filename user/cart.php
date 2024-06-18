@@ -1,25 +1,35 @@
 <?php
 include 'authentication.php';
+checkLogin(); // Call the function to check if the user is logged in
 include 'includes/header.php';
 
 include "alert.php";
 
-// Fetch cart items count
 $user_id = $_SESSION['user']['user_id'];
-$count_query = "SELECT COUNT(added_quantity) AS total_items FROM cart WHERE `user_id` = '$user_id'";
-$result_count = mysqli_query($conn, $count_query);
+
+// Fetch cart items count
+$count_query = "SELECT COUNT(added_quantity) AS total_items FROM cart WHERE user_id = ?";
+$stmt_count = $conn->prepare($count_query);
+$stmt_count->bind_param("s", $user_id);
+$stmt_count->execute();
+$result_count = $stmt_count->get_result();
 $total_items = 0;
 
-if ($result_count && mysqli_num_rows($result_count) > 0) {
-    $row_count = mysqli_fetch_assoc($result_count);
+if ($result_count && $result_count->num_rows > 0) {
+    $row_count = $result_count->fetch_assoc();
     $total_items = $row_count['total_items'];
 }
+
+$stmt_count->close();
 
 // Fetch cart items and calculate total price
 $sql = "SELECT c.user_id, c.username, c.product_code, c.product_name, c.added_quantity, i.price, i.category, i.product_picture
         FROM cart c
-        JOIN inventory i ON c.product_code = i.product_code";
-$result = mysqli_query($conn, $sql);
+        JOIN inventory i ON c.product_code = i.product_code WHERE c.user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
 $total_price = 0;
 ?>
 
@@ -102,7 +112,7 @@ $total_price = 0;
                     <input type="hidden" name="total_items" id="" value="<?= $total_items ?>">
                     <hr>
 
-                    <?php if (mysqli_num_rows($result) > 0) : ?>
+                    <?php if ($result) : ?>
                     <?php while ($row = mysqli_fetch_assoc($result)) :
                             $product_price = $row['price'] * $row['added_quantity'];
                             $total_price += $product_price; // Add to total price

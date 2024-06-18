@@ -1,5 +1,6 @@
 <?php
 include 'authentication.php';
+checkLogin(); // Call the function to check if the user is logged in
 include_once 'includes/header.php';
 
 include "alert.php";
