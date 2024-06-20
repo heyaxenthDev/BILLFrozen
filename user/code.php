@@ -13,7 +13,7 @@ if (isset($_POST['AddtoCartBtn'])) {
     // Check if the item already exists in the cart
     $check_query = "SELECT * FROM `cart` WHERE `user_id` = ? AND `product_code` = ? AND `product_name` = ?";
     $check_stmt = mysqli_prepare($conn, $check_query);
-    mysqli_stmt_bind_param($check_stmt, "iss", $user_id, $product_code, $product_name);
+    mysqli_stmt_bind_param($check_stmt, "sss", $user_id, $product_code, $product_name);
     mysqli_stmt_execute($check_stmt);
     $result = mysqli_stmt_get_result($check_stmt);
 
@@ -22,7 +22,7 @@ if (isset($_POST['AddtoCartBtn'])) {
         $new_quantity = $row['added_quantity'] + $quantity;
         $update_query = "UPDATE `cart` SET `added_quantity` = ? WHERE `user_id` = ? AND `product_code` = ? AND `product_name` = ?";
         $update_stmt = mysqli_prepare($conn, $update_query);
-        mysqli_stmt_bind_param($update_stmt, "isss", $new_quantity, $user_id, $product_code, $product_name);
+        mysqli_stmt_bind_param($update_stmt, "ssss", $new_quantity, $user_id, $product_code, $product_name);
         mysqli_stmt_execute($update_stmt);
         $_SESSION['cart'] = "success";
         $_SESSION['cart_text'] = "Item quantity updated in cart.";

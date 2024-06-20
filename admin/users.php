@@ -27,9 +27,9 @@ include "alert.php";
                     <?php
                     if ($count != 0) {
                     ?>
-                        <span class="badge bg-primary rounded-pill mx-5">
-                            <?= $count ?>
-                        </span>
+                    <span class="badge bg-primary rounded-pill mx-5">
+                        <?= $count ?>
+                    </span>
                     <?php
                     }
                     ?>
@@ -99,7 +99,7 @@ include "alert.php";
                                     <th scope="col">Email or Phone Number</th>
                                     <th scope="col">Full Name</th>
                                     <th scope="col">Username</th>
-                                    <th scope="col">Password</th>
+                                    <!-- <th scope="col">Password</th> -->
                                     <!-- <th scope="col">Profile Picture</th> -->
                                     <th scope="col">Date Created</th>
                                     <!-- <th scope="col">Actions</th> -->
@@ -119,7 +119,7 @@ include "alert.php";
                                     echo "<td>{$row['email_or_phone_number']}</td>";
                                     echo "<td>{$row['full_name']}</td>";
                                     echo "<td>{$row['username']}</td>";
-                                    echo "<td>{$row['password']}</td>";
+                                    // echo "<td>{$row['password']}</td>";
                                     // echo "<td><img src='{$row['profile_picture']}' style='max-width: 100px; max-height: 65px;' alt='Profile Picture'></td>";
                                     echo "<td>{$row['date_created']}</td>";
                                     // echo "<td>";

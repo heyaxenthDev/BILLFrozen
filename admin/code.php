@@ -225,6 +225,39 @@ if (isset($_POST['editProductId'])) {
     header("Location: {$_SERVER['HTTP_REFERER']}");
 }
 
-// Close connection
+if (isset($_POST['editInventory'])) {
+    // Get the form data
+    $id = $_POST['id'];
+    $product_name = $_POST['product_name'];
+    $price = $_POST['price'];
+    $quantity = $_POST['quantity'];
+    $expiry_date = $_POST['expiry_date'];
+
+    // Prepare the SQL statement
+    $stmt = $conn->prepare("UPDATE `inventory` SET `product_name`=?, `price`=?, `quantity`=?, `expiry_date`=? WHERE `id`=?");
+    $stmt->bind_param("sdiss", $product_name, $price, $quantity, $expiry_date, $id);
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        // Redirect to a success page or display a success message
+        $_SESSION['status'] = "Success";
+        $_SESSION['status_text'] = "Inventory item updated successfully.";
+        $_SESSION['status_code'] = "success";
+        $_SESSION['status_btn'] = "Back";
+        header("Location: inventory.php");
+    } else {
+        // Handle the error
+        $_SESSION['status'] = "Error";
+        $_SESSION['status_text'] = "Error: " . $stmt->error;
+        $_SESSION['status_code'] = "error";
+        $_SESSION['status_btn'] = "Back";
+        header("Location: inventory.php");
+    }
+
+    // Close the statement
+    $stmt->close();
+}
+
+// Close the database connection
 $conn->close();
 ?>

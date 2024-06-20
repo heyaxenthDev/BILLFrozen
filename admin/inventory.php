@@ -255,7 +255,7 @@ include "alert.php";
                             <div class="modal-body">
                                 <!-- Form for editing inventory item -->
                                 <form action="code.php" method="POST">
-                                    <input type="hidden" name="id" id="editId">
+                                    <input type="text" name="id" id="editId">
                                     <div class="mb-3">
                                         <label for="editProductName" class="form-label">Product Name</label>
                                         <input type="text" class="form-control" id="editProductName"
