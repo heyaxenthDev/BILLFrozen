@@ -249,8 +249,14 @@ include "alert.php";
 
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" name="declineBtn">Decline
+                                    <button type="submit" class="btn btn-danger" name="declineBtn"
+                                        id="declineBtn">Decline
                                         Order</button>
+                                    <script>
+                                    document.getElementById('declineBtn').addEventListener('click', function() {
+                                        document.getElementById('deliveryDate').removeAttribute('required');
+                                    });
+                                    </script>
                                     <button type="submit" class="btn btn-success" name="confirmBtn">Confirm
                                         Order</button>
                                 </div>
@@ -326,7 +332,8 @@ include "alert.php";
                     document.getElementById('customerName').value = data.name;
                     document.getElementById('customerContact').value = data.contact;
                     document.getElementById('deliveryAddress').value = data.delivery_address;
-                    document.getElementById('deliveryDate').value = data.delivery_date;
+                    document.getElementById('deliveryDate').value = (data.delivery_date = null ?
+                        "Order Declined" : data.delivery_date);
 
                     var orderItemsTableBody = document.getElementById('orderItemsTableBody');
                     orderItemsTableBody.innerHTML = '';

@@ -33,65 +33,7 @@ $result = $stmt->get_result();
 $total_price = 0;
 ?>
 
-<!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
 
-    <ul class="sidebar-nav" id="sidebar-nav">
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="home.php">
-                <i class="bi bi-house"></i>
-                <span>Home</span>
-            </a>
-        </li><!-- End Home Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link " href="cart.php">
-                <i class="bi bi-cart3"></i>
-                <span>Cart</span>
-                <div class="mx-5 px-5">
-                    <?php
-                    if ($total_items != 0) {
-                       
-                    ?>
-                    <span class="badge bg-success rounded-pill mx-5">
-                        <?= $total_items ?>
-                    </span>
-                    <?php
-                    }
-                    ?>
-                </div>
-            </a>
-        </li><!-- End Cart Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-bs-toggle="modal" data-bs-target="#notificationsModal">
-                <i class="bi bi-bell"></i>
-                <span>Notifications</span>
-                <div class="mx-4 px-2">
-                    <?php
-                    if ($notifs != 0 && $stat == "unread") {
-                    ?>
-                    <span class="badge bg-primary rounded-pill mx-5">
-                        <?= $notifs ?>
-                    </span>
-                    <?php
-                    }
-                    ?>
-                </div>
-            </a>
-        </li><!-- End Notifications Modal Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="my-order.php">
-                <i class="bi bi-bag-check"></i>
-                <span>My Orders</span>
-            </a>
-        </li><!-- End Orders Page Nav -->
-
-    </ul>
-
-</aside><!-- End Sidebar-->
 
 <main id="main" class="main">
 
@@ -358,7 +300,7 @@ $total_price = 0;
             </div>
             <div class="modal-body">
                 <?php
-                if ($notifs != 0) {
+                if ($notifs_count != 0) {
                 ?>
                 <!-- Notification -->
                 <ul class="list-group">

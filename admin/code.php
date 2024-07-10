@@ -152,8 +152,9 @@ if (isset($_POST['confirmBtn'])) {
         // Insert notification into the notifications table
         $description = "Your order with order code $orderCode has been confirmed and is now scheduled for delivery on $deliveryDate.";
         $status = 'unread';
+        $order_status = "Order Confirmed";
 
-        $insertNotificationQuery = "INSERT INTO `notifications`(`user_id`, `username`, `description`, `status`) VALUES ('$userId','$username','$description','$status')";
+        $insertNotificationQuery = "INSERT INTO `notifications`(`user_id`, `username`, `description`, `order_status`, `status`) VALUES ('$userId','$username','$description', '$order_status', '$status')";
         mysqli_query($conn, $insertNotificationQuery);
 
         $_SESSION['alert'] = "success";
@@ -166,6 +167,38 @@ if (isset($_POST['confirmBtn'])) {
     }
 }
 
+
+if (isset($_POST['declineBtn'])) {
+    $orderCode = $_POST['orderCode'];
+
+    // Update order status for declining
+    $updateQuery = "UPDATE orders SET delivery_date = null, order_status = 'Order Declined' WHERE order_code = '$orderCode'";
+    if (mysqli_query($conn, $updateQuery)) {
+        // Fetch user_id and username from the orders table
+        $fetchOrderInfoQuery = "SELECT user_id,name FROM orders WHERE order_code = '$orderCode'";
+        $result = mysqli_query($conn, $fetchOrderInfoQuery);
+        $row = mysqli_fetch_assoc($result);
+        $userId = $row['user_id'];
+        $username = $row['name'];
+
+        // Insert notification into the notifications table
+        $description = "Your order with order code $orderCode has been declined due to insufficient stocks.";
+        $status = "unread";
+        $order_status = "Order Declined";
+
+        $insertNotificationQuery = "INSERT INTO `notifications`(`user_id`, `username`, `description`, `order_status`, `status`) VALUES ('$userId','$username','$description', '$order_status', '$status')";
+        mysqli_query($conn, $insertNotificationQuery);
+
+        $_SESSION['alert'] = "warning";
+        $_SESSION['alert_text'] = "Order has been declined.";
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+    } else {
+        $_SESSION['alert'] = "error";
+        $_SESSION['alert_text'] = "Error updating order: " . mysqli_error($conn);
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+    
+    }
+}
 
 
 if(isset($_GET['order']) == 'Delivered'){
@@ -257,6 +290,7 @@ if (isset($_POST['editInventory'])) {
     // Close the statement
     $stmt->close();
 }
+
 
 // Close the database connection
 $conn->close();

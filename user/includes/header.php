@@ -61,33 +61,30 @@ $src = "\BILLFrozen/admin/";
 
                 <li class="nav-item dropdown">
                     <?php
-                    // Assuming you have already started the session and connected to the database
-                    // Fetch cart items count
+                    // Fetch unread notifications
                     $userID = $_SESSION['user']['user_id'];
-                    $notif_query = "SELECT COUNT(`status`) AS `notifs`, `description`, `status`, `date_created` FROM notifications WHERE `user_id` = '$userID'";
+                    $notif_query = "SELECT `description`, `status`, `order_status`, `date_created` FROM notifications WHERE `user_id` = '$userID'";
                     $notif_result = mysqli_query($conn, $notif_query);
 
+                    $unread_notifs = [];
+                    $read_notifs = [];
                     if ($notif_result && mysqli_num_rows($notif_result) > 0) {
-                        $notif_row = mysqli_fetch_assoc($notif_result);
-                        $notifs = $notif_row['notifs'];
-                        $desc = $notif_row['description'];
-                        $date_create = $notif_row['date_created'];
-                        $stat = $notif_row['status'];
-                    } else {
-                        // Handle error or no items in cart
-                        $notifs = 0;
+                        while ($notif_row = mysqli_fetch_assoc($notif_result)) {
+                            if ($notif_row['status'] == 'unread') {
+                                $unread_notifs[] = $notif_row;
+                            } else {
+                                $read_notifs[] = $notif_row;
+                            }
+                        }
                     }
+                    $notifs_count = count($unread_notifs);
                     ?>
 
                     <a class="nav-link nav-icon" href="#" data-bs-toggle="modal" data-bs-target="#notificationsModal">
                         <i class="bi bi-bell"></i>
-                        <?php
-                        if ($notifs != 0 && $stat == "unread") {
-                        ?>
-                        <span class="badge bg-primary badge-number"><?= $notifs ?></span>
-                        <?php
-                        }
-                        ?>
+                        <?php if ($notifs_count != 0) { ?>
+                        <span class="badge bg-primary badge-number"><?= $notifs_count ?></span>
+                        <?php } ?>
                     </a><!-- End Notification Icon -->
 
 
@@ -95,7 +92,6 @@ $src = "\BILLFrozen/admin/";
 
                 <li class="nav-item dropdown">
                     <?php
-                    // Assuming you have already started the session and connected to the database
                     // Fetch cart items count
                     $userID = $_SESSION['user']['user_id'];
                     $count_query = "SELECT COUNT(added_quantity) AS total_items FROM cart WHERE `user_id` = '$userID'";
@@ -122,6 +118,7 @@ $src = "\BILLFrozen/admin/";
                     </a><!-- End Messages Icon -->
 
                 </li><!-- End Messages Nav -->
+
 
                 <li class="nav-item dropdown pe-3">
 
@@ -158,3 +155,117 @@ $src = "\BILLFrozen/admin/";
         </nav><!-- End Icons Navigation -->
 
     </header><!-- End Header -->
+
+    <?php
+    $current_page = basename($_SERVER['PHP_SELF']);
+    ?>
+
+    <!-- ======= Sidebar ======= -->
+    <aside id="sidebar" class="sidebar">
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link <?= ($current_page == 'home.php') ? '' : 'collapsed' ?>" href="home.php">
+                    <i class="bi bi-house"></i>
+                    <span>Home</span>
+                </a>
+            </li><!-- End Home Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link <?= ($current_page == 'cart.php') ? '' : 'collapsed' ?>" href="cart.php">
+                    <i class="bi bi-cart3"></i>
+                    <span>Cart</span>
+                    <div class="mx-5 px-5">
+                        <?php if ($total_items != 0) { ?>
+                        <span class="badge bg-success rounded-pill mx-5">
+                            <?= $total_items ?>
+                        </span>
+                        <?php } ?>
+                    </div>
+                </a>
+            </li><!-- End Cart Page Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link <?= ($current_page == 'notifications.php') ? '' : 'collapsed' ?>" href="#"
+                    data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                    <i class="bi bi-bell"></i>
+                    <span>Notifications</span>
+                    <div class="mx-5 px-3">
+                        <?php if ($notifs_count != 0) { ?>
+                        <span class="badge bg-primary rounded-pill mx-3"><?= $notifs_count ?></span>
+                        <?php } ?>
+                    </div>
+                </a>
+            </li><!-- End Notifications Modal Nav -->
+
+            <li class="nav-item">
+                <a class="nav-link <?= ($current_page == 'my-order.php') ? '' : 'collapsed' ?>" href="my-order.php">
+                    <i class="bi bi-bag-check"></i>
+                    <span>My Orders</span>
+                </a>
+            </li><!-- End Orders Page Nav -->
+
+        </ul>
+
+    </aside><!-- End Sidebar-->
+
+
+    <!-- Notifications Modal -->
+    <div class="modal fade" id="notificationsModal" tabindex="-1" aria-labelledby="notificationsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationsModalLabel">Notifications</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <?php if (!empty($unread_notifs) || !empty($read_notifs)) { ?>
+                    <ul class="list-group">
+                        <?php
+                    $current_date = '';
+                    foreach (array_merge($unread_notifs, $read_notifs) as $notif) {
+                        $notif_date = date('Y-m-d', strtotime($notif['date_created']));
+                        if ($notif_date != $current_date) {
+                            if ($current_date != '') {
+                                echo '</ul>';
+                            }
+                            $current_date = $notif_date;
+                            echo "<li class='list-group-item list-group-item-dark'><strong>Date: " . date('F j, Y', strtotime($notif_date)) . "</strong></li>";
+                            echo '<ul class="list-group">';
+                        }
+                        ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <?= $notif['description'] ?>
+
+                            <span
+                                class="badge <?= ($notif['order_status'] == "Order Confirmed" ? "bg-primary" : "bg-danger") ?> rounded-pill"><?= $notif['order_status'] ?></span>
+
+                        </li>
+                        <?php
+                    }
+                    echo '</ul>';
+                    ?>
+                    </ul><!-- End Notifications List -->
+                    <?php } else { ?>
+                    <p>No notifications found.</p>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div><!-- End Notifications Modal -->
+
+    <script>
+    document.getElementById('notificationsModal').addEventListener('shown.bs.modal', function() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "update_notifications.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log("Notifications marked as read.");
+            }
+        };
+        xhr.send("user_id=<?= $userID ?>");
+    });
+    </script>
