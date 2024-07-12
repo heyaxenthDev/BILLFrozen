@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 01, 2024 at 10:34 AM
+-- Generation Time: Jul 12, 2024 at 03:01 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -41,10 +41,9 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`user_id`, `username`, `product_code`, `product_name`, `added_quantity`, `date_created`) VALUES
-('BFU342966', 'hyacynth', 'PROD346792', 'Magnolia Whole Chicken', 5, '2024-03-31 06:09:56'),
-('BFU342966', 'hyacynth', 'PROD291373', 'CDO - Funtastyk Young Pork', 9, '2024-03-31 06:09:58'),
-('BFU342966', 'hyacynth', 'PROD779539', 'Tender Juicy - 1kg', 1, '2024-04-01 05:58:49'),
-('BFU342966', 'hyacynth', 'PROD863845', 'Pampanga`s Best - Sisig', 3, '2024-04-01 06:08:03');
+('BFU342966', 'hyacynth', 'PROD291373', 'CDO - Funtastyk Young Pork', 1, '2024-05-15 05:52:37'),
+('BFU342966', 'hyacynth', 'PROD346792', 'Magnolia Whole Chicken', 1, '2024-06-20 02:10:22'),
+('BFU509265', 'yangyang', 'PROD863845', 'Pampanga`s Best - Sisig', 1, '2024-06-20 02:15:02');
 
 -- --------------------------------------------------------
 
@@ -60,7 +59,6 @@ CREATE TABLE `inventory` (
   `category` varchar(255) NOT NULL,
   `quantity` int(11) NOT NULL,
   `sold` int(11) NOT NULL,
-  `product_status` varchar(255) NOT NULL,
   `expiry_date` date NOT NULL,
   `product_picture` varchar(255) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT current_timestamp()
@@ -70,12 +68,12 @@ CREATE TABLE `inventory` (
 -- Dumping data for table `inventory`
 --
 
-INSERT INTO `inventory` (`id`, `product_code`, `product_name`, `price`, `category`, `quantity`, `sold`, `product_status`, `expiry_date`, `product_picture`, `date_created`) VALUES
-(1, 'PROD346792', 'Magnolia Whole Chicken', 230.00, 'Dressed Chicken', 10, 0, 'Expiring Soon', '2024-03-29', 'uploads/SM3012-4.jpg', '2024-03-12 08:17:59'),
-(2, 'PROD291373', 'CDO - Funtastyk Young Pork', 92.25, 'Frozen Foods', 50, 0, 'Good', '2025-03-07', 'uploads/funtastyk-young-pork-tocino-flatpack-225g_1.jpg', '2024-03-12 08:18:28'),
-(3, 'PROD283520', 'Mekeni - Kikiam', 110.00, 'Street Foods', 0, 10, 'Expired', '2024-03-12', 'uploads/MekeniKikiam-AsianFlavoredFishRolls-250g.jpg', '2024-03-12 08:22:12'),
-(4, 'PROD779539', 'Tender Juicy - 1kg', 243.00, 'Frozen Foods', 10, 0, 'Good', '2024-08-29', 'uploads/Purefoods-Tender-Juicy.jpg', '2024-03-22 01:36:05'),
-(5, 'PROD863845', 'Pampanga`s Best - Sisig', 81.00, 'Frozen Foods', 15, 0, 'Good', '2024-06-22', 'uploads/5951-003-20-2023-140350-685.jpg', '2024-03-22 02:10:24');
+INSERT INTO `inventory` (`id`, `product_code`, `product_name`, `price`, `category`, `quantity`, `sold`, `expiry_date`, `product_picture`, `date_created`) VALUES
+(1, 'PROD346792', 'Magnolia Whole Chicken', 230.00, 'Dressed Chicken', 10, 0, '2024-11-29', 'uploads/SM3012-4.jpg', '2024-03-12 08:17:59'),
+(2, 'PROD291373', 'CDO - Funtastyk Young Pork', 92.25, 'Frozen Foods', 50, 0, '2025-03-07', 'uploads/funtastyk-young-pork-tocino-flatpack-225g_1.jpg', '2024-03-12 08:18:28'),
+(3, 'PROD283520', 'Mekeni - Kikiam', 110.00, 'Street Foods', 0, 10, '2024-03-12', 'uploads/MekeniKikiam-AsianFlavoredFishRolls-250g.jpg', '2024-03-12 08:22:12'),
+(4, 'PROD779539', 'Tender Juicy - 1kg', 243.00, 'Frozen Foods', 10, 0, '2024-08-29', 'uploads/Purefoods-Tender-Juicy.jpg', '2024-03-22 01:36:05'),
+(5, 'PROD863845', 'Pampanga`s Best - Sisig', 81.00, 'Frozen Foods', 15, 0, '2024-06-22', 'uploads/5951-003-20-2023-140350-685.jpg', '2024-03-22 02:10:24');
 
 -- --------------------------------------------------------
 
@@ -84,12 +82,22 @@ INSERT INTO `inventory` (`id`, `product_code`, `product_name`, `price`, `categor
 --
 
 CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
   `user_id` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
+  `order_status` varchar(255) NOT NULL,
   `status` varchar(50) DEFAULT NULL,
   `date_created` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user_id`, `username`, `description`, `order_status`, `status`, `date_created`) VALUES
+(1, 'BFU342966', 'Hya Cynth Dojillo', 'Your order with order code ORD04-05-20242627 has been declined due to insufficient stocks.', 'Order Declined', 'read', '2024-07-10 02:59:43'),
+(2, 'BFU342966', 'Hya Cynth Dojillo', 'Your order with order code ORD04-05-20244958 has been confirmed and is now scheduled for delivery on 2024-07-26.', 'Order Confirmed', 'read', '2024-07-09 02:59:57');
 
 -- --------------------------------------------------------
 
@@ -118,8 +126,9 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_code`, `user_id`, `name`, `contact`, `product_code`, `product_name`, `quantity`, `total_price`, `order_date`, `delivery_date`, `delivery_address`, `order_status`, `date_created`) VALUES
-('ORD04-01-20248809', 'BFU342966', 'Hya Cynth Dojillo', '09651168472', 'PROD291373', 'CDO - Funtastyk Young Pork', 4, 369.00, '2024-04-01', NULL, 'asdasd, asddas, 564', 'Pending', '2024-04-01 07:48:45'),
-('ORD04-01-20246471', 'BFU342966', 'Hya Cynth Dojillo', '09651168472', 'PROD283520', 'Mekeni - Kikiam', 2, 220.00, '2024-04-01', NULL, 'asdsa, dsad, asdas', 'Pending', '2024-04-01 07:51:13');
+('ORD04-05-20242627', 'BFU342966', 'Hya Cynth Dojillo', '09651168472', 'PROD863845', 'Pampanga`s Best - Sisig', 3, 243.00, '2024-04-05', NULL, 'Villavert-Jimenez, Hamtic, 5715', 'Order Declined', '2024-04-05 05:21:37'),
+('ORD04-05-20244958', 'BFU342966', 'Hya Cynth Dojillo', '09651168472', 'PROD863845', 'Pampanga`s Best - Sisig', 3, 243.00, '2024-04-05', '2024-07-26', 'h dfhjsd, hhasdh, 546', 'For Delivery', '2024-04-05 07:56:26'),
+('ORD04-08-20245184', 'BFU342966', 'Hya Cynth Dojillo', '09651168472', 'PROD346792', 'Magnolia Whole Chicken', 1, 230.00, '2024-04-08', NULL, 'Hello World, Hello, ', 'Pending', '2024-04-08 03:54:35');
 
 -- --------------------------------------------------------
 
@@ -168,7 +177,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `user_id`, `email_or_phone_number`, `full_name`, `username`, `password`, `profile_picture`, `date_created`) VALUES
-(1, 'BFU342966', '09651168472', 'Hya Cynth Dojillo', 'hyacynth', '$2y$10$LA8MNMshGEV/Pt2Iv5kexuNERQB/25yjoyb8cDlBdsvCHg9loq7XW', NULL, '2024-03-21 06:18:48');
+(1, 'BFU342966', '09651168472', 'Hya Cynth Dojillo', 'hyacynth', '$2y$10$OVAMZrZ2acJ/Z6v9CUEaiuuSQgfHu/kjZlMRC30ABd8SMKgupHMcu', NULL, '2024-03-21 06:18:48'),
+(2, 'BFU509265', '09610519898', 'Hya Cynth Dojillo', 'yangyang', '$2y$10$3O0tM.ugft11w2yTxu/1a.h5QwFB5wg3RGRjYZcCIT7U0bOqD84zC', NULL, '2024-06-18 02:22:22');
 
 --
 -- Indexes for dumped tables
@@ -184,7 +194,7 @@ ALTER TABLE `inventory`
 -- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`user_id`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `product_list`
@@ -209,6 +219,12 @@ ALTER TABLE `inventory`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `product_list`
 --
 ALTER TABLE `product_list`
@@ -218,7 +234,7 @@ ALTER TABLE `product_list`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
