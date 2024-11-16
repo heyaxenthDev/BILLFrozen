@@ -269,6 +269,20 @@ h6 {
   font-weight: 400;
 }
 
+.card-title-reports {
+  padding: 20px 0 15px 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #010315;
+  font-family: "Poppins", sans-serif;
+}
+
+.card-title-reports span {
+  color: #899bbd;
+  font-size: 14px;
+  font-weight: 400;
+}
+
 .card-body {
   padding: 0 20px 20px 20px;
 }

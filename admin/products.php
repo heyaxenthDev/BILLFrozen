@@ -1,73 +1,12 @@
 <?php
 include 'authentication.php';
 checkLogin(); // Call the function to check if the user is logged in
-include_once 'includes/header.php';
 
 include "includes/conn.php";
-
+include_once 'includes/header.php';
+include 'includes/sidebar.php';
 include "alert.php";
 ?>
-<!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
-
-    <ul class="sidebar-nav" id="sidebar-nav">
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="dashboard.php">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li><!-- End Dashboard Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="orders.php">
-                <i class="bi bi-cart3"></i>
-                <span>Orders</span>
-                <div class="mx-5 px-4">
-                    <?php
-                    if ($count != 0) {
-                    ?>
-                    <span class="badge bg-primary rounded-pill mx-5">
-                        <?= $count ?>
-                    </span>
-                    <?php
-                    }
-                    ?>
-                </div>
-            </a>
-        </li><!-- End Orders Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link " href="products.php">
-                <i class="bi bi-basket2"></i>
-                <span>Product List</span>
-            </a>
-        </li><!-- End Product List Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="inventory.php">
-                <i class="bi bi-box-seam"></i>
-                <span>Inventory</span>
-            </a>
-        </li><!-- End Inventory Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="reports.php">
-                <i class="bi bi-bar-chart-line"></i>
-                <span>Reports</span>
-            </a>
-        </li><!-- End Reports Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="users.php">
-                <i class="bi bi-people"></i>
-                <span>Users</span>
-            </a>
-        </li><!-- End Users Page Nav -->
-
-    </ul>
-
-</aside><!-- End Sidebar-->
 
 <main id="main" class="main">
 
@@ -96,7 +35,7 @@ include "alert.php";
         <!-- Add Product Modal -->
         <div class="modal fade" id="productList" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
             aria-labelledby="productListLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="staticBackdropLabel">Add New Product</h1>
@@ -105,7 +44,7 @@ include "alert.php";
                     <form action="code.php" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-6 col-md-12">
                                     <!-- Product Image Preview -->
                                     <center>
                                         <img id="productImagePreview" src="images/default-product-image.png"
@@ -115,7 +54,8 @@ include "alert.php";
                                     <small class="mt-2">Add Product Image</small>
                                     <input type="file" name="productImage" class="form-control mb-3" id="productImage"
                                         onchange="previewProductImage();" accept="image/*" required>
-
+                                </div>
+                                <div class="col-lg-6 col-md-12">
                                     <div class="form-floating mb-3">
                                         <input type="text" class="form-control" id="product_name" name="product_name"
                                             placeholder=" " required>
@@ -196,7 +136,7 @@ include "alert.php";
         <!-- Edit Product Modal -->
         <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editProductModalLabel"><i
@@ -208,26 +148,39 @@ include "alert.php";
                     <div class="modal-body">
                         <!-- Form for editing product details -->
                         <form id="editProductForm" method="POST" action="code.php">
-                            <div class="mb-3">
-                                <img src="" alt="product image" class="img-fluid rounded" id="product_pic"
-                                    name="product_pic">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <img src="" alt="product image" class="img-fluid rounded" id="product_pic"
+                                            name="product_pic">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-3">
+                                        <label for="editProductName" class="form-label">Product Name</label>
+                                        <input type="text" class="form-control" id="editProductName"
+                                            name="editProductName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductPrice" class="form-label">Price</label>
+                                        <input type="text" class="form-control" id="editProductPrice"
+                                            name="editProductPrice" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductCategory" clasys="form-label">Category</label>
+                                        <input type="text" class="form-control" id="editProductCategory"
+                                            name="editProductCategory" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="editProductDesc" clasys="form-label">Description
+                                            <small>(Optional)</small></label>
+                                        <textarea type="text" class="form-control" id="editProductDesc"
+                                            name="editProductDesc" required></textarea>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="editProductName" class="form-label">Product Name</label>
-                                <input type="text" class="form-control" id="editProductName" name="editProductName"
-                                    required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editProductPrice" class="form-label">Price</label>
-                                <input type="text" class="form-control" id="editProductPrice" name="editProductPrice"
-                                    required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="editProductCategory" clasys="form-label">Category</label>
-                                <input type="text" class="form-control" id="editProductCategory"
-                                    name="editProductCategory" required>
-                            </div>
-                            <div class="justify-content-end">
+                            <div class="modal-footer">
                                 <input type="hidden" id="editProductId" name="editProductId">
                                 <button type="submit" class="btn btn-primary">Save Changes</button>
                             </div>
