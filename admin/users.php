@@ -40,7 +40,7 @@ include "alert.php";
                                     <!-- <th scope="col">Password</th> -->
                                     <!-- <th scope="col">Profile Picture</th> -->
                                     <th scope="col">Date Created</th>
-                                    <!-- <th scope="col">Actions</th> -->
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -60,10 +60,10 @@ include "alert.php";
                                     // echo "<td>{$row['password']}</td>";
                                     // echo "<td><img src='{$row['profile_picture']}' style='max-width: 100px; max-height: 65px;' alt='Profile Picture'></td>";
                                     echo "<td>{$row['date_created']}</td>";
-                                    // echo "<td>";
-                                    // echo "<a class='btn btn-success mx-2'><i class='bi bi-pencil-square'></i></a>";
+                                    echo "<td>";
+                                    echo "<a class='btn btn-warning mx-2'><i class='bi bi-box-arrow-up-right'></i> Send via Email</a>";
                                     // echo "<a class='btn btn-danger'><i class='bi bi-trash'></i></a>";
-                                    // echo "</td>";
+                                    echo "</td>";
                                     echo "</tr>";
                                 }
                                 ?>

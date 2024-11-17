@@ -86,15 +86,23 @@ include "alert.php";
 
                                         <span class="<?php echo $badgeClass; ?>"><?php echo $status; ?></span>
                                     <td>
+                                        <!-- View Modal Button -->
                                         <button class="btn btn-primary view-order-btn" data-bs-toggle="modal"
                                             data-bs-target="#ViewModal"
                                             data-order-code="<?php echo $row['order_code']; ?>">
                                             <i class="bi bi-eye"></i>
                                         </button>
-                                        <?php if ($row['order_status'] == 'for delivery') { ?>
+
+                                        <!-- Complete Delivery Status -->
+                                        <?php if ($row['order_status'] == 'For Delivery') { ?>
                                         <a href="code.php?order=Delivered&OrderCode=<?php echo $row['order_code']; ?>"
                                             class="btn btn-success"><i class="bi bi-cart-check"></i></a>
                                         <?php } ?>
+
+                                        <!-- Print Modal Button -->
+                                        <button id="print-view-modal" class="btn btn-secondary">
+                                            <i class="bi bi-printer"></i>
+                                        </button>
                                     </td>
 
                                 </tr>
@@ -304,6 +312,39 @@ include "alert.php";
                 })
                 .catch(error => console.error('Error:', error));
         }
+    });
+    </script>
+
+    <script>
+    document.getElementById('print-view-modal').addEventListener('click', function() {
+        // Get the content of the modal
+        const modalContent = document.querySelector('#ViewModal .modal-content').innerHTML;
+
+        // Create a new window for printing
+        const printWindow = window.open('', '_blank', 'width=800,height=600');
+
+        // Write the content to the new window
+        printWindow.document.write(`
+                        <html>
+                            <head>
+                                <title>Print View Modal</title>
+                                <link rel="stylesheet" href="path/to/bootstrap.css">
+                                <style>
+                                    /* Add custom styles here if needed */
+                                </style>
+                            </head>
+                            <body>
+                                ${modalContent}
+                            </body>
+                        </html>
+                    `);
+
+        // Print and close the window after the content loads
+        printWindow.document.close();
+        printWindow.onload = function() {
+            printWindow.print();
+            printWindow.close();
+        };
     });
     </script>
 
