@@ -75,6 +75,12 @@ include "alert.php";
                                             required>
                                         <label for="price">Price</label>
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="editProductDesc" clasys="form-label">Description
+                                            <small>(Optional)</small></label>
+                                        <textarea type="text" class="form-control" id="editProductDesc"
+                                            name="ProductDesc" required></textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +99,7 @@ include "alert.php";
         <div class="row" id="product">
             <?php
             // Query to fetch data from product_list table
-            $query = "SELECT `id`, `product_name`, `category`, `price`, `product_picture` FROM `product_list` WHERE 1";
+            $query = "SELECT * FROM `product_list`";
 
             // Perform the query
             $result = $conn->query($query);
@@ -116,6 +122,7 @@ include "alert.php";
                                 data-product-name="<?php echo $row['product_name']; ?>"
                                 data-product-price="<?php echo $row['price']; ?>"
                                 data-product-category="<?php echo $row['category']; ?>"
+                                data-product-description="<?php echo $row['description']; ?>"
                                 data-product-picture="<?php echo $row['product_picture']; ?> ">Edit</button>
                             <a class="btn btn-danger del" data-product-idDel="<?php echo $row['id']; ?>">Delete</a>
                         </div>
@@ -182,7 +189,7 @@ include "alert.php";
                             </div>
                             <div class="modal-footer">
                                 <input type="hidden" id="editProductId" name="editProductId">
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="submit" class="btn btn-primary" name="editProduct">Save Changes</button>
                             </div>
                         </form>
                     </div>
@@ -203,6 +210,7 @@ include "alert.php";
             var productName = button.getAttribute('data-product-name');
             var productPrice = button.getAttribute('data-product-price');
             var productCategory = button.getAttribute('data-product-category');
+            var productDesc = button.getAttribute('data-product-description');
 
             // Populate the form fields with the product details
             var form = document.getElementById('editProductForm');
@@ -211,6 +219,7 @@ include "alert.php";
             form['editProductName'].value = productName;
             form['editProductPrice'].value = productPrice;
             form['editProductCategory'].value = productCategory;
+            form['editProductDesc'].value = productDesc;
         });
     });
 

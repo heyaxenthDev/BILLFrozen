@@ -6,78 +6,131 @@ include "includes/conn.php";
 include_once 'includes/header.php';
 include 'includes/sidebar.php';
 include "alert.php";
+
+$getCurrentMonth = date('F');
+
 ?>
 
 <main id="main" class="main">
 
-    <div class="pagetitle">
-        <h1>Reports</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
-                <li class="breadcrumb-item active">Reports</li>
-            </ol>
-        </nav>
-    </div><!-- End Page Title -->
+    <div class="pagetitle row align-items-center">
+        <!-- Left side: Page Title -->
+        <div class="col-md-6">
+            <h1>Reports</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="dashboard.php">Home</a></li>
+                    <li class="breadcrumb-item active">Reports</li>
+                </ol>
+            </nav>
+        </div>
 
-    <section class="section dashboard">
+        <!-- Right side: Filters -->
+        <div class="col-md-6 d-flex justify-content-end">
+            <form method="GET" action="" class="w-100">
+                <div class="row align-items-end gap-2">
+                    <!-- Month Filter -->
+                    <div class="col-md-4">
+                        <label for="month" class="form-label">Select Month:</label>
+                        <select name="month" id="month" class="form-control">
+                            <option value="">All Months</option>
+                            <?php
+                        for ($m = 1; $m <= 12; $m++) {
+                            $monthName = date("F", mktime(0, 0, 0, $m, 1));
+                            $selected = (isset($_GET['month']) && $_GET['month'] == $m) ? "selected" : "";
+                            echo "<option value='$m' $selected>$monthName</option>";
+                        }
+                        ?>
+                        </select>
+                    </div>
+
+                    <!-- Year Filter -->
+                    <div class="col-md-4">
+                        <label for="year" class="form-label">Select Year:</label>
+                        <select name="year" id="year" class="form-control">
+                            <option value="">All Years</option>
+                            <?php
+                        $currentYear = date("Y");
+                        for ($y = $currentYear; $y >= $currentYear - 5; $y--) {
+                            $selected = (isset($_GET['year']) && $_GET['year'] == $y) ? "selected" : "";
+                            echo "<option value='$y' $selected>$y</option>";
+                        }
+                        ?>
+                        </select>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- End Page Title -->
+
+
+    <section class="section dashboard mt-3">
+
         <div class="row">
-
             <!-- Left side columns -->
             <div class="col-lg-8">
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Bordered Table</h5>
-                        <p>Add <code>.table-bordered</code> for borders on all sides of the table and cells.</p>
+                        <h5 class="card-title">Sales</h5>
                         <!-- Bordered Table -->
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Position</th>
-                                    <th scope="col">Age</th>
-                                    <th scope="col">Start Date</th>
+                                    <th scope="col">Product Name</th>
+                                    <th scope="col">Price per Unit</th>
+                                    <th scope="col">Unit Sold</th>
+                                    <th scope="col">Total</th>
                                 </tr>
                             </thead>
+                            <?php
+
+                            // Get selected month and year from URL parameters
+                            $selectedMonth = isset($_GET['month']) ? $_GET['month'] : "";
+                            $selectedYear = isset($_GET['year']) ? $_GET['year'] : "";
+
+                            // Build WHERE clause dynamically
+                            $whereConditions = [];
+
+                            if (!empty($selectedMonth)) {
+                                $whereConditions[] = "MONTH(date_created) = " . intval($selectedMonth);
+                            }
+                            if (!empty($selectedYear)) {
+                                $whereConditions[] = "YEAR(date_created) = " . intval($selectedYear);
+                            }
+
+                            // Combine conditions into a single WHERE clause
+                            $whereSQL = !empty($whereConditions) ? "WHERE " . implode(" AND ", $whereConditions) : "";
+
+                            // Fetch Sales Data based on filters
+                            $filteredSalesQuery = "SELECT product_name, price, sold, (price * sold) AS total 
+                                                FROM inventory $whereSQL";
+                            $filteredSales = $conn->query($filteredSalesQuery);
+                            ?>
+
                             <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Brandon Jacob</td>
-                                    <td>Designer</td>
-                                    <td>28</td>
-                                    <td>2016-05-25</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Bridie Kessler</td>
-                                    <td>Developer</td>
-                                    <td>35</td>
-                                    <td>2014-12-05</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td>Ashleigh Langosh</td>
-                                    <td>Finance</td>
-                                    <td>45</td>
-                                    <td>2011-08-12</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">4</th>
-                                    <td>Angus Grady</td>
-                                    <td>HR</td>
-                                    <td>34</td>
-                                    <td>2012-06-11</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">5</th>
-                                    <td>Raheem Lehner</td>
-                                    <td>Dynamic Division Officer</td>
-                                    <td>47</td>
-                                    <td>2011-04-19</td>
-                                </tr>
+                                <?php
+                                $count = 1;
+                                while ($row = $filteredSales->fetch_assoc()) {
+                                    echo "<tr>
+                                            <th scope='row'>{$count}</th>
+                                            <td>{$row['product_name']}</td>
+                                            <td>$" . number_format($row['price'], 2) . "</td>
+                                            <td>{$row['sold']}</td>
+                                            <td>$" . number_format($row['total'], 2) . "</td>
+                                        </tr>";
+                                    $count++;
+                                }
+                                ?>
                             </tbody>
+
                         </table>
                         <!-- End Bordered Table -->
 
@@ -90,73 +143,88 @@ include "alert.php";
 
                 <div class="row">
 
+                    <?php 
+                $selectedMonth = isset($_GET['month']) ? $_GET['month'] : "";
+                $selectedYear = isset($_GET['year']) ? $_GET['year'] : "";
+                
+                $whereConditions = [];
+                if (!empty($selectedMonth)) {
+                    $whereConditions[] = "MONTH(date_created) = " . intval($selectedMonth);
+                }
+                if (!empty($selectedYear)) {
+                    $whereConditions[] = "YEAR(date_created) = " . intval($selectedYear);
+                }
+                
+                $whereSQL = !empty($whereConditions) ? "WHERE " . implode(" AND ", $whereConditions) : "";
+                $totalProductsQuery = "SELECT COUNT(id) AS total_products FROM inventory";
+                $totalProductsResult = $conn->query($totalProductsQuery);
+                $totalProducts = ($totalProductsResult->fetch_assoc())['total_products'];
+                $totalUnitsSoldQuery = "SELECT SUM(sold) AS total_units FROM inventory $whereSQL";
+                $totalUnitsSoldResult = $conn->query($totalUnitsSoldQuery);
+                $totalUnitsSold = ($totalUnitsSoldResult->fetch_assoc())['total_units'] ?? 0;
+                $totalRevenueQuery = "SELECT SUM(price * sold) AS total_revenue FROM inventory $whereSQL";
+                $totalRevenueResult = $conn->query($totalRevenueQuery);
+                $totalRevenue = ($totalRevenueResult->fetch_assoc())['total_revenue'] ?? 0;
+                $outOfStockQuery = "SELECT COUNT(id) AS out_of_stock FROM inventory WHERE quantity = 0";
+                $outOfStockResult = $conn->query($outOfStockQuery);
+                $outOfStock = ($outOfStockResult->fetch_assoc())['out_of_stock'];
+                                                                                
+                ?>
                     <!-- Total Products Card -->
                     <div class="col-md-6">
                         <div class="card info-card sales-card">
                             <div class="card-body">
                                 <h5 class="card-title-reports">Total Products</h5>
-
                                 <div class="d-flex align-items-center">
                                     <div class="ps-3">
-                                        <h6>145</h6>
+                                        <h6><?= $totalProducts ?></h6>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-                    </div><!-- End Total Products Card -->
+                    </div>
 
-                    <!-- Total Unit Sold Card -->
+                    <!-- Total Units Sold Card -->
                     <div class="col-md-6">
                         <div class="card info-card revenue-card">
                             <div class="card-body">
-                                <h5 class="card-title-reports">Total Unit Sold</h5>
-
+                                <h5 class="card-title-reports">Total Units Sold</h5>
                                 <div class="d-flex align-items-center">
                                     <div class="ps-3">
-                                        <h6>$3,264</h6>
+                                        <h6><?= number_format($totalUnitsSold) ?></h6>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-                    </div><!-- End Total Unit Sold Card -->
+                    </div>
 
                     <!-- Total Revenue Card -->
                     <div class="col-md-6">
-
                         <div class="card info-card customers-card">
                             <div class="card-body">
                                 <h5 class="card-title-reports">Total Revenue</h5>
-
                                 <div class="d-flex align-items-center">
                                     <div class="ps-3">
-                                        <h6>1244</h6>
+                                        <h6>₱<?= number_format($totalRevenue, 2) ?></h6>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
+                    </div>
 
-                    </div><!-- End Total Revenue Card -->
-
-                    <!-- No. of Item out of stocks Card -->
+                    <!-- Out of Stock Items Card -->
                     <div class="col-md-6">
-
                         <div class="card info-card customers-card">
                             <div class="card-body">
-                                <h5 class="card-title-reports">No. of Item out of stocks</h5>
-
+                                <h5 class="card-title-reports">Out of Stock Items</h5>
                                 <div class="d-flex align-items-center">
                                     <div class="ps-3">
-                                        <h6>1244</h6>
+                                        <h6><?= $outOfStock ?></h6>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
-                    </div><!-- End No. of Item out of stocks Card -->
+                    </div>
 
                 </div>
 
@@ -170,16 +238,33 @@ include "alert.php";
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Bar Chart</h5>
+                        <h5 class="card-title">Most Buyed Product</h5>
 
-                        <!-- Bar Chart -->
+                        <?php 
+                        // Fetch top 10 selling products
+                        $topProductsQuery = "SELECT product_name, sold FROM inventory ORDER BY sold DESC LIMIT 10";
+                        $topProducts = $conn->query($topProductsQuery);
+
+                        $productNames = [];
+                        $salesData = [];
+
+                        while ($row = $topProducts->fetch_assoc()) {
+                            $productNames[] = $row['product_name'];
+                            $salesData[] = $row['sold'];
+                        }
+
+                        $productNamesJson = json_encode($productNames);
+                        $salesDataJson = json_encode($salesData);
+                        ?>
+
+                        <!-- Most Buyed Product -->
                         <div id="barChart"></div>
 
                         <script>
                         document.addEventListener("DOMContentLoaded", () => {
                             new ApexCharts(document.querySelector("#barChart"), {
                                 series: [{
-                                    data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+                                    data: <?= $salesDataJson ?>
                                 }],
                                 chart: {
                                     type: 'bar',
@@ -188,22 +273,19 @@ include "alert.php";
                                 plotOptions: {
                                     bar: {
                                         borderRadius: 4,
-                                        horizontal: true,
+                                        horizontal: true
                                     }
                                 },
                                 dataLabels: {
                                     enabled: false
                                 },
                                 xaxis: {
-                                    categories: ['South Korea', 'Canada', 'United Kingdom',
-                                        'Netherlands', 'Italy', 'France', 'Japan',
-                                        'United States', 'China', 'Germany'
-                                    ],
+                                    categories: <?= $productNamesJson ?>
                                 }
                             }).render();
                         });
                         </script>
-                        <!-- End Bar Chart -->
+                        <!-- End Most Buyed Product -->
 
                     </div>
                 </div>
@@ -214,21 +296,32 @@ include "alert.php";
                 <div class="col-12">
                     <div class="card">
 
-                        <div class="filter">
-                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
-                                </li>
+                        <?php 
+                        $salesForecastQuery = "SELECT DATE(date_created) AS sale_date, SUM(sold) AS units_sold, SUM(price * sold) AS revenue 
+                        FROM inventory $whereSQL
+                        GROUP BY DATE(date_created)
+                        ORDER BY sale_date ASC";
+                        $salesForecastResult = $conn->query($salesForecastQuery);
+                        
+                        $salesData = [];
+                        $revenueData = [];
+                        $dateLabels = [];
+                        
+                        while ($row = $salesForecastResult->fetch_assoc()) {
+                            $dateLabels[] = $row['sale_date'];
+                            $salesData[] = $row['units_sold'];
+                            $revenueData[] = $row['revenue'];
+                        }
+                        
+                        $salesDataJson = json_encode($salesData);
+                        $revenueDataJson = json_encode($revenueData);
+                        $dateLabelsJson = json_encode($dateLabels);
 
-                                <li><a class="dropdown-item" href="#">Today</a></li>
-                                <li><a class="dropdown-item" href="#">This Month</a></li>
-                                <li><a class="dropdown-item" href="#">This Year</a></li>
-                            </ul>
-                        </div>
+                    ?>
+
 
                         <div class="card-body">
-                            <h5 class="card-title">Reports <span>/Today</span></h5>
+                            <h5 class="card-title">Sales Forecast <span>/Today</span></h5>
 
                             <!-- Line Chart -->
                             <div id="reportsChart"></div>
@@ -237,26 +330,25 @@ include "alert.php";
                             document.addEventListener("DOMContentLoaded", () => {
                                 new ApexCharts(document.querySelector("#reportsChart"), {
                                     series: [{
-                                        name: 'Sales',
-                                        data: [31, 40, 28, 51, 42, 82, 56],
-                                    }, {
-                                        name: 'Revenue',
-                                        data: [11, 32, 45, 32, 34, 52, 41]
-                                    }, {
-                                        name: 'Customers',
-                                        data: [15, 11, 32, 18, 9, 24, 11]
-                                    }],
+                                            name: 'Sales',
+                                            data: <?= $salesDataJson ?>, // Units sold per day
+                                        },
+                                        {
+                                            name: 'Revenue',
+                                            data: <?= $revenueDataJson ?>, // Revenue per day
+                                        },
+                                    ],
                                     chart: {
                                         height: 350,
                                         type: 'area',
                                         toolbar: {
                                             show: false
-                                        },
+                                        }
                                     },
                                     markers: {
                                         size: 4
                                     },
-                                    colors: ['#4154f1', '#2eca6a', '#ff771d'],
+                                    colors: ['#4154f1', '#2eca6a'], // Customize colors
                                     fill: {
                                         type: "gradient",
                                         gradient: {
@@ -274,30 +366,22 @@ include "alert.php";
                                         width: 2
                                     },
                                     xaxis: {
-                                        type: 'datetime',
-                                        categories: ["2018-09-19T00:00:00.000Z",
-                                            "2018-09-19T01:30:00.000Z",
-                                            "2018-09-19T02:30:00.000Z",
-                                            "2018-09-19T03:30:00.000Z",
-                                            "2018-09-19T04:30:00.000Z",
-                                            "2018-09-19T05:30:00.000Z",
-                                            "2018-09-19T06:30:00.000Z"
-                                        ]
+                                        categories: <?= $dateLabelsJson ?>, // Display dates on the x-axis
                                     },
                                     tooltip: {
                                         x: {
-                                            format: 'dd/MM/yy HH:mm'
-                                        },
+                                            format: 'dd/MM/yy'
+                                        }, // Format the date in the tooltip
                                     }
                                 }).render();
                             });
                             </script>
-                            <!-- End Line Chart -->
+
 
                         </div>
 
                     </div>
-                </div><!-- End Reports -->
+                </div><!-- End Sales Forecast -->
             </div>
 
         </div>

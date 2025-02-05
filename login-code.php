@@ -7,6 +7,7 @@ include 'includes/conn.php';
 if (isset($_POST['loginAdmin'])) {
     // Set the default password
     $defaultPassword = "billfrozen_admin";
+    $subadminPassword = "sub_adminBillfrozen";
 
     // Get the entered password from the form
     $enteredPassword = $_POST["password"];
@@ -18,7 +19,14 @@ if (isset($_POST['loginAdmin'])) {
         $_SESSION['logged'] = "Logged in successfully";
         $_SESSION['logged_icon'] = "success";
         header("Location: admin/dashboard.php");
-    } else {
+        
+    } elseif ($enteredPassword == $subadminPassword) {
+        // Password is correct, redirect to the dashboard page
+        $_SESSION['sub_admin_auth'] = true;
+        $_SESSION['logged'] = "Logged in successfully";
+        $_SESSION['logged_icon'] = "success";
+        header("Location: sub-admin/dashboard.php");
+    }else {
         // Password is incorrect, display an error message
         $_SESSION['status'] = "Password Error";
         $_SESSION['status_text'] = "Incorrect password. Please try again.";

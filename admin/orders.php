@@ -30,7 +30,7 @@ include "alert.php";
                         <p></p>
 
                         <!-- Table with stripped rows -->
-                        <table class="table datatable">
+                        <table id="ordersTable" class="table datatable">
                             <thead>
                                 <tr>
                                     <th scope="col">Order Code</th>
@@ -53,13 +53,13 @@ include "alert.php";
                                 while ($row = mysqli_fetch_assoc($result)) {
                                 ?>
                                 <tr>
-                                    <td><?php echo $row['order_code']; ?></td>
-                                    <td><?php echo $row['user_id']; ?></td>
-                                    <td><?php echo $row['total_quantity']; ?></td>
-                                    <td><?php echo "₱" . $row['grand_total']; ?></td>
-                                    <td><?php echo $row['order_date']; ?></td>
-                                    <td><?php echo $row['delivery_date']; ?></td>
-                                    <td><?php echo $row['delivery_address']; ?></td>
+                                    <td><?= $row['order_code'] ?></td>
+                                    <td><?= $row['user_id'] ?></td>
+                                    <td><?= $row['total_quantity'] ?></td>
+                                    <td><?= "₱" . $row['grand_total'] ?></td>
+                                    <td><?= $row['order_date'] ?></td>
+                                    <td><?= date("F j, Y", strtotime($row['delivery_date']))?></td>
+                                    <td><?= $row['delivery_address'] ?></td>
                                     <td>
                                         <?php
                                             $status = $row['order_status'];
@@ -84,25 +84,20 @@ include "alert.php";
                                             }
                                             ?>
 
-                                        <span class="<?php echo $badgeClass; ?>"><?php echo $status; ?></span>
+                                        <span class="<?= $badgeClass ?>"><?= $status ?></span>
                                     <td>
                                         <!-- View Modal Button -->
                                         <button class="btn btn-primary view-order-btn" data-bs-toggle="modal"
-                                            data-bs-target="#ViewModal"
-                                            data-order-code="<?php echo $row['order_code']; ?>">
+                                            data-bs-target="#ViewModal" data-order-code="<?= $row['order_code'] ?>">
                                             <i class="bi bi-eye"></i>
                                         </button>
 
                                         <!-- Complete Delivery Status -->
                                         <?php if ($row['order_status'] == 'For Delivery') { ?>
-                                        <a href="code.php?order=Delivered&OrderCode=<?php echo $row['order_code']; ?>"
+                                        <a href="code.php?order=Delivered&OrderCode=<?= $row['order_code'] ?>"
                                             class="btn btn-success"><i class="bi bi-cart-check"></i></a>
                                         <?php } ?>
 
-                                        <!-- Print Modal Button -->
-                                        <button id="print-view-modal" class="btn btn-secondary">
-                                            <i class="bi bi-printer"></i>
-                                        </button>
                                     </td>
 
                                 </tr>
@@ -127,6 +122,8 @@ include "alert.php";
                                     aria-label="Close"></button>
                             </div>
                             <form action="code.php" method="POST">
+                                <input type="hidden" id="Status">
+                                <input type="hidden" class="form-control" id="userID" name="userID" readonly>
                                 <div class="modal-body m-4">
                                     <div class="row mb-3">
                                         <label for="inputEmail3" class="col-sm-3 col-form-label">Order Status: </label>
@@ -142,28 +139,29 @@ include "alert.php";
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <label for="inputEmail3" class="col-sm-3 col-form-label">Customer's
+                                        <label for="customerContact" class="col-sm-3 col-form-label">Customer's
                                             Contact:</label>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control" id="customerContact" readonly>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <label for="inputEmail3" class="col-sm-3 col-form-label">Customer's
+                                        <label for="customerName" class="col-sm-3 col-form-label">Customer's
                                             Name:</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="customerName" readonly>
+                                            <input type="text" class="form-control" id="customerName"
+                                                name="customerName" readonly>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <label for="inputEmail3" class="col-sm-3 col-form-label">Delivery
+                                        <label for="deliveryAddress" class="col-sm-3 col-form-label">Delivery
                                             Address:</label>
                                         <div class="col-sm-9">
                                             <input type="text" class="form-control" id="deliveryAddress" readonly>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <label for="inputEmail3" class="col-sm-3 col-form-label">Set Delivery
+                                        <label for="deliveryDate" class="col-sm-3 col-form-label">Set Delivery
                                             Date:</label>
                                         <div class="col-sm-9">
                                             <input type="date" class="form-control" id="deliveryDate"
@@ -206,6 +204,15 @@ include "alert.php";
                                     </script>
                                     <button type="submit" class="btn btn-success" name="confirmBtn">Confirm
                                         Order</button>
+
+                                    <button style="display: none;" type="submit" class="btn btn-primary"
+                                        name="saveChangeBtn" id="saveChangeBtn">Save
+                                        Change Date</button>
+
+                                    <!-- Print Modal Button -->
+                                    <button id="print-view-modal" onclick="printOrderModal()" class="btn btn-secondary">
+                                        <i class="bi bi-printer"></i> Print Order
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -214,139 +221,14 @@ include "alert.php";
 
             </div>
         </div>
+
+
+
     </section>
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var viewOrderButtons = document.querySelectorAll('.view-order-btn');
-
-        viewOrderButtons.forEach(function(button) {
-            button.addEventListener('click', function() {
-                var orderCode = this.getAttribute('data-order-code');
-                fetchOrderInformation(orderCode);
-            });
-        });
-
-        function fetchOrderInformation(orderCode) {
-            fetch('fetch_order_details.php', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        order_code: orderCode
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    var orderStatusElement = document.getElementById('orderStatus');
-                    var status = data.order_status;
-                    var badgeClass = '';
-
-                    switch (status) {
-                        case 'Pending':
-                            badgeClass = 'badge bg-warning';
-                            break;
-                        case 'for delivery':
-                            badgeClass = 'badge bg-primary';
-                            break;
-                        case 'Delivered':
-                            badgeClass = 'badge bg-success';
-                            break;
-                        default:
-                            badgeClass = 'badge bg-secondary';
-                            break;
-                    }
-
-                    orderStatusElement.innerHTML = `<span class="${badgeClass}">${status}</span>`;
-
-                    var confirmBtn = document.querySelector('[name="confirmBtn"]');
-                    var declineBtn = document.querySelector('[name="declineBtn"]');
-
-                    // Assuming data.order_status contains the order status
-                    if (data.order_status !== 'Pending') {
-                        confirmBtn.style.display = 'none';
-                        declineBtn.style.display = 'none';
-                    } else {
-                        confirmBtn.style.display = 'inline-block'; // or 'block' based on your styling
-                        declineBtn.style.display = 'inline-block'; // or 'block' based on your styling
-                    }
-
-                    document.getElementById('orderCode').value = data.order_code;
-                    document.getElementById('customerName').value = data.name;
-                    document.getElementById('customerContact').value = data.contact;
-                    document.getElementById('deliveryAddress').value = data.delivery_address;
-                    document.getElementById('deliveryDate').value = (data.delivery_date = null ?
-                        "Order Declined" : data.delivery_date);
-
-                    var orderItemsTableBody = document.getElementById('orderItemsTableBody');
-                    orderItemsTableBody.innerHTML = '';
-
-                    data.items.forEach(function(item, index) {
-                        var unitPrice = item.total_price / item.quantity;
-                        var formattedUnitPrice = unitPrice.toLocaleString('en-PH', {
-                            style: 'currency',
-                            currency: 'PHP',
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        });
-
-                        var row = `
-                            <tr>
-                                <th scope="row">${index + 1}</th>
-                                <td>${item.product_name}</td>
-                                <td>${formattedUnitPrice}</td>
-                                <td>${item.quantity}</td>
-                                <td>₱${item.total_price}</td>
-                            </tr>
-                        `;
-                        orderItemsTableBody.innerHTML += row;
-                    });
-
-
-                    document.getElementById('grandTotalPrice').textContent = "₱" +
-                        data.grand_total;
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    });
-    </script>
-
-    <script>
-    document.getElementById('print-view-modal').addEventListener('click', function() {
-        // Get the content of the modal
-        const modalContent = document.querySelector('#ViewModal .modal-content').innerHTML;
-
-        // Create a new window for printing
-        const printWindow = window.open('', '_blank', 'width=800,height=600');
-
-        // Write the content to the new window
-        printWindow.document.write(`
-                        <html>
-                            <head>
-                                <title>Print View Modal</title>
-                                <link rel="stylesheet" href="path/to/bootstrap.css">
-                                <style>
-                                    /* Add custom styles here if needed */
-                                </style>
-                            </head>
-                            <body>
-                                ${modalContent}
-                            </body>
-                        </html>
-                    `);
-
-        // Print and close the window after the content loads
-        printWindow.document.close();
-        printWindow.onload = function() {
-            printWindow.print();
-            printWindow.close();
-        };
-    });
-    </script>
+    <script src="assets/js/order.js"></script>
 
 </main><!-- End #main -->
 

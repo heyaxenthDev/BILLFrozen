@@ -32,6 +32,7 @@ if (mysqli_num_rows($result) > 0) {
 
     // Construct the response data
     $responseData = [
+        'user_id' => $row['user_id'],
         'order_status' => $row['order_status'],
         'order_code' => $row['order_code'],
         'name' => $row['name'],

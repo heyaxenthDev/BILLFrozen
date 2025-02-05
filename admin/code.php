@@ -8,6 +8,7 @@ if (isset($_POST['addNewProduct'])) {
     $product_name = mysqli_real_escape_string($conn, $_POST['product_name']);
     $category = mysqli_real_escape_string($conn, $_POST['category']);
     $price = mysqli_real_escape_string($conn, $_POST['price']);
+    $desc = mysqli_real_escape_string($conn, $_POST['ProductDesc']);
 
     // Validate image
     $target_dir = "uploads/";
@@ -67,8 +68,8 @@ if (isset($_POST['addNewProduct'])) {
 
             // Prepare and bind SQL statement
             $product_picture = $target_file;
-            $stmt = $conn->prepare("INSERT INTO product_list (product_name, category, price, product_picture) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssds", $product_name, $category, $price, $product_picture);
+            $stmt = $conn->prepare("INSERT INTO product_list (product_name, description, category, price, product_picture) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssds", $product_name, $desc, $category, $price, $product_picture);
 
             // Execute the statement
             if ($stmt->execute() === TRUE) {
@@ -132,7 +133,6 @@ if (isset($_POST['addInventoryProduct'])) {
         header("Location: {$_SERVER['HTTP_REFERER']}");
     }
 }
-
 
 
 if (isset($_POST['confirmBtn'])) {
@@ -220,21 +220,22 @@ if(isset($_GET['order']) == 'Delivered'){
     }
 }
 
-if (isset($_POST['editProductId'])) {
+if (isset($_POST['editProduct']) && isset($_POST['editProductId'])) {
    // Get the form data
     $productId = $_POST['editProductId'];
     $productName = $_POST['editProductName'];
     $productPrice = $_POST['editProductPrice'];
     $productCategory = $_POST['editProductCategory'];
+    $productDesc = $_POST['editProductDesc'];
 
     // Prepare the SQL query
-    $query = "UPDATE `product_list` SET `product_name`=?, `price`=?, `category`=? WHERE `id`=?";
+    $query = "UPDATE `product_list` SET `product_name`=?, `description`=?, `price`=?, `category`=? WHERE `id`=?";
     
     // Create a prepared statement
     $stmt = mysqli_prepare($conn, $query);
 
     // Bind the parameters
-    mysqli_stmt_bind_param($stmt, 'sdsi', $productName, $productPrice, $productCategory, $productId);
+    mysqli_stmt_bind_param($stmt, 'ssdsi', $productName, $productDesc, $productPrice, $productCategory, $productId);
 
     // Execute the statement
     if (mysqli_stmt_execute($stmt)) {
@@ -277,20 +278,65 @@ if (isset($_POST['editInventory'])) {
         $_SESSION['status_text'] = "Inventory item updated successfully.";
         $_SESSION['status_code'] = "success";
         $_SESSION['status_btn'] = "Back";
-        header("Location: inventory.php");
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+
     } else {
         // Handle the error
         $_SESSION['status'] = "Error";
         $_SESSION['status_text'] = "Error: " . $stmt->error;
         $_SESSION['status_code'] = "error";
         $_SESSION['status_btn'] = "Back";
-        header("Location: inventory.php");
+        header("Location: {$_SERVER['HTTP_REFERER']}");
+
     }
 
     // Close the statement
     $stmt->close();
 }
 
+
+if (isset($_POST['saveChangeBtn'])) { // Check correct form name
+
+    $orderCode = trim($_POST['orderCode']); // Trim input to remove spaces
+    $newDate = trim($_POST['deliveryDate']);
+    $user_id = trim($_POST['userID']);
+    $name = $_POST['customerName'];
+
+    if (!empty($orderCode) && !empty($newDate)) { // Validate inputs
+        $stmt = $conn->prepare('UPDATE orders SET delivery_date = ? WHERE order_code = ?');
+        $stmt->bind_param('ss', $newDate, $orderCode);
+
+        if ($stmt->execute()) {
+            // Insert notification into the notifications table
+            $description = "Your order with order code $orderCode has been rescheduled for delivery on $newDate.";
+            $status = 'unread';
+            $order_status = "Order Rescheduled";
+
+            $insertNotificationQuery = "INSERT INTO `notifications`(`user_id`, `username`, `description`, `order_status`, `status`) VALUES ('$user_id','$name','$description', '$order_status', '$status')";
+            mysqli_query($conn, $insertNotificationQuery);
+            
+            $_SESSION['status'] = "Success";
+            $_SESSION['status_text'] = "Delivery Date updated successfully.";
+            $_SESSION['status_code'] = "success";
+            $_SESSION['status_btn'] = "Back";
+        } else {
+            $_SESSION['status'] = "Error";
+            $_SESSION['status_text'] = "Error: " . $stmt->error;
+            $_SESSION['status_code'] = "error";
+            $_SESSION['status_btn'] = "Back";
+        }
+
+        $stmt->close(); // Close the statement
+    } else {
+        $_SESSION['status'] = "Error";
+        $_SESSION['status_text'] = "Invalid input. Please try again.";
+        $_SESSION['status_code'] = "error";
+        $_SESSION['status_btn'] = "Back";
+    }
+
+    header("Location: " . $_SERVER['HTTP_REFERER']); // Redirect back to the previous page
+    exit; // Stop further execution
+}
 
 // Close the database connection
 $conn->close();

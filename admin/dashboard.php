@@ -338,22 +338,45 @@ Toast.fire({
 
                         $currentDateTime = date('Y-m-d H:i:s');
                         $oneDayAgo = date('Y-m-d H:i:s', strtotime('-1 day', strtotime($currentDateTime)));
-                        $sql = "SELECT * FROM `orders`  WHERE `date_created` >= '$oneDayAgo'";
+                        $sql = "SELECT * FROM `orders` INNER JOIN `product_list` ON product_list.product_name = orders.product_name  WHERE `date_created` >= '$oneDayAgo'";
                         $result = mysqli_query($conn, $sql);
 
                         if (mysqli_num_rows($result) > 0) {
                         ?>
                         <div class="news">
-                            <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+                            <?php while ($row = mysqli_fetch_assoc($result)) { 
+                                 $status = $row['order_status'];
+                                 $badgeClass = '';
+     
+                                 switch ($status) {
+                                     case 'Pending':
+                                         $badgeClass = 'badge bg-warning';
+                                         break;
+                                     case 'For Delivery':
+                                         $badgeClass = 'badge bg-primary';
+                                         break;
+                                     case 'Delivered':
+                                         $badgeClass = 'badge bg-info';
+                                         break;
+                                     case 'Recieved':
+                                         $badgeClass = 'badge bg-success';
+                                         break;
+                                     default:
+                                         $badgeClass = 'badge bg-secondary';
+                                         break;
+                                 }
+                                ?>
                             <div class="post-item clearfix">
-                                <h4><a href="#"><?php echo $row['product_name']; ?></a></h4>
-                                <p>Order Code: <?php echo $row['order_code']; ?></p>
-                                <p>Quantity: <?php echo $row['quantity']; ?></p>
-                                <p>Total Price: <?php echo $row['total_price']; ?></p>
-                                <p>Order Date: <?php echo $row['order_date']; ?></p>
-                                <p>Delivery Date: <?php echo $row['delivery_date']; ?></p>
-                                <p>Delivery Address: <?php echo $row['delivery_address']; ?></p>
-                                <p>Order Status: <?php echo $row['order_status']; ?></p>
+                                <img src="<?= $row['product_picture']?>" alt="">
+                                <h4><a href="#"><?= $row['name'] ?></a></h4>
+                                <p>Order Code: <?= $row['order_code'] ?><br>
+                                    <!-- Quantity: <?= $row['quantity'] ?><br> -->
+                                    Total Price: <?= $row['total_price'] ?><br>
+                                    Order Date: <?= $row['order_date'] ?><br>
+                                    Delivery Date: <?= $row['delivery_date'] ?><br>
+                                    Delivery Address: <?= $row['delivery_address'] ?><br>
+                                    Order Status: <span class="<?=$badgeClass?> "><?= $row['order_status'] ?></span>
+                                </p>
                             </div>
                             <?php } ?>
                         </div><!-- End sidebar recent posts-->
