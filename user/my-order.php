@@ -88,16 +88,21 @@ include "alert.php";
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <?php
                             if ($orderStatus !== "Order Declined") {
-                                if ($orderStatus !== 'Out for Delivery') {
-                                    echo '<button class="btn btn-outline-secondary" type="button">Received</button>';
+                                if ($orderStatus === 'Delivered') {
+                                    ?>
+                            <form action="code.php" method="POST">
+                                <input type="hidden" value="<?= $orderCode?>" name="order_code">
+                                <button class="btn btn-outline-success" type="submit"
+                                    name="ReceivedBtn">Received</button>
+                            </form>
+                            <?php
+                                }elseif ($orderStatus === "Order Received") {
+                                    
                                 } else {
-                                    echo '<button class="btn btn-outline-success" type="submit">Recieved</button>';
-                                } 
-                            }else{
-                                
+                                    echo '<button class="btn btn-outline-secondary" type="button">Received</button>';
+                                }
                             }
                             ?>
-
                         </div>
                     </div>
                 </div>

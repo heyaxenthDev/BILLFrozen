@@ -75,7 +75,7 @@ include "alert.php";
                                                 case 'Delivered':
                                                     $badgeClass = 'badge bg-info';
                                                     break;
-                                                case 'Recieved':
+                                                case 'Order Received':
                                                     $badgeClass = 'badge bg-success';
                                                     break;
                                                 default:

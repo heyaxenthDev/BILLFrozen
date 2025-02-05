@@ -219,3 +219,31 @@ if (isset($_POST['placeOrder'])) {
     header("Location: order-placed.html");
     exit;
 }
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ReceivedBtn'])) {
+    $orderCode = $_POST['order_code'];
+
+    $stmt = $conn->prepare("UPDATE orders SET order_status = 'Order Received' WHERE order_code = ?");
+    $stmt->bind_param("s", $orderCode);
+
+    if ($stmt->execute()) {
+        $_SESSION['status'] = "Success";
+        $_SESSION['status_text'] = "Order status updated successfully!";
+        $_SESSION['status_code'] = "success";
+        $_SESSION['status_btn'] = "OK";
+    } else {
+        $_SESSION['status'] = "Error";
+        $_SESSION['status_text'] = "Error: " . $stmt->error;
+        $_SESSION['status_code'] = "error";
+        $_SESSION['status_btn'] = "Back";
+    }
+
+    $stmt->close();
+    $conn->close();
+
+    header("Location: my-order.php"); // Redirect to the orders page
+    exit();
+}
+
+?>
