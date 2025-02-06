@@ -63,7 +63,7 @@ $src = "\BILLFrozen/admin/";
                     <?php
                     // Fetch unread notifications
                     $userID = $_SESSION['user']['user_id'];
-                    $notif_query = "SELECT `description`, `status`, `order_status`, `date_created` FROM notifications WHERE `user_id` = '$userID'";
+                    $notif_query = "SELECT * FROM notifications WHERE `user_id` = '$userID' ORDER BY date_created DESC";
                     $notif_result = mysqli_query($conn, $notif_query);
 
                     $unread_notifs = [];

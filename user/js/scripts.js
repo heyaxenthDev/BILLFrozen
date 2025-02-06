@@ -1,20 +1,4 @@
 $(document).ready(function () {
-  $(".increment-btn").click(function (e) {
-    e.preventDefault();
-    var quantityInput = $(this).siblings(".quantity");
-    var currentValue = parseInt(quantityInput.val());
-    quantityInput.val(currentValue + 1);
-  });
-
-  $(".decrement-btn").click(function (e) {
-    e.preventDefault();
-    var quantityInput = $(this).siblings(".quantity");
-    var currentValue = parseInt(quantityInput.val());
-    if (currentValue > 1) {
-      quantityInput.val(currentValue - 1);
-    }
-  });
-
   const productLinks = document.querySelectorAll(".product-link");
 
   function updateAttributes() {
@@ -101,4 +85,3 @@ $(document).ready(function () {
     $("#offcanvasQuantity").text("Quantity: " + product.quantity);
   }
 });
-

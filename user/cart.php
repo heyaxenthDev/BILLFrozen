@@ -50,15 +50,15 @@ $total_price = 0;
                 <div class="col-md-8">
                     <h1 class="card-title">Shop Cart</h1>
 
-                    <span class="">You have <?= $total_items ?> items in your Cart</span>
-                    <input type="hidden" name="total_items" id="" value="<?= $total_items ?>">
+                    <span>You have <?= $total_items ?> items in your Cart</span>
+                    <input type="hidden" name="total_items" id="total_items" value="<?= $total_items ?>">
                     <hr>
 
                     <?php if ($result) : ?>
                     <?php while ($row = mysqli_fetch_assoc($result)) :
-                            $product_price = $row['price'] * $row['added_quantity'];
-                            $total_price += $product_price; // Add to total price
-                        ?>
+                        $product_price = $row['price'] * $row['added_quantity'];
+                        $total_price += $product_price; // Add to total price
+                    ?>
 
                     <div class="d-none d-md-block card mb-3">
                         <div class="row g-0 align-items-center">
@@ -77,16 +77,15 @@ $total_price = 0;
                             <div class="col-md-2 col-2">
                                 <div class="cart-body">
                                     <div class="input-group">
-                                        <button class="btn btn-outline-secondary decrement-btn">-</button>
+                                        <button class="btn btn-outline-secondary decrement-btn" type="button">-</button>
                                         <input type="number" class="form-control quantity" name="quantity[]"
-                                            value="<?= $row['added_quantity'] ?>">
-                                        <button class="btn btn-outline-secondary increment-btn">+</button>
+                                            value="<?= $row['added_quantity'] ?>" data-price="<?= $row['price'] ?>">
+                                        <button class="btn btn-outline-secondary increment-btn" type="button">+</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-2 col-2">
                                 <div class="cart-body text-center">
-                                    <!-- <p class="cart-text">per Qty.</p> -->
                                     <h5 class="cart-price">₱<?= $row['price'] ?></h5>
                                     <input type="hidden" name="price[]" value="<?= $row['price'] ?>">
                                 </div>
@@ -107,7 +106,7 @@ $total_price = 0;
                 </div>
 
                 <!-- Summary for Browser Layout -->
-                <div class="summary col-md-4 ">
+                <div class="summary col-md-4">
                     <div class="card mb-4">
                         <div class="card-header py-3">
                             <h5 class="mb-0">Summary</h5>
@@ -117,12 +116,12 @@ $total_price = 0;
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                                     Products
-                                    <span>₱<?= number_format($total_price, 2) ?></span>
+                                    <span id="product-total">₱<?= number_format($total_price, 2) ?></span>
                                     <!-- Display total price -->
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <!-- Shipping
-                                <span>NULL</span> -->
+                            <span>NULL</span> -->
                                 </li>
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
@@ -132,8 +131,9 @@ $total_price = 0;
                                             <p class="mb-0">(including VAT)</p>
                                         </strong>
                                     </div>
-                                    <span><strong>₱<?= number_format($total_price, 2) ?></strong></span>
-                                    <input type="hidden" name="price_summary"
+                                    <span><strong
+                                            id="total-price">₱<?= number_format($total_price, 2) ?></strong></span>
+                                    <input type="hidden" name="price_summary" id="price_summary"
                                         value="<?= number_format($total_price, 2) ?>">
                                     <!-- Display total price -->
                                 </li>
@@ -149,22 +149,59 @@ $total_price = 0;
             </div>
         </form>
 
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            $(document).on('click', '.increment-btn', function(e) {
+                e.preventDefault();
+                var quantityInput = $(this).siblings(".quantity");
+                var currentValue = parseInt(quantityInput.val());
+                quantityInput.val(currentValue);
+                updateTotal();
+            });
+
+            $(document).on('click', '.decrement-btn', function(e) {
+                e.preventDefault();
+                var quantityInput = $(this).siblings(".quantity");
+                var currentValue = parseInt(quantityInput.val());
+                if (currentValue > 1) {
+                    quantityInput.val(currentValue);
+                }
+                updateTotal();
+            });
+
+            $(".quantity").on('input', function() {
+                updateTotal();
+            });
+
+            function updateTotal() {
+                let total = 0;
+                $(".quantity").each(function() {
+                    const price = parseFloat($(this).data("price")) || 0;
+                    const quantity = parseInt($(this).val()) || 0;
+                    total += price * quantity;
+                });
+                $("#product-total").text('₱' + total.toFixed(2));
+                $("#total-price").text('₱' + total.toFixed(2));
+                $("#price_summary").val(total.toFixed(2));
+            }
+        });
+        </script>
+
+
+
         <!-- Mobile layout form -->
         <form action="code.php" method="POST" class="d-md-none">
             <h1 class="card-title">Shop Cart</h1>
 
-            <span class="">You have <?= $total_items ?> items in your Cart</span>
-            <input type="hidden" name="total_items" id="" value="<?= $total_items ?>">
+            <span>You have <?= $total_items ?> items in your Cart</span>
+            <input type="hidden" name="total_items" value="<?= $total_items ?>">
             <hr>
 
             <?php if (mysqli_num_rows($result) > 0) : ?>
-            <?php mysqli_data_seek($result, 0); // Reset result set pointer 
-                ?>
+            <?php mysqli_data_seek($result, 0); // Reset result set pointer ?>
             <?php while ($row = mysqli_fetch_assoc($result)) :
-
-                    $product_price = $row['price'] * $row['added_quantity'];
-                    $total_price += $product_price; // Add to total price
-                ?>
+            ?>
             <div class="row">
                 <div class="col-md-8 d-md-none d-block">
                     <div class="card mb-3 position-relative">
@@ -183,17 +220,18 @@ $total_price = 0;
                                     <p class="cart-text"><?= $row['category'] ?></p>
                                     <div class="row">
                                         <div class="col-6">
-                                            <!-- <p class="cart-text">per Qty.</p> -->
                                             <h5 class="cart-price">₱<?= $row['price'] ?></h5>
                                             <input type="hidden" name="price[]" value="<?= $row['price'] ?>">
-
                                         </div>
                                         <div class="col-6">
                                             <div class="input-group">
-                                                <button class="btn btn-outline-secondary decrement-btn">-</button>
+                                                <button class="btn btn-outline-secondary decrement-btn" type="button"
+                                                    data-action="decrement">-</button>
                                                 <input type="number" class="form-control quantity" name="quantity[]"
-                                                    value="<?= $row['added_quantity'] ?>">
-                                                <button class="btn btn-outline-secondary increment-btn">+</button>
+                                                    value="<?= $row['added_quantity'] ?>"
+                                                    data-price="<?= $row['price'] ?>">
+                                                <button class="btn btn-outline-secondary increment-btn" type="button"
+                                                    data-action="increment">+</button>
                                             </div>
                                         </div>
                                     </div>
@@ -210,25 +248,57 @@ $total_price = 0;
 
             <!-- Summary for mobile layout -->
             <nav class="navbar fixed-bottom" style="background-color: #fff394;">
-                <nav class="navbar fixed-bottom d-md-none d-block" style="background-color: #fff394;">
-                    <div class="container-fluid d-flex justify-content-center">
-                        <div class="row w-100">
-                            <div class="col-6 d-flex justify-content-center align-items-center">
-                                <span><strong><small>Total amount:</small>
-                                        ₱<?= number_format($total_price, 2) ?></strong></span>
-                                <input type="hidden" name="price_summary" value="<?= number_format($total_price, 2) ?>">
-                            </div>
-                            <div class="col-6 d-flex justify-content-center align-items-center">
-                                <button type="submit" class="btn btn-md btn-block text-white" name="checkOutBtn"
-                                    style="background-color: #0f1b48;">
-                                    Go to checkout
-                                </button>
-                            </div>
+                <div class="container-fluid d-flex justify-content-center">
+                    <div class="row w-100">
+                        <div class="col-6 d-flex justify-content-center align-items-center">
+                            <span><strong><small>Total amount:</small>
+                                    ₱<span
+                                        id="mobile-total-price"><?= number_format($total_price, 2) ?></span></strong></span>
+                            <input type="hidden" name="price_summary" id="mobile-price-summary"
+                                value="<?= number_format($total_price, 2) ?>">
+                        </div>
+                        <div class="col-6 d-flex justify-content-center align-items-center">
+                            <button type="submit" class="btn btn-md btn-block text-white" name="checkOutBtn"
+                                style="background-color: #0f1b48;">
+                                Go to checkout
+                            </button>
                         </div>
                     </div>
-                </nav>
+                </div>
             </nav>
         </form>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            $(document).on('click', '.increment-btn, .decrement-btn', function(e) {
+                e.preventDefault();
+                var quantityInput = $(this).siblings(".quantity");
+                var currentValue = parseInt(quantityInput.val());
+                if ($(this).data('action') === 'increment') {
+                    quantityInput.val(currentValue);
+                } else if ($(this).data('action') === 'decrement' && currentValue > 1) {
+                    quantityInput.val(currentValue);
+                }
+                updateTotal();
+            });
+
+            $(".quantity").on('input', function() {
+                updateTotal();
+            });
+
+            function updateTotal() {
+                let total = 0;
+                $(".quantity").each(function() {
+                    const price = parseFloat($(this).data("price")) || 0;
+                    const quantity = parseInt($(this).val()) || 0;
+                    total += price * quantity;
+                });
+                $("#mobile-total-price").text(total.toFixed(2));
+                $("#mobile-price-summary").val(total.toFixed(2));
+            }
+        });
+        </script>
 
     </section>
 
