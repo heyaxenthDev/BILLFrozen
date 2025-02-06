@@ -83,10 +83,23 @@ if (isset($_POST['placeOrderBtn'])) {
 
     // Execute the statement
     if ($stmt->execute()) {
+       
+ // Prepare the statement for updating the inventory quantity
+    $updateStmt = $conn->prepare("UPDATE `inventory` SET `quantity` = `quantity` - ?, `sold`= `sold` + ? WHERE `product_code` = ?");
+    $updateStmt->bind_param("iis", $quantity, $quantity, $product_code);
 
+       if ($updateStmt->execute()) {
         unset($_SESSION['order']);
         header("Location: order-placed.html");
         // echo "Order placed successfully!";
+       }else {
+        $_SESSION['status'] = "Error";
+        $_SESSION['status_text'] = "Error: " . $stmt->error;
+        $_SESSION['status_code'] = "error";
+        $_SESSION['status_btn'] = "Back";
+        // echo "Error: " . $stmt->error;
+        header("Location: home.php");
+       }
     } else {
         $_SESSION['status'] = "Error";
         $_SESSION['status_text'] = "Error: " . $stmt->error;
@@ -164,8 +177,8 @@ if (isset($_POST['placeOrder'])) {
     );
 
     // Prepare the statement for updating the inventory quantity
-    $updateStmt = $conn->prepare("UPDATE `inventory` SET `quantity` = `quantity` - ? WHERE `product_code` = ?");
-    $updateStmt->bind_param("is", $quantity, $product_code);
+    $updateStmt = $conn->prepare("UPDATE `inventory` SET `quantity` = `quantity` - ?, `sold`= `sold` + ? WHERE `product_code` = ?");
+    $updateStmt->bind_param("iis", $quantity, $quantity, $product_code);
 
     // Insert each order item into the orders table and update the inventory
     foreach ($_SESSION['order_items'] as $item) {

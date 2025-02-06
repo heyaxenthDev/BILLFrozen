@@ -79,7 +79,7 @@ include "alert.php";
                                         <label for="editProductDesc" clasys="form-label">Description
                                             <small>(Optional)</small></label>
                                         <textarea type="text" class="form-control" id="editProductDesc"
-                                            name="ProductDesc" required></textarea>
+                                            name="ProductDesc"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +183,7 @@ include "alert.php";
                                         <label for="editProductDesc" clasys="form-label">Description
                                             <small>(Optional)</small></label>
                                         <textarea type="text" class="form-control" id="editProductDesc"
-                                            name="editProductDesc" required></textarea>
+                                            name="editProductDesc"></textarea>
                                     </div>
                                 </div>
                             </div>
