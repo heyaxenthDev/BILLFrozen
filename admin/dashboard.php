@@ -177,7 +177,7 @@ Toast.fire({
                                     </thead>
                                     <?php
                                     // Assuming you have already connected to your database
-                                    $sql = "SELECT * FROM `inventory` WHERE 1";
+                                    $sql = "SELECT * FROM `inventory`";
                                     $result = mysqli_query($conn, $sql);
 
                                     if (mysqli_num_rows($result) > 0) {
