@@ -23,7 +23,11 @@ include "alert.php";
     <section class="section">
         <div class="row mt-4 mb-4">
             <div class="col-lg-3 col-10 d-grid gap-2 d-md-block">
-                <input type="email" class="form-control" id="SearchBar" placeholder="Search Product...">
+                <form method="POST" class="d-flex" id="adminProductSearchForm">
+                    <input type="text" class="form-control" name="query" id="adminProductSearchInput"
+                        placeholder="Search Product..." autocomplete="off">
+                    <!-- <button type="submit" class="btn btn-primary ms-2">Search</button> -->
+                </form>
             </div>
             <div class="col-lg-9 col-2 d-grid gap-2 d-md-flex justify-content-md-end">
                 <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#productList">
@@ -96,13 +100,22 @@ include "alert.php";
 
         <hr>
 
-        <div class="row" id="product">
+        <div class="row" id="productListContainer">
             <?php
             // Query to fetch data from product_list table
-            $query = "SELECT * FROM `product_list`";
-
-            // Perform the query
-            $result = $conn->query($query);
+            $search = '';
+            if (isset($_POST['query']) && !empty(trim($_POST['query']))) {
+                $search = trim($_POST['query']);
+                $query = "SELECT * FROM `product_list` WHERE product_name LIKE ? OR category LIKE ?";
+                $stmt = $conn->prepare($query);
+                $like = "%$search%";
+                $stmt->bind_param("ss", $like, $like);
+                $stmt->execute();
+                $result = $stmt->get_result();
+            } else {
+                $query = "SELECT * FROM `product_list`";
+                $result = $conn->query($query);
+            }
 
             // Check if there are any rows in the result
             if ($result->num_rows > 0) {
@@ -272,6 +285,33 @@ include "alert.php";
                     xhr.send(`id=${productID}`);
                 }
             });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('adminProductSearchInput');
+        const productListContainer = document.getElementById('productListContainer');
+        let timer;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(timer);
+            timer = setTimeout(function() {
+                const query = searchInput.value;
+                fetch('search_admin_products.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'query=' + encodeURIComponent(query)
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        productListContainer.innerHTML = html;
+                    });
+            }, 300);
+        });
+        // Prevent form submit
+        document.getElementById('adminProductSearchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
         });
     });
     </script>

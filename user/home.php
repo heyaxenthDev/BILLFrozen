@@ -65,6 +65,12 @@ Toast.fire({
 
                 <!-- Additional content for the product list -->
                 <div class="row" id="product-user">
+                    <div id="productListLoading"
+                        style="display:none;position:absolute;left:50%;top:30%;transform:translate(-50%, -50%);z-index:10;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
                     <?php
                     // Perform database query to fetch product information
                     $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity, inv.product_code 
@@ -280,3 +286,50 @@ unset($_SESSION['orders']);
 
 include 'includes/footer.php';
 ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.search-bar input[name="query"]');
+    const productListContainer = document.getElementById('product-user');
+    const loadingSpinner = document.getElementById('productListLoading');
+    let timer;
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(timer);
+            timer = setTimeout(function() {
+                const query = searchInput.value;
+                loadingSpinner.style.display = 'block';
+                fetch('search_home_products.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'query=' + encodeURIComponent(query)
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        // Remove all children except the spinner
+                        Array.from(productListContainer.children).forEach(child => {
+                            if (child.id !== 'productListLoading') {
+                                child.remove();
+                            }
+                        });
+                        // Insert the new product cards after the spinner
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = html;
+                        while (tempDiv.firstChild) {
+                            productListContainer.appendChild(tempDiv.firstChild);
+                        }
+                    })
+                    .finally(() => {
+                        loadingSpinner.style.display = 'none';
+                    });
+            }, 300);
+        });
+        // Prevent form submit
+        searchInput.form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            searchInput.dispatchEvent(new Event('input'));
+        });
+    }
+});
+</script>

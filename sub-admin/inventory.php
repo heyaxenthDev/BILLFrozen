@@ -155,7 +155,7 @@ include "alert.php";
 
                                     echo "<td>";
                                     echo "<a class='btn btn-success mx-2' data-bs-toggle='modal' data-bs-target='#editInventoryModal' data-id='{$row['id']}' data-product-name='{$row['product_name']}' data-price='{$row['price']}' data-quantity='{$row['quantity']}' data-expiry-date='{$row['expiry_date']}'><i class='bi bi-pencil-square'></i></a>";
-                                    echo "<a class='btn btn-danger'><i class='bi bi-trash'></i></a>";
+                                    echo "<a href='#' class='btn btn-danger delete-inventory' data-id='{$row['id']}'><i class='bi bi-trash'></i></a>";
                                     echo "</td>";
                                     echo "</tr>";
                                 }
@@ -251,6 +251,44 @@ include "alert.php";
     </section>
 
 </main><!-- End #main -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.querySelectorAll('.delete-inventory').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var id = this.getAttribute('data-id');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // AJAX request to delete
+                fetch('delete_inventory.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'id=' + encodeURIComponent(id)
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        Swal.fire('Deleted!', 'The item has been deleted.', 'success')
+                            .then(() => location.reload());
+                    })
+                    .catch(() => {
+                        Swal.fire('Error!', 'Failed to delete item.', 'error');
+                    });
+            }
+        });
+    });
+});
+</script>
 
 <?php
 include 'includes/footer.php';

@@ -25,10 +25,11 @@ include "alert.php";
                         <div class="col-md-6 mb-2">
                             <div class="gap-2 d-md-flex justify-content-md-end">
                                 <div class="search-bar">
-                                    <form class="search-form d-flex align-items-center" method="POST" action="#">
-                                        <input type="text" name="query" placeholder="Search"
-                                            title="Enter search keyword">
-                                        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                                    <form class="search-form d-flex align-items-center" id="productSearchForm"
+                                        method="POST">
+                                        <input type="text" name="query" id="productSearchInput" placeholder="Search"
+                                            title="Enter search keyword" autocomplete="off">
+                                        <!-- <button type="submit" title="Search"><i class="bi bi-search"></i></button> -->
                                     </form>
                                 </div><!-- End Search Bar -->
                             </div>
@@ -40,27 +41,47 @@ include "alert.php";
                 <hr>
 
                 <!-- Additional content for the product list -->
-                <div class="row">
+                <div class="row position-relative" id="productListContainer">
+                    <div id="productListLoading"
+                        style="display:none;position:absolute;left:50%;top:30%;transform:translate(-50%, -50%);z-index:10;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
                     <?php
                     // Perform database query to fetch product information
-                    $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity, inv.product_code 
-                            FROM product_list pl
-                            JOIN inventory inv ON pl.product_name = inv.product_name 
-                            WHERE inv.quantity > 0";
-                    $result = $conn->query($sql);
+                    $search = '';
+                    if (isset($_POST['query']) && !empty(trim($_POST['query']))) {
+                        $search = trim($_POST['query']);
+                        $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity, inv.product_code 
+                                FROM product_list pl
+                                JOIN inventory inv ON pl.product_name = inv.product_name 
+                                WHERE inv.quantity > 0 AND (pl.product_name LIKE ? OR pl.category LIKE ? )";
+                        $stmt = $conn->prepare($sql);
+                        $like = "%$search%";
+                        $stmt->bind_param("ss", $like, $like);
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+                    } else {
+                        $sql = "SELECT pl.product_name, pl.category, pl.price, pl.product_picture, inv.quantity, inv.product_code 
+                                FROM product_list pl
+                                JOIN inventory inv ON pl.product_name = inv.product_name 
+                                WHERE inv.quantity > 0";
+                        $result = $conn->query($sql);
+                    }
 
                     // Check if query was successful
                     if ($result && $result->num_rows > 0) {
                         // Output data of each row
                         while ($row = $result->fetch_assoc()) {
                     ?>
-                    <div class="col-lg-3 col-6">
+                    <div class="col-lg-2 col-6">
                         <!-- Card with an image on top -->
                         <a href="" class="product-link" data-product-id="<?php echo $row['product_code']; ?>">
                             <div class="card">
                                 <img src="<?php echo $src . $row['product_picture']; ?>" class="card-img-top" alt="...">
                                 <div class="card-body">
-                                    <h5 class="card-title"><?php echo $row['product_name']; ?></h5>
+                                    <h6 class="fw-bold"><?php echo $row['product_name']; ?></h6>
                                     <p class="card-text">Price: <?php echo $row['price']; ?></p>
                                     <?php if ($row['quantity'] == 0) : ?>
                                     <p class="card-text"><span class="badge bg-danger">Sold Out</span></p>
@@ -203,6 +224,48 @@ include "alert.php";
     </div>
 
 </main><!-- End #main -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('productSearchInput');
+    const productListContainer = document.getElementById('productListContainer');
+    const loadingSpinner = document.getElementById('productListLoading');
+    let timer;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            const query = searchInput.value;
+            loadingSpinner.style.display = 'block';
+            fetch('search_products_list.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: 'query=' + encodeURIComponent(query)
+                })
+                .then(response => response.text())
+                .then(html => {
+                    // Remove all children except the spinner
+                    Array.from(productListContainer.children).forEach(child => {
+                        if (child.id !== 'productListLoading') {
+                            child.remove();
+                        }
+                    });
+                    // Insert the new product cards or message after the spinner
+                    productListContainer.insertAdjacentHTML('beforeend', html);
+                })
+                .finally(() => {
+                    loadingSpinner.style.display = 'none';
+                });
+        }, 300);
+    });
+    // Prevent form submit
+    document.getElementById('productSearchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        searchInput.dispatchEvent(new Event('input'));
+    });
+});
+</script>
 
 <?php
 unset($_SESSION['order']);

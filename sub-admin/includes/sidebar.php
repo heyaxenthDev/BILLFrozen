@@ -48,23 +48,6 @@ $current_page = basename($_SERVER['PHP_SELF'], ".php");
             </a>
         </li><!-- End Reports Page Nav -->
 
-        <li class="nav-heading">User Management</li>
-
-        <li class="nav-item">
-            <a class="nav-link <?= ($current_page == 'user-registration') ? '' : 'collapsed' ?>"
-                href="user-registration.php">
-                <i class="bi bi-person-plus"></i>
-                <span>User Registration</span>
-            </a>
-        </li><!-- End User Registration Page Nav -->
-
-        <li class="nav-item">
-            <a class="nav-link <?= ($current_page == 'users') ? '' : 'collapsed' ?>" href="users.php">
-                <i class="bi bi-people"></i>
-                <span>Users</span>
-            </a>
-        </li><!-- End Users Page Nav -->
-
     </ul>
 
 </aside><!-- End Sidebar -->

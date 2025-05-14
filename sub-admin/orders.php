@@ -194,14 +194,8 @@ include "alert.php";
 
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-danger" name="declineBtn"
-                                        id="declineBtn">Decline
+                                    <button type="button" class="btn btn-danger" id="openDeclineModalBtn">Decline
                                         Order</button>
-                                    <script>
-                                    document.getElementById('declineBtn').addEventListener('click', function() {
-                                        document.getElementById('deliveryDate').removeAttribute('required');
-                                    });
-                                    </script>
                                     <button type="submit" class="btn btn-success" name="confirmBtn">Confirm
                                         Order</button>
 
@@ -219,6 +213,36 @@ include "alert.php";
                     </div>
                 </div>
 
+                <!-- Add Decline Reason Modal -->
+                <div class="modal fade" id="declineReasonModal" tabindex="-1" aria-labelledby="declineReasonModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="declineReasonModalLabel">Decline Order</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <form id="declineReasonForm" method="POST" action="code.php">
+                                <div class="modal-body">
+                                    <input type="hidden" name="decline_order_code" id="decline_order_code">
+                                    <div class="mb-3">
+                                        <label for="decline_reason" class="form-label">Reason for Decline <span
+                                                class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="decline_reason" name="decline_reason"
+                                            rows="3" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-danger">Submit Reason</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -229,6 +253,17 @@ include "alert.php";
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/order.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Open Decline Modal and set order code
+        document.getElementById('openDeclineModalBtn').addEventListener('click', function() {
+            var orderCode = document.getElementById('orderCode').value;
+            document.getElementById('decline_order_code').value = orderCode;
+            var declineModal = new bootstrap.Modal(document.getElementById('declineReasonModal'));
+            declineModal.show();
+        });
+    });
+    </script>
 
 </main><!-- End #main -->
 
