@@ -26,8 +26,8 @@ const Toast = Swal.mixin({
 Toast.fire({
     background: '#53a653',
     color: '#fff',
-    icon: '<?php echo $_SESSION['logged_icon']; ?>',
-    title: '<?php echo $_SESSION['logged']; ?>'
+    icon: '<?= $_SESSION['logged_icon']; ?>',
+    title: '<?= $_SESSION['logged']; ?>'
 });
 </script>
 <?php
@@ -88,16 +88,17 @@ Toast.fire({
                     ?>
                     <div class="col-lg-3 col-6">
                         <!-- Card with an image on top -->
-                        <a href="#" class="product-link" data-product-id="<?php echo $row['product_code']; ?>">
+                        <a href="#" class="product-link" data-product-id="<?= $row['product_code']; ?>">
                             <div class="card item">
-                                <img src="<?php echo $src . $row['product_picture']; ?>" class="card-img-top" alt="...">
+                                <img src="<?= $src . $row['product_picture']; ?>" class="card-img-top" alt="...">
                                 <div class="card-body">
-                                    <h5 class="card-title"><?php echo $row['product_name']; ?></h5>
-                                    <p class="card-text">Price: <?php echo $row['price']; ?></p>
+                                    <h5 class="card-title"><?= $row['product_name']; ?></h5>
+                                    <p class="card-text">Price: <?= $row['price']; ?></p>
                                     <?php if ($row['quantity'] == 0) : ?>
                                     <p class="card-text"><span class="badge bg-danger">Sold Out</span></p>
                                     <?php else : ?>
-                                    <p class="card-text"><span class="badge bg-success">Available</span></p>
+                                    <p class="card-text">Qty: <?= $row['quantity']?> <span
+                                            class="badge bg-success">Available</span></p>
                                     <?php endif; ?>
                                 </div>
                             </div><!-- End Card with an image on top -->
@@ -136,16 +137,16 @@ Toast.fire({
                         $totalSold = $row['total_sold'];
                         $productPicture = $src . $row['product_picture'];
                 ?>
-                <a href="" class="product-link" data-product-id="<?php echo $row['product_code']; ?>">
+                <a href="" class="product-link" data-product-id="<?= $row['product_code']; ?>">
                     <div class="card mb-3 item" style="max-width: 540px;">
                         <div class="row g-0 align-items-center">
                             <div class="col-md-4 col-4">
-                                <img src="<?php echo $productPicture; ?>" class="card-img-top" alt="...">
+                                <img src="<?= $productPicture; ?>" class="card-img-top" alt="...">
                             </div>
                             <div class="col-md-8 col-8">
                                 <div class="card-body">
-                                    <h5 class="card-title"><?php echo $productName; ?></h5>
-                                    <p>Total Sold: <?php echo $totalSold; ?></p>
+                                    <h5 class="card-title"><?= $productName; ?></h5>
+                                    <p>Total Sold: <?= $totalSold; ?></p>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +165,7 @@ Toast.fire({
     </section>
 
     <!-- Modal -->
-    <div class="modal fade" id="modalProduct" tabindex="-1" aria-labelledby="modalProductLabel" aria-hidden="true"
+    <div class="modal fade" id="modalProduct" tabindex="-1" aria-labelledby="modalProductLabel" aria-disabled="true"
         data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -183,19 +184,21 @@ Toast.fire({
                                 <div class="row">
                                     <div class="col-9">
                                         <h1 class="modal-title" id="modalProductName">Product Name</h1>
-                                        <input type="hidden" name="product_name" id="modProductName" value="">
-                                        <input type="hidden" name="product_code" id="productCode" value="">
+                                        <input type="hidden" name="product_name" id="modalProductNameInput" value="">
+                                        <input type="hidden" name="product_code" id="modalProductCode" value="">
                                     </div>
                                     <div class="col-3">
                                         <h2 class="modal-title"><span class="badge text-bg-primary"
                                                 id="modalPrice">Price</span>
                                             <input type="hidden" name="price" id="modalPriceRaw" value="">
-
+                                        </h2>
                                     </div>
                                 </div>
 
-                                <small id="modalCategory">Category: Frozen Foods</small><br>
-                                </h2>
+                                <small id="modalDesc"></small><br>
+                                <small id="modalCategory"></small><br>
+                                <small id="modalAvailableQty"></small><br>
+                                <small id="modalExpiryDate"> <span id="modalExpiryBadge" class="badge "></span></small>
 
                                 <div class="row">
                                     <div class="col-7 modal-title">
@@ -245,14 +248,18 @@ Toast.fire({
                 <div class="row">
                     <div class="col-8">
                         <h1 class="canvas-title" id="offcanvasProductName">Product Name</h1>
-                        <input type="hidden" name="product_name" id="offProductName" value="">
-                        <input type="hidden" name="product_code" id="offproductCode" value="">
+                        <input type="hidden" name="product_name" id="offcanvasProductNameInput" value="">
+                        <input type="hidden" name="product_code" id="offcanvasProductCode" value="">
                     </div>
                     <div class="col-4 text-end canvas-title px-3">
                         <span class="badge text-bg-primary" id="offcanvasPrice">Price</span>
                         <input type="hidden" name="price" id="offcanvasPriceRaw" value="">
                     </div>
                 </div>
+
+                <small id="offcanvasDesc"></small><br>
+                <small id="offcanvasAvailableQty"></small><br>
+                <small id="offcanvasExpiryDate"> <span id="offcanvasExpiryBadge" class="badge "></span></small>
 
                 <div class="row mt-2">
                     <div class="col-7">
@@ -334,45 +341,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handle product link clicks
-    document.getElementById('product-user').addEventListener('click', function(e) {
-        const link = e.target.closest('.product-link');
-        if (link) {
-            e.preventDefault();
-            const productId = link.getAttribute('data-product-id');
-            if (!productId) {
-                alert('No product ID found!');
-                return;
-            }
-            fetch(`get_product_details.php?product_id=${productId}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Update modal content
-                    document.getElementById('modalImage').src = data.product_picture;
-                    document.getElementById('modalProductName').textContent = data.product_name;
-                    document.getElementById('modProductName').value = data.product_name;
-                    document.getElementById('productCode').value = data.product_code;
-                    document.getElementById('modalPrice').textContent = '₱' + data.price;
-                    document.getElementById('modalPriceRaw').value = data.price;
-                    document.getElementById('modalCategory').textContent = 'Category: ' + data
-                        .category;
-
-                    // Set inventory quantity
-                    const quantityInput = document.querySelector('#modalProduct .quantity');
-                    quantityInput.setAttribute('data-inventory', data.quantity);
-                    quantityInput.setAttribute('max', data.quantity);
-                });
-        }
-    });
 
     // Handle increment/decrement buttons in modal
-    const modalQuantityInput = document.querySelector('#modalProduct .quantity');
-    const modalIncrementBtn = document.querySelector('#modalProduct .increment-btn');
-    const modalDecrementBtn = document.querySelector('#modalProduct .decrement-btn');
+    const modalQuantityInput = document.querySelector("#modalProduct .quantity");
+    const modalIncrementBtn = document.querySelector(
+        "#modalProduct .increment-btn"
+    );
+    const modalDecrementBtn = document.querySelector(
+        "#modalProduct .decrement-btn"
+    );
 
-    modalIncrementBtn.addEventListener('click', function() {
+    modalIncrementBtn.addEventListener("click", function() {
         const currentValue = parseInt(modalQuantityInput.value) || 0;
-        const inventory = parseInt(modalQuantityInput.getAttribute('data-inventory')) || 0;
+        const inventory =
+            parseInt(modalQuantityInput.getAttribute("data-inventory")) || 0;
 
         if (currentValue < inventory) {
             modalQuantityInput.value = currentValue + 1;
@@ -382,14 +364,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 text: "Cannot exceed available inventory.",
                 icon: "warning",
                 toast: true,
-                position: 'top-end',
+                position: "top-end",
                 showConfirmButton: false,
-                timer: 3000
+                timer: 3000,
             });
         }
     });
-
-    modalDecrementBtn.addEventListener('click', function() {
+    modalDecrementBtn.addEventListener("click", function() {
         const currentValue = parseInt(modalQuantityInput.value) || 0;
         if (currentValue > 1) {
             modalQuantityInput.value = currentValue - 1;
@@ -397,9 +378,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Handle manual input
-    modalQuantityInput.addEventListener('input', function() {
+    modalQuantityInput.addEventListener("input", function() {
         const value = parseInt(this.value);
-        const inventory = parseInt(this.getAttribute('data-inventory')) || 0;
+        const inventory = parseInt(this.getAttribute("data-inventory")) || 0;
 
         if (isNaN(value) || value < 1) {
             this.value = 1;
@@ -410,11 +391,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 text: "Quantity cannot exceed available inventory.",
                 icon: "warning",
                 toast: true,
-                position: 'top-end',
+                position: "top-end",
                 showConfirmButton: false,
-                timer: 3000
+                timer: 3000,
             });
         }
     });
+
 });
 </script>

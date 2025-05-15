@@ -77,19 +77,22 @@ include "alert.php";
                     ?>
                     <div class="col-lg-2 col-6">
                         <!-- Card with an image on top -->
-                        <a href="" class="product-link" data-product-id="<?php echo $row['product_code']; ?>">
-                            <div class="card">
-                                <img src="<?php echo $src . $row['product_picture']; ?>" class="card-img-top" alt="...">
+                        <a href="#" class="product-link" data-product-id="<?= $row['product_code']; ?>">
+                            <div class="card h-100">
+                                <img src="<?= rtrim($src, '/') . '/' . $row['product_picture']; ?>" class="card-img-top"
+                                    alt="<?= $row['product_name']; ?>">
                                 <div class="card-body">
-                                    <h6 class="fw-bold"><?php echo $row['product_name']; ?></h6>
-                                    <p class="card-text">Price: <?php echo $row['price']; ?></p>
+                                    <h6 class="fw-bold"><?= $row['product_name']; ?></h6>
+                                    <p class="card-text">Price: ₱<?= $row['price']; ?></p>
                                     <?php if ($row['quantity'] == 0) : ?>
                                     <p class="card-text"><span class="badge bg-danger">Sold Out</span></p>
                                     <?php else : ?>
-                                    <p class="card-text"><span class="badge bg-success">Available</span></p>
+                                    <p class="card-text">Qty: <?= $row['quantity']; ?>
+                                        <span class="badge bg-success">Available</span>
+                                    </p>
                                     <?php endif; ?>
                                 </div>
-                            </div><!-- End Card with an image on top -->
+                            </div>
                         </a>
                     </div>
                     <?php
@@ -139,7 +142,11 @@ include "alert.php";
                                     </div>
                                 </div>
 
-                                <small id="modalCategory">Category: Frozen Foods</small><br>
+                                <small id="modalDesc" class="pb-3"></small> <br>
+
+                                <small id="modalCategory"></small><br>
+
+                                <small id="modalAvailableQty"></small><br>
                                 </h2>
 
                                 <div class="row">
@@ -198,6 +205,10 @@ include "alert.php";
                 </div>
 
                 <div class="row mt-2">
+
+                </div>
+
+                <div class="row mt-2">
                     <div class="col-7">
                         <span class="mx-2">Quantity</span><br>
                     </div>
@@ -225,95 +236,65 @@ include "alert.php";
 
 </main><!-- End #main -->
 
+<!-- <script src="js/scripts.js"></script> -->
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('productSearchInput');
-    const productListContainer = document.getElementById('productListContainer');
-    const loadingSpinner = document.getElementById('productListLoading');
+    const searchInput = document.getElementById("productSearchInput");
+    const productListContainer = document.getElementById("productListContainer");
+    const loadingSpinner = document.getElementById("productListLoading");
     let timer;
-    searchInput.addEventListener('input', function() {
+
+    searchInput.addEventListener("input", function() {
         clearTimeout(timer);
         timer = setTimeout(function() {
             const query = searchInput.value;
-            loadingSpinner.style.display = 'block';
-            fetch('search_products_list.php', {
-                    method: 'POST',
+            loadingSpinner.style.display = "block";
+            fetch("search_products_list.php", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        "Content-Type": "application/x-www-form-urlencoded",
                     },
-                    body: 'query=' + encodeURIComponent(query)
+                    body: "query=" + encodeURIComponent(query),
                 })
-                .then(response => response.text())
-                .then(html => {
+                .then((response) => response.text())
+                .then((html) => {
                     // Remove all children except the spinner
-                    Array.from(productListContainer.children).forEach(child => {
-                        if (child.id !== 'productListLoading') {
+                    Array.from(productListContainer.children).forEach((child) => {
+                        if (child.id !== "productListLoading") {
                             child.remove();
                         }
                     });
                     // Insert the new product cards or message after the spinner
-                    productListContainer.insertAdjacentHTML('beforeend', html);
+                    productListContainer.insertAdjacentHTML("beforeend", html);
                 })
                 .finally(() => {
-                    loadingSpinner.style.display = 'none';
+                    loadingSpinner.style.display = "none";
                 });
         }, 300);
     });
     // Prevent form submit
-    document.getElementById('productSearchForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        searchInput.dispatchEvent(new Event('input'));
-    });
-
-    // Handle product link clicks
-    document.getElementById('productListContainer').addEventListener('click', function(e) {
-        const link = e.target.closest('.product-link');
-        if (link) {
+    document
+        .getElementById("productSearchForm")
+        .addEventListener("submit", function(e) {
             e.preventDefault();
-            const productId = link.getAttribute('data-product-id');
-            if (!productId) {
-                alert('No product ID found!');
-                return;
-            }
-            fetch('get_product_details.php?product_id=' + productId)
-                .then(response => response.json())
-                .then(data => {
-                    // Update modal content
-                    document.getElementById('modalImage').src = data.product_picture;
-                    document.getElementById('modalProductName').textContent = data.product_name;
-                    document.getElementById('modProductName').value = data.product_name;
-                    document.getElementById('productCode').value = data.product_code;
-                    document.getElementById('modalPrice').textContent = '₱' + data.price;
-                    document.getElementById('modalPriceRaw').value = data.price;
-                    document.getElementById('modalCategory').textContent = 'Category: ' + data
-                        .category;
+            searchInput.dispatchEvent(new Event("input"));
+        });
 
-                    // Set inventory quantity
-                    const quantityInput = document.querySelector('#modalProduct .quantity');
-                    quantityInput.setAttribute('data-inventory', data.quantity);
-                    quantityInput.setAttribute('max', data.quantity);
-
-                    // Show modal for wide screens and off-canvas for mobile
-                    if (window.innerWidth >= 768) {
-                        const modal = new bootstrap.Modal(document.getElementById('modalProduct'));
-                        modal.show();
-                    } else {
-                        const offcanvas = new bootstrap.Offcanvas(document.getElementById(
-                            'offcanvasProduct'));
-                        offcanvas.show();
-                    }
-                });
-        }
-    });
 
     // Handle increment/decrement buttons in modal
-    const modalQuantityInput = document.querySelector('#modalProduct .quantity');
-    const modalIncrementBtn = document.querySelector('#modalProduct .increment-btn');
-    const modalDecrementBtn = document.querySelector('#modalProduct .decrement-btn');
+    const modalQuantityInput = document.querySelector("#modalProduct .quantity");
+    const modalIncrementBtn = document.querySelector(
+        "#modalProduct .increment-btn"
+    );
+    const modalDecrementBtn = document.querySelector(
+        "#modalProduct .decrement-btn"
+    );
 
-    modalIncrementBtn.addEventListener('click', function() {
+    modalIncrementBtn.addEventListener("click", function() {
         const currentValue = parseInt(modalQuantityInput.value) || 0;
-        const inventory = parseInt(modalQuantityInput.getAttribute('data-inventory')) || 0;
+        const inventory =
+            parseInt(modalQuantityInput.getAttribute("data-inventory")) || 0;
 
         if (currentValue < inventory) {
             modalQuantityInput.value = currentValue + 1;
@@ -323,14 +304,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 text: "Cannot exceed available inventory.",
                 icon: "warning",
                 toast: true,
-                position: 'top-end',
+                position: "top-end",
                 showConfirmButton: false,
-                timer: 3000
+                timer: 3000,
             });
         }
     });
-
-    modalDecrementBtn.addEventListener('click', function() {
+    modalDecrementBtn.addEventListener("click", function() {
         const currentValue = parseInt(modalQuantityInput.value) || 0;
         if (currentValue > 1) {
             modalQuantityInput.value = currentValue - 1;
@@ -338,9 +318,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Handle manual input
-    modalQuantityInput.addEventListener('input', function() {
+    modalQuantityInput.addEventListener("input", function() {
         const value = parseInt(this.value);
-        const inventory = parseInt(this.getAttribute('data-inventory')) || 0;
+        const inventory = parseInt(this.getAttribute("data-inventory")) || 0;
 
         if (isNaN(value) || value < 1) {
             this.value = 1;
@@ -351,9 +331,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 text: "Quantity cannot exceed available inventory.",
                 icon: "warning",
                 toast: true,
-                position: 'top-end',
+                position: "top-end",
                 showConfirmButton: false,
-                timer: 3000
+                timer: 3000,
             });
         }
     });
