@@ -203,10 +203,12 @@ Toast.fire({
                                     </div>
                                     <div class="col-5 modal-title px-3">
                                         <div class="input-group">
-                                            <button class="btn btn-outline-warning decrement-btn">-</button>
-                                            <input type="number" class="form-control quantity" name="quantity"
-                                                value="1">
-                                            <button class="btn btn-outline-warning increment-btn">+</button>
+                                            <button class="btn btn-outline-warning decrement-btn"
+                                                type="button">-</button>
+                                            <input type="number" class="form-control quantity" name="quantity" value="1"
+                                                data-inventory="">
+                                            <button class="btn btn-outline-warning increment-btn"
+                                                type="button">+</button>
                                         </div>
                                     </div>
                                 </div>
@@ -258,9 +260,9 @@ Toast.fire({
                     </div>
                     <div class="col-5 px-3">
                         <div class="input-group">
-                            <button class="btn btn-outline-warning decrement-btn">-</button>
+                            <button class="btn btn-outline-warning decrement-btn" type="button">-</button>
                             <input type="number" class="form-control quantity" name="quantity" value="1">
-                            <button class="btn btn-outline-warning increment-btn">+</button>
+                            <button class="btn btn-outline-warning increment-btn" type="button">+</button>
                         </div>
                     </div>
                 </div>
@@ -331,5 +333,88 @@ document.addEventListener('DOMContentLoaded', function() {
             searchInput.dispatchEvent(new Event('input'));
         });
     }
+
+    // Handle product link clicks
+    document.getElementById('product-user').addEventListener('click', function(e) {
+        const link = e.target.closest('.product-link');
+        if (link) {
+            e.preventDefault();
+            const productId = link.getAttribute('data-product-id');
+            if (!productId) {
+                alert('No product ID found!');
+                return;
+            }
+            fetch(`get_product_details.php?product_id=${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Update modal content
+                    document.getElementById('modalImage').src = data.product_picture;
+                    document.getElementById('modalProductName').textContent = data.product_name;
+                    document.getElementById('modProductName').value = data.product_name;
+                    document.getElementById('productCode').value = data.product_code;
+                    document.getElementById('modalPrice').textContent = '₱' + data.price;
+                    document.getElementById('modalPriceRaw').value = data.price;
+                    document.getElementById('modalCategory').textContent = 'Category: ' + data
+                        .category;
+
+                    // Set inventory quantity
+                    const quantityInput = document.querySelector('#modalProduct .quantity');
+                    quantityInput.setAttribute('data-inventory', data.quantity);
+                    quantityInput.setAttribute('max', data.quantity);
+                });
+        }
+    });
+
+    // Handle increment/decrement buttons in modal
+    const modalQuantityInput = document.querySelector('#modalProduct .quantity');
+    const modalIncrementBtn = document.querySelector('#modalProduct .increment-btn');
+    const modalDecrementBtn = document.querySelector('#modalProduct .decrement-btn');
+
+    modalIncrementBtn.addEventListener('click', function() {
+        const currentValue = parseInt(modalQuantityInput.value) || 0;
+        const inventory = parseInt(modalQuantityInput.getAttribute('data-inventory')) || 0;
+
+        if (currentValue < inventory) {
+            modalQuantityInput.value = currentValue + 1;
+        } else {
+            Swal.fire({
+                title: "Warning!",
+                text: "Cannot exceed available inventory.",
+                icon: "warning",
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        }
+    });
+
+    modalDecrementBtn.addEventListener('click', function() {
+        const currentValue = parseInt(modalQuantityInput.value) || 0;
+        if (currentValue > 1) {
+            modalQuantityInput.value = currentValue - 1;
+        }
+    });
+
+    // Handle manual input
+    modalQuantityInput.addEventListener('input', function() {
+        const value = parseInt(this.value);
+        const inventory = parseInt(this.getAttribute('data-inventory')) || 0;
+
+        if (isNaN(value) || value < 1) {
+            this.value = 1;
+        } else if (value > inventory) {
+            this.value = inventory;
+            Swal.fire({
+                title: "Warning!",
+                text: "Quantity cannot exceed available inventory.",
+                icon: "warning",
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        }
+    });
 });
 </script>

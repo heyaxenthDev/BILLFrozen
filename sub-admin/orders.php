@@ -87,7 +87,7 @@ include "alert.php";
                                         <span class="<?= $badgeClass ?>"><?= $status ?></span>
                                     <td>
                                         <!-- View Modal Button -->
-                                        <button class="btn btn-primary view-order-btn" data-bs-toggle="modal"
+                                        <button class="btn btn-primary btn-sm view-order-btn" data-bs-toggle="modal"
                                             data-bs-target="#ViewModal" data-order-code="<?= $row['order_code'] ?>">
                                             <i class="bi bi-eye"></i>
                                         </button>
@@ -95,7 +95,7 @@ include "alert.php";
                                         <!-- Complete Delivery Status -->
                                         <?php if ($row['order_status'] == 'For Delivery') { ?>
                                         <a href="code.php?order=Delivered&OrderCode=<?= $row['order_code'] ?>"
-                                            class="btn btn-success"><i class="bi bi-cart-check"></i></a>
+                                            class="btn btn-success btn-sm"><i class="bi bi-cart-check"></i></a>
                                         <?php } ?>
 
                                     </td>
@@ -194,17 +194,18 @@ include "alert.php";
 
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" id="openDeclineModalBtn">Decline
+                                    <button type="button" class="btn btn-danger btn-sm" id="openDeclineModalBtn">Decline
                                         Order</button>
-                                    <button type="submit" class="btn btn-success" name="confirmBtn">Confirm
+                                    <button type="submit" class="btn btn-success btn-sm" name="confirmBtn">Confirm
                                         Order</button>
 
-                                    <button style="display: none;" type="submit" class="btn btn-primary"
+                                    <button style="display: none;" type="submit" class="btn btn-primary btn-sm"
                                         name="saveChangeBtn" id="saveChangeBtn">Save
                                         Change Date</button>
 
                                     <!-- Print Modal Button -->
-                                    <button id="print-view-modal" onclick="printOrderModal()" class="btn btn-secondary">
+                                    <button id="print-view-modal" onclick="printOrderModal()"
+                                        class="btn btn-secondary btn-sm">
                                         <i class="bi bi-printer"></i> Print Order
                                     </button>
                                 </div>
@@ -234,9 +235,9 @@ include "alert.php";
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
+                                    <button type="button" class="btn btn-secondary btn-sm"
                                         data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-danger">Submit Reason</button>
+                                    <button type="submit" class="btn btn-danger btn-sm">Submit Reason</button>
                                 </div>
                             </form>
                         </div>

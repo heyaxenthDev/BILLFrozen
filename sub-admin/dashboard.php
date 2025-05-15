@@ -150,18 +150,6 @@ Toast.fire({
                     <div class="col-12">
                         <div class="card top-selling overflow-auto">
 
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div>
-
                             <div class="card-body pb-0">
                                 <h5 class="card-title">Out of Stocks</h5>
 
@@ -204,9 +192,87 @@ Toast.fire({
 
                         </div>
                     </div><!-- End Out of Stocks -->
+
+                    <!-- Expiring Products -->
+                    <div class="col-12">
+                        <div class="card top-selling overflow-auto">
+
+                            <div class="card-body pb-0">
+                                <h5 class="card-title">Expiring Products</h5>
+
+                                <table class="table table-borderless">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Preview</th>
+                                            <th scope="col">Product</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">Quantity</th>
+                                            <th scope="col">Expiration Date</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <?php
+                                    // Query to get products that are expiring soon (within 30 days) or already expired
+                                    $sql = "SELECT *, 
+                                            CASE 
+                                                WHEN expiry_date < CURDATE() THEN 'Expired'
+                                                WHEN expiry_date <= DATE_ADD(CURDATE(), INTERVAL 30 DAY) THEN 'Expiring Soon'
+                                                ELSE 'Good'
+                                            END as expiry_status
+                                            FROM `inventory` 
+                                            WHERE expiry_date IS NOT NULL AND expiry_date <= DATE_ADD(CURDATE(), INTERVAL 30 DAY)
+                                            ORDER BY expiry_date ASC";
+                                    $result = mysqli_query($conn, $sql);
+                                    ?>
+
+                                    <tbody>
+                                        <?php 
+                                        if (mysqli_num_rows($result) > 0) {
+                                            while ($row = mysqli_fetch_assoc($result)) { 
+                                                $statusClass = '';
+                                                $expiryDate = strtotime($row['expiry_date']);
+                                                $currentDate = strtotime(date('Y-m-d'));
+                                                $daysUntilExpiry = ceil(($expiryDate - $currentDate) / (60 * 60 * 24));
+                                                
+                                                if ($daysUntilExpiry < 0) {
+                                                    $statusClass = 'badge bg-danger';
+                                                    $status = 'Expired';
+                                                } elseif ($daysUntilExpiry <= 30) {
+                                                    $statusClass = 'badge bg-warning';
+                                                    $status = 'Expiring Soon';
+                                                } else {
+                                                    $statusClass = 'badge bg-success';
+                                                    $status = 'Good';
+                                                }
+                                        ?>
+                                        <tr>
+                                            <th scope="row"><a href="#"><img
+                                                        src="<?php echo $row['product_picture']; ?>" alt=""></a></th>
+                                            <td><a href="#"
+                                                    class="text-primary fw-bold"><?php echo $row['product_name']; ?></a>
+                                            </td>
+                                            <td>₱<?php echo $row['price']; ?></td>
+                                            <td class="fw-bold"><?php echo $row['quantity']; ?></td>
+                                            <td><?php echo date('M d, Y', strtotime($row['expiry_date'])); ?></td>
+                                            <td><span class="<?php echo $statusClass; ?>"><?php echo $status; ?></span>
+                                            </td>
+                                        </tr>
+                                        <?php 
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='6' class='text-center'>No expiring products found.</td></tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div><!-- End Expiring Products -->
                     <?php
                                     } else {
-                                        echo "No inventory found.";
+                                        echo "No expiring products found.";
                                     }
 
                 ?>
@@ -216,19 +282,6 @@ Toast.fire({
                     <!-- Reports -->
                     <div class="col-12">
                         <div class="card">
-
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
-
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div>
 
                             <div class="card-body">
                                 <h5 class="card-title">Reports <span>/Today</span></h5>

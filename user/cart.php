@@ -23,7 +23,7 @@ if ($result_count && $result_count->num_rows > 0) {
 $stmt_count->close();
 
 // Fetch cart items and calculate total price
-$sql = "SELECT c.user_id, c.username, c.product_code, c.product_name, c.added_quantity, i.price, i.category, i.product_picture
+$sql = "SELECT c.user_id, c.username, c.product_code, c.product_name, c.added_quantity, i.price, i.category, i.product_picture, i.quantity as inventory_quantity
         FROM cart c
         JOIN inventory i ON c.product_code = i.product_code WHERE c.user_id = ?";
 $stmt = $conn->prepare($sql);
@@ -75,7 +75,9 @@ $total_price = 0;
                                     <div class="input-group">
                                         <button class="btn btn-outline-secondary decrement-btn" type="button">-</button>
                                         <input type="number" class="form-control quantity p-2" name="quantity[]"
-                                            value="<?= $row['added_quantity'] ?>" data-price="<?= $row['price'] ?>">
+                                            value="<?= $row['added_quantity'] ?>" data-price="<?= $row['price'] ?>"
+                                            data-inventory="<?= $row['inventory_quantity'] ?>"
+                                            max="<?= $row['inventory_quantity'] ?>">
                                         <button class="btn btn-outline-secondary increment-btn" type="button">+</button>
                                     </div>
                                 </div>
@@ -153,10 +155,26 @@ $total_price = 0;
                 $(".quantity:visible").each(function() {
                     let price = parseFloat($(this).data("price")) || 0;
                     let quantity = parseInt($(this).val()) || 0;
+                    let inventory = parseInt($(this).data("inventory")) || 0;
 
                     if (isNaN(quantity) || quantity < 1) {
                         quantity = 1;
                         $(this).val(1);
+                    }
+
+                    // Ensure quantity doesn't exceed inventory
+                    if (quantity > inventory) {
+                        quantity = inventory;
+                        $(this).val(inventory);
+                        Swal.fire({
+                            title: "Warning!",
+                            text: "Quantity cannot exceed available inventory.",
+                            icon: "warning",
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
                     }
 
                     let itemTotal = price * quantity;
@@ -181,27 +199,53 @@ $total_price = 0;
             // Handle increment button click
             $(document).on('click', '.increment-btn', function() {
                 let quantityInput = $(this).closest(".row").find(".quantity");
-                let currentValue = parseInt(quantityInput.val()) || 0; // No default to 1
-                quantityInput.val(currentValue + 1);
-                updateTotal();
+                let currentValue = parseInt(quantityInput.val()) || 0;
+                let inventory = parseInt(quantityInput.data("inventory")) || 0;
+
+                if (currentValue < inventory) {
+                    quantityInput.val(currentValue + 1);
+                    updateTotal();
+                } else {
+                    Swal.fire({
+                        title: "Warning!",
+                        text: "Cannot exceed available inventory.",
+                        icon: "warning",
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                }
             });
 
             // Handle decrement button click
             $(document).on('click', '.decrement-btn', function() {
                 let quantityInput = $(this).closest(".row").find(".quantity");
-                let currentValue = parseInt(quantityInput.val()) || 0; // No default to 1
+                let currentValue = parseInt(quantityInput.val()) || 0;
                 if (currentValue > 1) {
                     quantityInput.val(currentValue - 1);
+                    updateTotal();
                 }
-                updateTotal();
             });
 
             // Handle manual input changes
             $(document).on('input', '.quantity', function() {
                 let value = parseInt($(this).val());
+                let inventory = parseInt($(this).data("inventory")) || 0;
 
                 if (isNaN(value) || value < 1) {
-                    $(this).val(1); // Prevent negative or empty values
+                    $(this).val(1);
+                } else if (value > inventory) {
+                    $(this).val(inventory);
+                    Swal.fire({
+                        title: "Warning!",
+                        text: "Quantity cannot exceed available inventory.",
+                        icon: "warning",
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
                 }
 
                 updateTotal();
@@ -252,7 +296,9 @@ $total_price = 0;
                                                     data-action="decrement">-</button>
                                                 <input type="number" class="form-control quantity" name="quantity[]"
                                                     value="<?= $row['added_quantity'] ?>"
-                                                    data-price="<?= $row['price'] ?>">
+                                                    data-price="<?= $row['price'] ?>"
+                                                    data-inventory="<?= $row['inventory_quantity'] ?>"
+                                                    max="<?= $row['inventory_quantity'] ?>">
                                                 <button class="btn btn-outline-secondary increment-btn" type="button"
                                                     data-action="increment">+</button>
                                             </div>

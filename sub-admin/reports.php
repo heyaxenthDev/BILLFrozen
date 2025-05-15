@@ -278,7 +278,7 @@ $getCurrentMonth = date('F');
                 <div class="col-lg-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Most Buyed Product</h5>
+                            <h5 class="card-title">Best Sellers</h5>
 
                             <?php 
                         // Fetch top 10 selling products
@@ -297,7 +297,7 @@ $getCurrentMonth = date('F');
                         $salesDataJson = json_encode($salesData);
                         ?>
 
-                            <!-- Most Buyed Product -->
+                            <!-- Best Sellers -->
                             <div id="barChart"></div>
 
                             <script>
@@ -325,7 +325,7 @@ $getCurrentMonth = date('F');
                                 }).render();
                             });
                             </script>
-                            <!-- End Most Buyed Product -->
+                            <!-- End Best Sellers -->
 
                         </div>
                     </div>
