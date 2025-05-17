@@ -76,6 +76,15 @@ document.addEventListener("DOMContentLoaded", () => {
             // Add tooltip for the full expiry date
             document.getElementById(prefix + "ExpiryDate").title =
               "Expires on " + formattedExpiryDate;
+
+            // After updating product details in updateProductDetails
+            const qtyInput = document.querySelector(
+              `#${prefix}Product .quantity`
+            );
+            if (qtyInput) {
+              qtyInput.setAttribute("data-inventory", data.quantity);
+              qtyInput.setAttribute("max", data.quantity);
+            }
           }
 
           // Update modal content

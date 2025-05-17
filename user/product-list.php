@@ -112,7 +112,7 @@ include "alert.php";
     </section>
 
     <!-- Modal -->
-    <div class="modal fade" id="modalProduct" tabindex="-1" aria-labelledby="modalProductLabel" aria-hidden="true"
+    <div class="modal fade" id="modalProduct" tabindex="-1" aria-labelledby="modalProductLabel" aria-disabled="true"
         data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -131,23 +131,21 @@ include "alert.php";
                                 <div class="row">
                                     <div class="col-9">
                                         <h1 class="modal-title" id="modalProductName">Product Name</h1>
-                                        <input type="hidden" name="product_name" id="modProductName" value="">
-                                        <input type="hidden" name="product_code" id="productCode" value="">
+                                        <input type="hidden" name="product_name" id="modalProductNameInput" value="">
+                                        <input type="hidden" name="product_code" id="modalProductCode" value="">
                                     </div>
                                     <div class="col-3">
                                         <h2 class="modal-title"><span class="badge text-bg-primary"
                                                 id="modalPrice">Price</span>
                                             <input type="hidden" name="price" id="modalPriceRaw" value="">
-
+                                        </h2>
                                     </div>
                                 </div>
 
-                                <small id="modalDesc" class="pb-3"></small> <br>
-
+                                <small id="modalDesc"></small><br>
                                 <small id="modalCategory"></small><br>
-
                                 <small id="modalAvailableQty"></small><br>
-                                </h2>
+                                <small id="modalExpiryDate"> <span id="modalExpiryBadge" class="badge "></span></small>
 
                                 <div class="row">
                                     <div class="col-7 modal-title">
@@ -155,10 +153,12 @@ include "alert.php";
                                     </div>
                                     <div class="col-5 modal-title px-3">
                                         <div class="input-group">
-                                            <button class="btn btn-outline-warning decrement-btn">-</button>
-                                            <input type="number" class="form-control quantity" name="quantity" value="1"
-                                                data-inventory="">
-                                            <button class="btn btn-outline-warning increment-btn">+</button>
+                                            <button class="btn btn-outline-warning decrement-btn"
+                                                type="button">-</button>
+                                            <input type="number" class="form-control quantity" name="quantity"
+                                                value="1">
+                                            <button class="btn btn-outline-warning increment-btn"
+                                                type="button">+</button>
                                         </div>
                                     </div>
                                 </div>
@@ -195,8 +195,8 @@ include "alert.php";
                 <div class="row">
                     <div class="col-8">
                         <h1 class="canvas-title" id="offcanvasProductName">Product Name</h1>
-                        <input type="hidden" name="product_name" id="offProductName" value="">
-                        <input type="hidden" name="product_code" id="offproductCode" value="">
+                        <input type="hidden" name="product_name" id="offcanvasProductNameInput" value="">
+                        <input type="hidden" name="product_code" id="offcanvasProductCode" value="">
                     </div>
                     <div class="col-4 text-end canvas-title px-3">
                         <span class="badge text-bg-primary" id="offcanvasPrice">Price</span>
@@ -204,9 +204,9 @@ include "alert.php";
                     </div>
                 </div>
 
-                <div class="row mt-2">
-
-                </div>
+                <small id="offcanvasDesc"></small><br>
+                <small id="offcanvasAvailableQty"></small><br>
+                <small id="offcanvasExpiryDate"> <span id="offcanvasExpiryBadge" class="badge "></span></small>
 
                 <div class="row mt-2">
                     <div class="col-7">
@@ -214,9 +214,9 @@ include "alert.php";
                     </div>
                     <div class="col-5 px-3">
                         <div class="input-group">
-                            <button class="btn btn-outline-warning decrement-btn">-</button>
+                            <button class="btn btn-outline-warning decrement-btn" type="button">-</button>
                             <input type="number" class="form-control quantity" name="quantity" value="1">
-                            <button class="btn btn-outline-warning increment-btn">+</button>
+                            <button class="btn btn-outline-warning increment-btn" type="button">+</button>
                         </div>
                     </div>
                 </div>
@@ -239,65 +239,15 @@ include "alert.php";
 <!-- <script src="js/scripts.js"></script> -->
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById("productSearchInput");
-    const productListContainer = document.getElementById("productListContainer");
-    const loadingSpinner = document.getElementById("productListLoading");
-    let timer;
-
-    searchInput.addEventListener("input", function() {
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-            const query = searchInput.value;
-            loadingSpinner.style.display = "block";
-            fetch("search_products_list.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: "query=" + encodeURIComponent(query),
-                })
-                .then((response) => response.text())
-                .then((html) => {
-                    // Remove all children except the spinner
-                    Array.from(productListContainer.children).forEach((child) => {
-                        if (child.id !== "productListLoading") {
-                            child.remove();
-                        }
-                    });
-                    // Insert the new product cards or message after the spinner
-                    productListContainer.insertAdjacentHTML("beforeend", html);
-                })
-                .finally(() => {
-                    loadingSpinner.style.display = "none";
-                });
-        }, 300);
-    });
-    // Prevent form submit
-    document
-        .getElementById("productSearchForm")
-        .addEventListener("submit", function(e) {
-            e.preventDefault();
-            searchInput.dispatchEvent(new Event("input"));
-        });
-
-
-    // Handle increment/decrement buttons in modal
-    const modalQuantityInput = document.querySelector("#modalProduct .quantity");
-    const modalIncrementBtn = document.querySelector(
-        "#modalProduct .increment-btn"
-    );
-    const modalDecrementBtn = document.querySelector(
-        "#modalProduct .decrement-btn"
-    );
-
-    modalIncrementBtn.addEventListener("click", function() {
-        const currentValue = parseInt(modalQuantityInput.value) || 0;
-        const inventory =
-            parseInt(modalQuantityInput.getAttribute("data-inventory")) || 0;
+$(document).ready(function() {
+    // Handle increment button click
+    $(document).on('click', '.increment-btn', function() {
+        let quantityInput = $(this).closest('.input-group').find('.quantity');
+        let currentValue = parseInt(quantityInput.val()) || 0;
+        let inventory = parseInt(quantityInput.data('inventory')) || 0;
 
         if (currentValue < inventory) {
-            modalQuantityInput.value = currentValue + 1;
+            quantityInput.val(currentValue + 1);
         } else {
             Swal.fire({
                 title: "Warning!",
@@ -306,34 +256,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 toast: true,
                 position: "top-end",
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 3000
             });
         }
     });
-    modalDecrementBtn.addEventListener("click", function() {
-        const currentValue = parseInt(modalQuantityInput.value) || 0;
+
+    // Handle decrement button click
+    $(document).on('click', '.decrement-btn', function() {
+        let quantityInput = $(this).closest('.input-group').find('.quantity');
+        let currentValue = parseInt(quantityInput.val()) || 0;
         if (currentValue > 1) {
-            modalQuantityInput.value = currentValue - 1;
+            quantityInput.val(currentValue - 1);
+        } else {
+            quantityInput.val(1);
         }
     });
 
-    // Handle manual input
-    modalQuantityInput.addEventListener("input", function() {
-        const value = parseInt(this.value);
-        const inventory = parseInt(this.getAttribute("data-inventory")) || 0;
+    // Handle manual input changes
+    $(document).on('input', '.quantity', function() {
+        let value = parseInt($(this).val());
+        let inventory = parseInt($(this).data('inventory')) || 0;
 
         if (isNaN(value) || value < 1) {
-            this.value = 1;
+            $(this).val(1);
         } else if (value > inventory) {
-            this.value = inventory;
+            $(this).val(inventory);
             Swal.fire({
                 title: "Warning!",
-                text: "Quantity cannot exceed available inventory.",
+                text: "Cannot exceed available inventory.",
                 icon: "warning",
                 toast: true,
                 position: "top-end",
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 3000
             });
         }
     });

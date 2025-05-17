@@ -251,40 +251,67 @@ include "alert.php";
     </section>
 
 </main><!-- End #main -->
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-document.querySelectorAll('.delete-inventory').forEach(function(btn) {
-    btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        var id = this.getAttribute('data-id');
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This action cannot be undone!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // AJAX request to delete
-                fetch('delete_inventory.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: 'id=' + encodeURIComponent(id)
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        Swal.fire('Deleted!', 'The item has been deleted.', 'success')
-                            .then(() => location.reload());
-                    })
-                    .catch(() => {
-                        Swal.fire('Error!', 'Failed to delete item.', 'error');
+document.addEventListener('DOMContentLoaded', function() {
+    // Delete inventory item
+    document.querySelectorAll('.delete-inventory').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const id = this.getAttribute('data-id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This action cannot be undone!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading state
+                    Swal.fire({
+                        title: 'Deleting...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
                     });
-            }
+
+                    // AJAX request to delete
+                    fetch('delete_inventory.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: 'id=' + encodeURIComponent(id)
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        })
+                        .then(data => {
+                            Swal.fire({
+                                title: 'Deleted!',
+                                text: 'The item has been deleted.',
+                                icon: 'success'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Failed to delete item. Please try again.',
+                                icon: 'error'
+                            });
+                        });
+                }
+            });
         });
     });
 });

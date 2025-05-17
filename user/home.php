@@ -128,7 +128,7 @@ Toast.fire({
             <div class="col-lg-3">
                 <h4 class="fw-semibold">Best Sellers</h4>
                 <?php
-                $query = "SELECT `product_name`, SUM(`sold`) AS `total_sold`, `product_picture`, `product_code` FROM `inventory` GROUP BY `product_name` HAVING `total_sold` > 0 ORDER BY `total_sold` DESC LIMIT 1";
+                $query = "SELECT `product_name`, SUM(`sold`) AS `total_sold`, `product_picture`, `product_code`, quantity FROM `inventory` GROUP BY `product_name` HAVING `total_sold` > 0 ORDER BY `total_sold` DESC LIMIT 1";
                 $result = mysqli_query($conn, $query);
 
                 if (mysqli_num_rows($result) > 0) {
@@ -137,7 +137,8 @@ Toast.fire({
                         $totalSold = $row['total_sold'];
                         $productPicture = $src . $row['product_picture'];
                 ?>
-                <a href="" class="product-link" data-product-id="<?= $row['product_code']; ?>">
+                <a href="" class="product-link" data-product-id="<?= $row['product_code']; ?>"
+                    data-inventory="<?= $row['quantity']; ?>">
                     <div class="card mb-3 item" style="max-width: 540px;">
                         <div class="row g-0 align-items-center">
                             <div class="col-md-4 col-4">
@@ -208,8 +209,8 @@ Toast.fire({
                                         <div class="input-group">
                                             <button class="btn btn-outline-warning decrement-btn"
                                                 type="button">-</button>
-                                            <input type="number" class="form-control quantity" name="quantity" value="1"
-                                                data-inventory="">
+                                            <input type="number" class="form-control quantity" name="quantity"
+                                                value="1">
                                             <button class="btn btn-outline-warning increment-btn"
                                                 type="button">+</button>
                                         </div>
@@ -265,7 +266,7 @@ Toast.fire({
                     <div class="col-7">
                         <span class="mx-2">Quantity</span><br>
                     </div>
-                    <div class="col-5 px-3">
+                    <div class="col-5 modal-title px-3">
                         <div class="input-group">
                             <button class="btn btn-outline-warning decrement-btn" type="button">-</button>
                             <input type="number" class="form-control quantity" name="quantity" value="1">
@@ -289,12 +290,6 @@ Toast.fire({
 
 </main><!-- End #main -->
 
-<?php
-unset($_SESSION['order']);
-unset($_SESSION['orders']);
-
-include 'includes/footer.php';
-?>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.querySelector('.search-bar input[name="query"]');
@@ -341,23 +336,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+});
 
-    // Handle increment/decrement buttons in modal
-    const modalQuantityInput = document.querySelector("#modalProduct .quantity");
-    const modalIncrementBtn = document.querySelector(
-        "#modalProduct .increment-btn"
-    );
-    const modalDecrementBtn = document.querySelector(
-        "#modalProduct .decrement-btn"
-    );
-
-    modalIncrementBtn.addEventListener("click", function() {
-        const currentValue = parseInt(modalQuantityInput.value) || 0;
-        const inventory =
-            parseInt(modalQuantityInput.getAttribute("data-inventory")) || 0;
+$(document).ready(function() {
+    // Handle increment button click
+    $(document).on('click', '.increment-btn', function() {
+        let quantityInput = $(this).closest('.input-group').find('.quantity');
+        let currentValue = parseInt(quantityInput.val()) || 0;
+        let inventory = parseInt(quantityInput.data('inventory')) || 0;
 
         if (currentValue < inventory) {
-            modalQuantityInput.value = currentValue + 1;
+            quantityInput.val(currentValue + 1);
         } else {
             Swal.fire({
                 title: "Warning!",
@@ -366,37 +355,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 toast: true,
                 position: "top-end",
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 3000
             });
         }
     });
-    modalDecrementBtn.addEventListener("click", function() {
-        const currentValue = parseInt(modalQuantityInput.value) || 0;
+
+    // Handle decrement button click
+    $(document).on('click', '.decrement-btn', function() {
+        let quantityInput = $(this).closest('.input-group').find('.quantity');
+        let currentValue = parseInt(quantityInput.val()) || 0;
         if (currentValue > 1) {
-            modalQuantityInput.value = currentValue - 1;
+            quantityInput.val(currentValue - 1);
+        } else {
+            quantityInput.val(1);
         }
     });
 
-    // Handle manual input
-    modalQuantityInput.addEventListener("input", function() {
-        const value = parseInt(this.value);
-        const inventory = parseInt(this.getAttribute("data-inventory")) || 0;
+    // Handle manual input changes
+    $(document).on('input', '.quantity', function() {
+        let value = parseInt($(this).val());
+        let inventory = parseInt($(this).data('inventory')) || 0;
 
         if (isNaN(value) || value < 1) {
-            this.value = 1;
+            $(this).val(1);
         } else if (value > inventory) {
-            this.value = inventory;
+            $(this).val(inventory);
             Swal.fire({
                 title: "Warning!",
-                text: "Quantity cannot exceed available inventory.",
+                text: "Cannot exceed available inventory.",
                 icon: "warning",
                 toast: true,
                 position: "top-end",
                 showConfirmButton: false,
-                timer: 3000,
+                timer: 3000
             });
         }
     });
-
 });
 </script>
+
+<?php
+unset($_SESSION['order']);
+unset($_SESSION['orders']);
+
+include 'includes/footer.php';
+?>
