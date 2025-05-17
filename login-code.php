@@ -142,7 +142,7 @@ if (isset($_POST['userLogin'])) {
     }
 
     // Close the database connection
-    $conn->close();
+    $conn->close(); 
 }
 
 ?>

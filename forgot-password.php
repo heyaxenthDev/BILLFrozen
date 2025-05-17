@@ -9,7 +9,7 @@ include 'includes/conn.php';
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Log in - Bill Frozen</title>
+    <title>Forgot Password - Bill Frozen</title>
     <meta content name="description">
     <meta content name="keywords">
 
@@ -57,60 +57,63 @@ include 'includes/conn.php';
                                 </div><!-- End Logo -->
 
                                 <div class="pt-4 pb-2">
-                                    <h1 class="card-title pb-0 fw-bold" id="welcome">Hi!<br>
-                                        Welcome</h1>
-                                    <p class="small fw-semibold" id="welcome-span">We are happy to know
-                                        what is
-                                        your
-                                        order</p>
+                                    <h1 class="card-title pb-0 fw-bold" id="welcome">Forgot<br>
+                                        Password?</h1>
+                                    <p class="small fw-semibold" id="welcome-span">Please enter your <i>registered
+                                            email</i>
+                                        for a reset code.</p>
                                 </div>
-                                <form class="row g-3" action="login-code.php" method="POST">
-
+                                <form class="row g-3" id="myForm" action="reset-password.php" method="POST">
                                     <div class="col-12 mt-3">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control transparent-input"
-                                                id="yourUsername_email" name="yourUsername_email" placeholder=" "
-                                                required>
-                                            <label for="yourUsername_email" class="fw-semibold">Username or
-                                                Email</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12 mb-3">
-                                        <div class="form-floating">
-                                            <input type="password" class="form-control transparent-input"
-                                                id="yourPassword" name="yourPassword" placeholder=" " required>
-                                            <label for="yourPassword" class="fw-semibold">Password</label>
-                                            <span hidden="hidden" class="field-icon toggle-password bi bi-eye-fill"
-                                                id="icon"
-                                                style="position: absolute; right: 17px; transform: translate(0, -50%); top: 50%; cursor: pointer;"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-12 d-flex align-items-center">
-                                        <div class="form-check me-auto">
-                                            <input class="form-check-input" type="checkbox" name="remember" value="true"
-                                                id="rememberMe">
-                                            <label class="form-check-label" for="rememberMe">Remember me</label>
-                                        </div>
-                                        <div class="forgot-password">
-                                            <a href="forgot-password.php">Forgot Password?</a>
+                                            <input type="email" class="form-control transparent-input" id="resetEmail"
+                                                name="resetEmail" placeholder=" " required>
+                                            <label for="resetEmail" class="fw-semibold">Email</label>
+                                            <small id="email-status" class="text-danger"></small>
                                         </div>
                                     </div>
 
                                     <div class="col-12 mb-3 mt-5">
                                         <button class="btn w-100 text-white" type="submit"
-                                            style="background-color: #0F1B48;" name="userLogin">Login</button>
+                                            style="background-color: #0F1B48;" name="passwordReset">Send Reset
+                                            Code</button>
                                     </div>
-                                    <!-- <div class="col-12 mb-5">
-                                        <p class="small mb-0 text-center">Don't have an account? <a href="user-register.php">Create
-                                                an account</a></p>
-                                    </div> -->
                                 </form>
 
 
                             </div>
 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="resetCodeModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="resetCodeModalLabel">Reset Code</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Please enter the reset code sent to your email.</p>
+                                <form id="resetCodeForm" action="reset-password.php" method="POST">
+                                    <input type="hidden" name="resetEmail" id="modalResetEmail">
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="resetCode" name="resetCode"
+                                                placeholder=" " required>
+                                            <label for="resetCode">Reset Code</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-3 mt-5">
+                                        <button class="btn w-100 text-white" type="submit"
+                                            style="background-color: #0F1B48;" name="verifyResetCode">Verify
+                                            Code</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -126,9 +129,7 @@ include 'includes/conn.php';
     <!-- Vendor JS Files -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/php-email-form/validate.js"></script>
-
-    <!-- Template Main JS File -->
-    <script src="js/password.js"></script>
+    <script src="js/reset-password.js"></script>
 
 </body>
 

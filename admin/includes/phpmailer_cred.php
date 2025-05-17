@@ -1,4 +1,4 @@
 <?php 
-$password = "oamb omnq kzsv toqi";
-$email = "billfrozen2025@gmail.com";
+$bf_password = "oamb omnq kzsv toqi";
+$bf_email = "billfrozen2025@gmail.com";
 ?>
