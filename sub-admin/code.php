@@ -29,8 +29,8 @@ if (isset($_POST['addNewProduct'])) {
     }
 
     // Check if the file already exists
-    if (file_exists($target_file)) {
-        unlink($target_file); // Delete the existing file
+    if (file_exists("../admin/" . $target_file)) {
+        unlink("../admin/" . $target_file); // Delete the existing file
     }
 
     // Check file size
@@ -63,7 +63,7 @@ if (isset($_POST['addNewProduct'])) {
         header("Location: {$_SERVER['HTTP_REFERER']}");
     } else {
         // If everything is ok, try to upload file
-        if (move_uploaded_file($_FILES["productImage"]["tmp_name"], $target_file)) {
+        if (move_uploaded_file($_FILES["productImage"]["tmp_name"], "../admin/" . $target_file)) {
             echo "The file ". basename( $_FILES["productImage"]["name"]). " has been uploaded.";
 
             // Prepare and bind SQL statement

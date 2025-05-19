@@ -236,7 +236,7 @@ include "alert.php";
 
 </main><!-- End #main -->
 
-<!-- <script src="js/scripts.js"></script> -->
+<script src="js/scripts.js"></script>
 
 <script>
 $(document).ready(function() {

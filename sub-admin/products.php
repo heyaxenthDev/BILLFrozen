@@ -83,7 +83,7 @@ include "alert.php";
                                         <label for="editProductDesc" clasys="form-label">Description
                                             <small>(Optional)</small></label>
                                         <textarea type="text" class="form-control" id="editProductDesc"
-                                            name="ProductDesc" required></textarea>
+                                            name="ProductDesc"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -125,19 +125,19 @@ include "alert.php";
             <div class="col-lg-2 col-6">
                 <!-- Product Card -->
                 <div class="card">
-                    <img src="<?php echo $row['product_picture']; ?>" class="card-img-top" alt="...">
+                    <img src="<?= "../admin/" . $row['product_picture']; ?>" class="card-img-top" alt="...">
                     <div class="card-body">
-                        <h6 class="card-title"><?php echo $row['product_name']; ?></h6>
-                        <p class="card-text fw-semibold">₱<?php echo $row['price']; ?></p>
+                        <h6 class="card-title"><?= $row['product_name']; ?></h6>
+                        <p class="card-text fw-semibold">₱<?= $row['price']; ?></p>
                         <div class="d-grid gap-2 mx-auto">
                             <button class="btn btn-primary" type="submit" name="editProduct" data-bs-toggle="modal"
-                                data-bs-target="#editProductModal" data-product-id="<?php echo $row['id']; ?>"
-                                data-product-name="<?php echo $row['product_name']; ?>"
-                                data-product-price="<?php echo $row['price']; ?>"
-                                data-product-category="<?php echo $row['category']; ?>"
-                                data-product-description="<?php echo $row['description']; ?>"
-                                data-product-picture="<?php echo $row['product_picture']; ?> ">Edit</button>
-                            <a class="btn btn-danger del" data-product-idDel="<?php echo $row['id']; ?>">Delete</a>
+                                data-bs-target="#editProductModal" data-product-id="<?= $row['id']; ?>"
+                                data-product-name="<?= $row['product_name']; ?>"
+                                data-product-price="<?= $row['price']; ?>"
+                                data-product-category="<?= $row['category']; ?>"
+                                data-product-description="<?= $row['description']; ?>"
+                                data-product-picture="<?= "../admin/" . $row['product_picture']; ?> ">Edit</button>
+                            <a class="btn btn-danger del" data-product-idDel="<?= $row['id']; ?>">Delete</a>
                         </div>
                     </div>
                 </div><!-- End Product Card -->
