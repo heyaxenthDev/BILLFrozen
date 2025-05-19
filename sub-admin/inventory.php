@@ -121,7 +121,7 @@ include "alert.php";
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     echo "<tr>";
                                     echo "<th scope='row'>{$row['product_code']}</th>";
-                                    echo "<td><img src='{$row['product_picture']}' style='max-width: 100px; max-height: 65px;' alt='Product Image'> {$row['product_name']}</td>";
+                                    echo "<td><img src='../admin/{$row['product_picture']}' style='max-width: 100px; max-height: 65px;' alt='Product Image'> {$row['product_name']}</td>";
                                     echo "<td>{$row['price']}</td>";
                                     echo "<td>";
                                     if ($row['quantity'] == 0) {
